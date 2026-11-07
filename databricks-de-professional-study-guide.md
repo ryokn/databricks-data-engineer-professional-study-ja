@@ -1,12 +1,12 @@
-# Databricks Certified Data Engineer Professional 集中対策ガイド（日本語）
+# Databricks Certified Data Engineer Professional 体系的学習ガイド（日本語）
 
-確認日：2026-11-07（JST）／対象：Associate の基礎と公式トレーニングを終えた方／受験想定：2026-11-09〜15（日本語）
+確認日：2026-11-07（JST）／対象：初学者〜実務者／現行試験（2026-11-19まで）を主対象
 
-> **最重要：日本語で来週受けるなら「現行試験」です。** 日本語公式PDFは、現行試験の期限を **2026-11-19**、新試験への切り替えを **2026-11-20** と明記しています。新試験の提供言語は **英語のみ** と記載されています。切り替え日の適用時刻・日本語試験のその後の再提供日は要確認。予約画面で試験名・言語・日付を必ず確認してください。本書とHTML模試は、来週の日本語受験に合わせて**現行10ドメイン**を主対象にしています。
+> **最重要：日本語で11/19までに受けるなら「現行試験」です。** 日本語公式PDFは、現行試験の期限を **2026-11-19**、新試験への切り替えを **2026-11-20** と明記しています。新試験の提供言語は **英語のみ** と記載されています。切り替え日の適用時刻・日本語試験のその後の再提供日は要確認。予約画面で試験名・言語・日付を必ず確認してください。本書とHTML模試は、11/19までの日本語受験に合わせて**現行10ドメイン**を主対象にしています。
 
 非公式のオリジナル教材です。合格保証・実際の試験問題の再現ではありません。問題・解答・解説は別ファイル `databricks-de-professional-mock-exam.html` にのみ収録しています。
 
-## 0. 試験概要・使い方・1週間の計画
+## 0. 試験概要・範囲対応・使い方・学習計画
 
 ### 0.1 一次情報の版と食い違い
 
@@ -21,7 +21,7 @@
 
 ### 0.2 試験情報
 
-| 項目 | 来週の現行試験（11/19まで） | 新試験（日本語PDFでは11/20以降） |
+| 項目 | 現行試験（11/19まで） | 新試験（日本語PDFでは11/20以降） |
 |---|---|---|
 | 採点対象 | 多肢選択59問 | 多肢選択60問 |
 | 採点対象外 | 最大10問の可能性（日本語PDF） | 最大10問の可能性（日本語PDF）。英語PDFでは上限数を記載せず |
@@ -46,48 +46,95 @@
 
 ### 0.3 現行試験の配点と本書の章順
 
-換算は「59 × 配点」、約問数は四捨五入。独立した丸めなので合計が59になるとは限りません。模試40問は最大剰余法で整数配分し、同率時は公式セクション順を優先しています。
+換算は「59 × 配点」、約問数は四捨五入。独立した丸めなので合計が59になるとは限りません。模試60問は概ね配点に比例させ、少数分野の全目標確認のため一部を調整しています。出題数の再現ではありません。
 
 | 本書章 | 現行公式Section | 分野 | 暫定配点 | 59問換算 | 模試 |
 |---|---|---|---:|---:|---:|
-| 1 | 1 | Python / SQLコード開発 | 22% | 12.98 ≈13問 | 9問 |
-| 2 | 6 | コスト・性能最適化 | 13% | 7.67 ≈8問 | 5問 |
-| 3 | 3 | 変換・クレンジング・品質 | 10% | 5.90 ≈6問 | 4問 |
-| 4 | 5 | 監視・アラート | 10% | 5.90 ≈6問 | 4問 |
-| 5 | 7 | セキュリティ・コンプライアンス | 10% | 5.90 ≈6問 | 4問 |
-| 6 | 9 | デバッグ・デプロイ | 10% | 5.90 ≈6問 | 4問 |
-| 7 | 2 | 取り込み・取得 | 7% | 4.13 ≈4問 | 3問 |
-| 8 | 8 | ガバナンス | 7% | 4.13 ≈4問 | 3問 |
-| 9 | 10 | モデリング | 6%※ | 3.54 ≈4問 | 2問 |
-| 10 | 4 | 共有・フェデレーション | 5%※ | 2.95 ≈3問 | 2問 |
-| 合計 | | | 100% | 59.00（丸め前） | **40問** |
+| 1 | 1 | Python / SQLコード開発 | 22% | 12.98 ≈13問 | 13問 |
+| 2 | 6 | コスト・性能最適化 | 13% | 7.67 ≈8問 | 8問 |
+| 3 | 3 | 変換・クレンジング・品質 | 10% | 5.90 ≈6問 | 6問 |
+| 4 | 5 | 監視・アラート | 10% | 5.90 ≈6問 | 6問 |
+| 5 | 7 | セキュリティ・コンプライアンス | 10% | 5.90 ≈6問 | 6問 |
+| 6 | 9 | デバッグ・デプロイ | 10% | 5.90 ≈6問 | 5問 |
+| 7 | 2 | 取り込み・取得 | 7% | 4.13 ≈4問 | 5問 |
+| 8 | 8 | ガバナンス | 7% | 4.13 ≈4問 | 4問 |
+| 9 | 10 | モデリング | 6%※ | 3.54 ≈4問 | 3問 |
+| 10 | 4 | 共有・フェデレーション | 5%※ | 2.95 ≈3問 | 4問 |
+| 合計 | | | 100% | 59.00（丸め前） | **60問** |
 
 ※現行日本語PDFの値はモデリング7%、共有10%。上の暫定採用理由を参照。
 
-### 0.4 新試験との差分（受験日が変わった時だけ）
+### 0.4 現行Exam Outlineの全項目対応表
 
-| 新Section | 新分野 | 新配点 | 60問換算 |
-|---|---|---:|---:|
-| 1 | Python / SQLコード開発 | 23% | 13.8 ≈14問 |
-| 5 | コスト・性能最適化 | 15% | 9.0 ≈9問 |
-| 2 | 取り込み・取得 | 12% | 7.2 ≈7問 |
-| 3 | データ操作 | 12% | 7.2 ≈7問 |
-| 4 | 監視・アラート | 10% | 6.0 ≈6問 |
-| 8 | デバッグ・デプロイ | 10% | 6.0 ≈6問 |
-| 6 | セキュリティ・コンプライアンス | 8% | 4.8 ≈5問 |
-| 7 | ガバナンス | 5% | 3.0 ≈3問 |
-| 9 | モデリング | 5% | 3.0 ≈3問 |
+本書は日本語公式PDFの現行10ドメインを、**意味のある45学習目標＋8親項目＋1原文の継続断片**として対応づけています。これは独自の整理数であり、公式が「45目標」と公表したという意味ではありません。Section 6の改行断片も省略せず別見出しにしました。
 
-共有は取り込みへ統合。新アウトラインで明示が強まるもの：状態付きStreaming（watermark / foreachBatch / checkpoint）、serverless環境、Lakeflow ConnectのDB CDC、Iceberg、VARIANT、AI Functions、Predictive Optimization、Delta cache、ABAC、Metric Views。既存機能がすべて11/20に初登場するという意味ではありません。来週の受験では★の現行論点を先に固めます。
+全54行に本文見出しと少なくとも1問の対応を設定。問題は複数目標を同時に扱うことがあります。**対応があることは、その目標の全仕様を一問で網羅する保証ではありません。** 試験ガイドの目的に沿って本文・比較・演習を組み合わせてください。模試の問題文・解答・解説はHTMLだけに収録します。
+
+| ID | Outlineの項目（要約） | 本書の節 | 模試番号 |
+|---|---|---|---|
+| D1.A | Pythonとツールの使用（親項目） | [1.A](#sec-1-a) | 01、02、03 |
+| D1.1 | Bundlesに適したPythonプロジェクト | [1.1](#sec-1-1) | 01 |
+| D1.2 | PyPI・wheel・ソースアーカイブと依存 | [1.2](#sec-1-2) | 02 |
+| D1.3 | Pandas/Python UDF | [1.3](#sec-1-3) | 03 |
+| D1.B | ETLの構築とテスト（親項目） | [1.B](#sec-1-b) | 04、05、06、07、08、09、41、42、43、44 |
+| D1.4 | Lakeflow/Auto Loaderのバッチ・Streaming | [1.4](#sec-1-4) | 04、05 |
+| D1.5 | UI/API/CLIによるJobsの自動化 | [1.5](#sec-1-5) | 07、20 |
+| D1.6 | STとMVの利点・欠点 | [1.6](#sec-1-6) | 05 |
+| D1.7 | AUTO CDC（旧APPLY CHANGES） | [1.7](#sec-1-7) | 06 |
+| D1.8 | Structured StreamingとLakeflowの比較 | [1.8](#sec-1-8) | 41 |
+| D1.9 | If/Else・For Each | [1.9](#sec-1-9) | 07、42 |
+| D1.10 | 環境・依存・高メモリ・追加再試行 | [1.10](#sec-1-10) | 08、43 |
+| D1.11 | 単体/統合テスト・transform・デバッガー | [1.11](#sec-1-11) | 09、44 |
+| D2.1 | 各種形式・メッセージバス・クラウドから取り込み | [7.1](#sec-7-1) | 31、33、45 |
+| D2.2 | Deltaでバッチ/Streamingの追記専用パイプライン | [7.2](#sec-7-2) | 32、46 |
+| D3.1 | Window・join・aggregation | [3.1](#sec-3-1) | 15、16、47 |
+| D3.2 | Lakeflow/クラシックAuto Loaderの隔離 | [3.2](#sec-3-2) | 17、18、48 |
+| D4.1 | Delta SharingのD2D/D2O | [10.1](#sec-10-1) | 40、49 |
+| D4.2 | ガバナンスのあるFederation | [10.2](#sec-10-2) | 39 |
+| D4.3 | 任意のcomputeへライブ共有 | [10.3](#sec-10-3) | 40、50 |
+| D5.A | モニタリング（親項目） | [4.A](#sec-4-a) | 19、20、21、51 |
+| D5.1 | system tablesで利用・費用・監査・workload | [4.1](#sec-4-1) | 19 |
+| D5.2 | Query Profiler UIとSpark UI | [4.2](#sec-4-2) | 51 |
+| D5.3 | REST API/CLIでjob/pipeline監視 | [4.3](#sec-4-3) | 20 |
+| D5.4 | Pipeline event logの監視 | [4.4](#sec-4-4) | 21 |
+| D5.B | アラート通知（親項目） | [4.B](#sec-4-b) | 22、52 |
+| D5.5 | SQL Alertsの品質監視 | [4.5](#sec-4-5) | 22 |
+| D5.6 | Jobs UI/APIで状態・性能の通知 | [4.6](#sec-4-6) | 52 |
+| D6.1 | UC managed tablesと保守削減 | [2.1](#sec-2-1) | 53 |
+| D6.1-cont | 原文の「オーバーヘッドとメンテナンスの負担」 | [2.1.1](#sec-2-1-1) | 53 |
+| D6.2 | Deletion vectors・Liquid等の最適化 | [2.2](#sec-2-2) | 10、11、14 |
+| D6.3 | data skipping・file pruning | [2.3](#sec-2-3) | 54 |
+| D6.4 | CDFでStreamingの制限・遅延に対処 | [2.4](#sec-2-4) | 12、55 |
+| D6.5 | Profileでskipping/join/shuffle分析 | [2.5](#sec-2-5) | 13 |
+| D7.A | セキュリティ適用（親項目） | [5.A](#sec-5-a) | 23、24、25、56 |
+| D7.1 | Workspace ACLと最小権限 | [5.1](#sec-5-1) | 23、56 |
+| D7.2 | 行フィルタ・列マスク | [5.2](#sec-5-2) | 24 |
+| D7.3 | ハッシュ/トークン/抑制/一般化 | [5.3](#sec-5-3) | 25 |
+| D7.B | コンプライアンス（親項目） | [5.B](#sec-5-b) | 26、57 |
+| D7.4 | バッチ/StreamingでPII検出・マスク | [5.4](#sec-5-4) | 57 |
+| D7.5 | 保持に準拠するパージ | [5.5](#sec-5-5) | 26 |
+| D8.1 | 説明・メタデータで発見性 | [8.1](#sec-8-1) | 35、58 |
+| D8.2 | UC権限継承 | [8.2](#sec-8-2) | 23、34、36 |
+| D9.A | デバッグ（親項目） | [6.A](#sec-6-a) | 27、30、59 |
+| D9.1 | Spark UI/logs/system/Profileで診断 | [6.1](#sec-6-1) | 30、51 |
+| D9.2 | repairとparameter override | [6.2](#sec-6-2) | 27 |
+| D9.3 | event log/Spark UIでpipelineデバッグ | [6.3](#sec-6-3) | 59 |
+| D9.B | CI/CDデプロイ（親項目） | [6.B](#sec-6-b) | 28、29 |
+| D9.4 | Bundlesでbuild/deploy | [6.4](#sec-6-4) | 28 |
+| D9.5 | Git foldersによるGitベースCI/CD | [6.5](#sec-6-5) | 29 |
+| D10.1 | スケーラブルなDeltaモデル | [9.1](#sec-9-1) | 37、60 |
+| D10.2 | Liquidによる配置判断の簡素化 | [9.2](#sec-9-2) | 60 |
+| D10.3 | Liquidとpartition/ZORDERの比較 | [9.3](#sec-9-3) | 11、60 |
+| D10.4 | ディメンショナルモデル | [9.4](#sec-9-4) | 16、38 |
 
 ### 0.5 1週間集中プラン（学習時間は提案であり公式値ではない）
 
-毎日2〜3時間を想定。受験日未確定のため日付ではなく相対日程です。短縮版は各章の**★項目だけ**を学び、下表の短縮版を優先してください。公式トレーニング受講済み前提で基礎の読み直しは最小限です。
+毎日2〜3時間を想定。受験日未確定のため日付ではなく相対日程です。短縮版は各章の**★項目だけ**を学び、下表の短縮版を優先してください。基礎ができている方は短縮版、初学者は下の3〜4週間案を選んでください。
 
 | 日 | 通常版 | 短縮版（約60〜90分の提案） |
 |---|---|---|
-| Day 1 | 0章で受験版を確認→HTML40問を未学習で解く→誤答を「要件読み落とし／知識／コード」に分類 | ★模試→誤答の章と根拠URLだけ記録 |
-| Day 2 | 1章。ST/MV、AUTO CDC、制御フロー、UDF、テストの選択理由を口頭説明 | ★1.3〜1.7を中心に誤答の理由を説明 |
+| Day 1 | 0章で受験版を確認→HTML60問を未学習で解く→誤答を「要件読み落とし／知識／コード」に分類 | ★模試→誤答の章と根拠URLだけ記録 |
+| Day 2 | 1章。ST/MV、AUTO CDC、制御フロー、UDF、テストの選択理由を口頭説明 | ★1.6〜1.11を中心に誤答の理由を説明 |
 | Day 3 | 2・3章。性能の診断順、CDF、重複除去、品質の隔離を小さなSQLで確認 | ★性能比較表・CDF・品質比較表 |
 | Day 4 | 5・8章。UC権限不足、マスク、削除要請、継承をシナリオで確認 | ★USE/SELECTの区別・DELETE/VACUUM・継承 |
 | Day 5 | 4・6章。ログの選択、ジョブ修復、Bundleのdev/prod差分を確認 | ★監視の使い分け・repair・validate/deploy/run |
@@ -110,61 +157,177 @@
 | SQL Alerts | 新ガイドは **Databricks Lakehouse alerts** と対象範囲を拡張して表記 |
 | Delta cache | ドキュメント上のdisk cacheの名称とも照合。Spark `cache()`やSQL結果キャッシュと同一ではない |
 
-## 1. コード開発（現行22%／新23%）
 
-### 1.1 ★PythonプロジェクトとBundles：ノートブックを「製品」にする
+### 0.7 初学者向け3〜4週間プラン
 
-変換関数は `src/`、テストは `tests/`、リソース定義は `resources/`、入口は薄いノートブック／wheelタスク、環境差は `targets` に分離。**同じGitコミットを複数環境へ昇格**させる設計を選びます。prodだけ手動修正すると再現不能です。ワークスペースパスや秘密情報をコードへ固定しません。Bundleはデータそのものの複製ツールではありません。[BUNDLE]
+期間は学習計画の提案であり、公式の必要学習時間ではありません。データ操作の初歩から始める方は、用語→最小コード→比較→模試→実機で再現の順に進めます。実機で使えない有料・Preview機能は公式画面・構成図で条件を追い、機能を使うための支出を前提にしません。
 
-### 1.2 外部ライブラリのインストール・依存関係
-
-PyPI、wheel、ソースアーカイブのどこから何版を導入したか、Python／Runtime／アクセスモードとの互換性、実際に実行したタスク環境を順に確認。対話ノートブックで動いてもジョブ・pipeline・serverlessの依存が同じとは限りません。再起動や最新版への無差別アップグレードは診断ではありません。バージョンを固定し、最小のimportで切り分けます。serverlessはクラスタ設定のすべてを自由に設定できる前提にしません。
-
-### 1.3 ★UDF：まず組み込みSQL、必要な時だけPython
-
-| 方法 | 選択の理由 | ひっかけ |
+| 週 | 学ぶ範囲 | 到達点 |
 |---|---|---|
-| 組み込みSQL関数 | 最適化しやすい標準変換 | 何でもPython UDFにしない |
-| SQL UDF | SQLで共通ロジックを再利用 | UDF化だけでデータアクセス権が消えるわけではない |
-| Python UDF | Python固有処理が必要 | 行単位処理・実行境界のコストを考える |
-| Pandas UDF | ベクトル化処理が適合 | 型、NULL、Arrow、依存関係を確認。常に最速ではない |
-| UC関数 | 永続化・権限管理・共有 | ノートブックの一時関数と区別。実行環境の対応条件を確認 |
+| 第1週 | 用語・Delta/UCの基礎、1章、7章 | バッチ/Streaming、状態、依存、テストの役割を説明 |
+| 第2週 | 3章、2章、9章 | 粒度と品質を守り、症状に合う最適化を選択 |
+| 第3週 | 5章、8章、10章 | 権限・保護・削除・共有をライフサイクルで設計 |
+| 第4週 | 4章、6章、公式サンプル、模試と未達項目 | 診断源を選び、修復と配備を再現可能に説明 |
 
-```sql
-CREATE OR REPLACE FUNCTION main.study.net_amount(x DOUBLE, discount DOUBLE)
-RETURNS DOUBLE
-RETURN x * (1 - discount);
-SELECT main.study.net_amount(100.0, 0.1);
+3週間にする場合は第3・4週の演習を並行します。現行試験の期限を越える場合は付録Aの新試験へ読み替え、受験言語を再確認してください。各対応表の行で「説明できる」「最小例を追える」「誤選択肢の理由がわかる」を記録すると、問題番号の暗記に偏りにくくなります。
+
+### 0.8 初学者のための用語と例の前提
+
+| 用語 | 最初に押さえる意味 |
+|---|---|
+| DataFrame / SQL | 分散データの表と、それを変換する表現 |
+| Delta Lake | トランザクションログを持つテーブル形式。業務重複の自動除去とは別 |
+| Unity Catalog / UC | データ等の名前・権限・メタデータを統制する仕組み |
+| catalog.schema.table | テーブルの三階層の名前 |
+| bronze/silver/gold | 原本に近い層、検証済み層、利用目的別の層という設計パターン |
+| batch / Streaming | 有界な入力を処理する方式／継続する到着を処理する方式 |
+| checkpoint | 増分処理の進捗や状態を復旧するための保存物 |
+| 冪等性 | 同じ処理を繰り返しても業務上の結果を重複させない性質 |
+
+コードの`main.study`は専用演習catalog/schema、入力表やパスは例です。存在・権限・対応Runtimeを確認して読み替え、prodへそのまま実行しないでください。変数や関数を外部で定義する例はその前提を注記しています。数値は架空の演習条件で、プラットフォームの制限や費用を推測したものではありません。
+
+
+## 1. Python・SQLによるコード開発（現行Section 1：22%）
+
+<a id="sec-1-a"></a>
+### 1.A 開発のためのPythonとツールの使用
+
+データ処理をチームで維持するための開発基盤です。「誰かのノートブックで動く」状態から、環境が違っても同じコードを配備・検証できる状態に進みます。プロジェクト構造、依存関係、UDFを下記の個別項目で学びます。
+
+<a id="sec-1-1"></a>
+#### 1.1 ★Bundlesに適したスケーラブルなPythonプロジェクト構造
+
+**何か**：変換ロジック、実行入口、テスト、リソース設定を分離した構成です。**なぜ**：環境ごとの手作業が増えると、同じコミットでも動作が変わるため。**仕組み**：再利用する変換をモジュール化し、Declarative Automation Bundles（旧Databricks Asset Bundles / DABs）のtargetsでdev/prod差を表します。
+
+| 置き場所の例 | 役割 | 混同しないもの |
+|---|---|---|
+| `src/` | 再利用する処理 | 本番固有の保存先・秘密情報 |
+| `tests/` | 期待結果と照合 | 本番データへの副作用 |
+| `resources/`、`databricks.yml` | ジョブ等の定義と環境差 | データそのもののバックアップ |
+
+**頻出・罠**：ノートブック複製を環境分離と思わない。同一ソースをテストして昇格させる。Bundleで配備しただけではデータ品質を保証しません。
+
+```text
+project/
+  databricks.yml
+  resources/jobs.yml
+  src/transforms.py
+  tests/test_transforms.py
 ```
 
-### 1.4 ★Lakeflow / Auto Loaderで本番取り込み
+根拠：[BUNDLE]。
 
-Auto Loaderはクラウドの到着ファイルを増分検出する仕組み。チェックポイントは取り込み進捗、schemaLocationは推論スキーマの管理です。両者を「どちらか片方があれば同じ」と考えないこと。pipelineでは状態をフレームワークが管理する部分があります。ソースの再配信や業務イベントの重複は別途扱います。
+<a id="sec-1-2"></a>
+#### 1.2 ★PyPI・wheel・ソースアーカイブの導入と依存関係の切り分け
+
+**何か**：コードが必要とする外部Pythonパッケージを、実行環境へ揃える工程。**なぜ**：対話ノートブックとジョブで環境が異なるとimportや型の互換性で失敗します。**仕組み**：パッケージの配布元・版・Python/Runtime互換性・実際のタスク環境を記録して、最小importで切り分けます。
+
+| 配布形態 | 主な用途 | 注意 |
+|---|---|---|
+| PyPIパッケージ | 公開・社内インデックスの依存 | 版固定、ネットワーク、依存競合 |
+| wheel | 自作処理の配布 | 対応Python・プラットフォーム |
+| ソースアーカイブ | ソースからインストール | ビルド依存・再現性 |
+
+```python
+# そのタスクと同じ環境で、バージョンとimport先を確認する例。
+import importlib.metadata as metadata
+print(metadata.version('requests'))
+```
+
+**頻出・罠**：Notebookで成功してもジョブ・pipeline・serverlessでの導入を証明しません。すべてを最新版へ上げてから原因調査すると再現不能になり得ます。serverlessでは環境の依存指定を確認します。根拠：[LIBRARY]、[SERVERLESS]。
+
+<a id="sec-1-3"></a>
+#### 1.3 ★Pandas UDF・Python UDFの開発と選択
+
+**何か**：標準関数で表現しにくい処理をユーザー定義関数として呼び出す仕組み。**なぜ**：独自の処理を分散処理へ組み込む必要があるため。**仕組み**：Python UDFはPython処理、Pandas UDFはバッチ単位のベクトル化処理を活用します。型・NULL・依存関係の契約を明確にします。
+
+| 候補 | 適する場合 | 罠 |
+|---|---|---|
+| 組み込みSQL | trim/lower等で十分 | 不要なUDF化をしない |
+| Python UDF | Python固有のロジック | 行単位の境界コスト・外部副作用 |
+| Pandas UDF | ベクトル化が適合する計算 | 常に最速ではない。戻り型を守る |
+
+```python
+import pandas as pd
+from pyspark.sql.functions import pandas_udf
+@pandas_udf('double')
+def add_fee(x: pd.Series) -> pd.Series:
+    return x * 1.1
+```
+
+**頻出・罠**：SQLで済むものを外部HTTP APIのUDFにしない。collectしてdriverで全件処理するのは分散UDFの代わりではありません。UC関数として共有する場合は権限と対応環境も確認。根拠：[UDF]。
+
+<a id="sec-1-b"></a>
+### 1.B Lakeflow Pipelines・SQL・SparkによるETLパイプラインの構築とテスト
+
+ETLは抽出・変換・格納の流れです。本番では変換式だけでなく、進捗、再実行、品質、ジョブ依存、実行環境を同時に設計します。Lakeflowの宣言型処理と、自分で状態や書き込みを制御するStructured Streamingを区別します。
+
+<a id="sec-1-4"></a>
+#### 1.4 ★Lakeflow PipelinesとAuto Loaderによるバッチ／Streamingの本番パイプライン
+
+**何か**：クラウドへ届くファイル等を取り込み、依存するテーブルを継続的に作る仕組み。**なぜ**：手動の全件読取りでは到着の追跡、再処理、品質確認が属人化するため。**仕組み**：Auto Loaderが増分取り込みを支え、Lakeflowが依存関係・状態・更新を管理します。
 
 ```sql
--- Lakeflow pipelineのSQL。main.study.raw_eventsは専用の演習対象。
+-- Lakeflow pipeline内。専用演習VolumeのJSONを想定。
 CREATE OR REFRESH STREAMING TABLE main.study.raw_events
 AS SELECT * FROM STREAM read_files(
   '/Volumes/main/study/input', format => 'json'
 );
 ```
 
-### 1.5 ★Streaming Table / Materialized View / 通常View
+| 概念 | 役割 |
+|---|---|
+| schemaLocation | 推論したスキーマの管理（クラシックの設定） |
+| checkpoint | 読取り進捗・状態・復旧の管理 |
+| triggered / continuous | 更新の実行方式。テーブル種類とは別の軸 |
 
-| 要件 | 原則的な選択 | 注意 |
+**頻出・罠**：schemaLocationだけで進捗は復元できません。pipelineが管理する状態とクラシックジョブの自前checkpointを混ぜない。取り込みのexactly-onceと業務イベントの重複除去も別です。根拠：[AUTO]、[LDP]。
+
+<a id="sec-1-5"></a>
+#### 1.5 ★JobsのUI・API・CLIによるETLの作成と自動化
+
+**何か**：複数タスクの依存と実行を管理するLakeflow Jobs。**なぜ**：ノートブックを個別に手動実行すると順序や回復が不安定になるため。**仕組み**：ジョブ定義を作り、スケジュールやトリガーでrunを起動し、task結果を追跡します。
+
+```bash
+# コマンド例。実行・外部変更は本教材では行わない。
+databricks jobs get <job-id>
+databricks jobs get-run <run-id>
+```
+
+| 識別子 | 指すもの |
+|---|---|
+| job_id | 再利用されるジョブの定義 |
+| run_id | 一回の実行 |
+| task_key | 定義内のタスク |
+
+**頻出・罠**：API呼出しが成功してもrun成功とは限りません。UIで作った定義をソース管理せずprodへ手コピーすると再現性を失います。根拠：[JOBS]。
+
+<a id="sec-1-6"></a>
+#### 1.6 ★Streaming TableとMaterialized Viewの利点・欠点
+
+**何か**：STは到着行の増分処理、MVはクエリ結果の物理保存と更新に使います。**なぜ**：同じSQLに見えても、入力履歴の変更や再計算の意味が異なるため。**仕組み**：STはストリーミングの意味で処理し、MVは結果全体を維持する更新計画を使います。
+
+| 要件 | 第一候補 | 条件 |
 |---|---|---|
-| 新規到着イベントを増分処理 | Streaming Table（ST） | 通常のappendストリームで過去更新が自然に再計算されるとは限らない |
-| 入力履歴の修正も含めた集計結果を維持 | Materialized View（MV） | 更新方式はクエリやソース条件に依存。**必ず増分／必ず低コスト**とはいえない |
-| 結果を物理保存せず参照時に計算 | 通常View | 高コストな処理の事前計算にはならない |
-
-★レイテンシだけでなく「元データは追記のみか」「更新・削除をどう反映するか」「完全な結果の再計算が必要か」で決めます。
-
-### 1.6 ★AUTO CDC / APPLY CHANGES：キーと順序と履歴
-
-CDCは変更イベント、SCDはターゲットの履歴モデル。Type 1は現状を上書き、Type 2は履歴を保持。到着時刻ではなく**業務的な変更順序を表す列**でSEQUENCE BYを決めます。複数列でタイブレークするならSTRUCT。削除イベントやNULL更新をどう解釈するかも必要です。[CDC]
+| 改変されないログの新規到着分 | ST | 追記前提と重複を検討 |
+| 過去データの修正を含む集計 | MV | 増分可否・完全再計算のコストを確認 |
+| 物理保存せず参照時に計算 | 通常View | 元の計算負担が残る |
 
 ```sql
--- Lakeflow pipeline内。cdc_events(id, name, operation, seq) が存在する前提。
+-- Lakeflow pipeline内のMVの例。
+CREATE OR REFRESH MATERIALIZED VIEW main.study.daily_sales
+AS SELECT sale_date, SUM(amount) AS total
+FROM main.study.sales GROUP BY sale_date;
+```
+
+**頻出・罠**：「MVなら必ず増分で安い」「STなら更新・削除も自動反映」と断定しない。鮮度、入力の変更、保持したい結果の意味を先に確認。根拠：[LDP]。
+
+<a id="sec-1-7"></a>
+#### 1.7 ★AUTO CDC（旧APPLY CHANGES）による変更適用
+
+**何か**：CDCイベントからターゲットの現在状態や履歴を維持する処理。**なぜ**：到着順が乱れた同一キーの更新を、単純なappendで扱えないため。**仕組み**：キー、SEQUENCE BY、削除の意味、SCD Type 1/2を定義します。
+
+```sql
 CREATE OR REFRESH STREAMING TABLE main.study.customer_history;
 CREATE FLOW customer_cdc AS AUTO CDC INTO main.study.customer_history
 FROM STREAM(main.study.cdc_events)
@@ -175,315 +338,750 @@ COLUMNS * EXCEPT (operation)
 STORED AS SCD TYPE 2;
 ```
 
-Pythonでは `stored_as_scd_type=2` のように指定。CDC順序処理を毎バッチの単純MERGEだけで置換すると、遅延到着・同一キー複数イベント・履歴処理の責務が自前になります。CDF（変更の公開）とAUTO CDC（変更を適用）は別機能です。
+| 指定 | 意味 |
+|---|---|
+| Type 1 | 最新状態を保持し、更新履歴は残さない |
+| Type 2 | 属性の履歴と有効期間を管理 |
+| sequence | 変更の業務的順序。到着時刻と同じとは限らない |
 
-### 1.7 ★Lakeflow Jobs：UI / API / CLI、If/Else、For Each、計算資源
+**頻出・罠**：CDFは変更を公開する機能、AUTO CDCは変更の適用。遅延到着・同じ順序値・NULL更新・削除を考慮します。OSSのSpark Declarative PipelinesにDatabricksのAUTO CDC拡張がすべてあるとは限りません。根拠：[CDC]。
 
-- 制御依存とデータ依存を整理。If/Elseの分岐先は条件タスクの結果に依存させる。
-- For Eachでパラメーター配列を反復する。並列化しても共有ターゲットへの競合・外部サービス上限がなくなるわけではない。
-- 同じ処理を再試行しても結果が壊れない**冪等性**を作る。副作用が冪等でなければ自動再試行を盲目的に有効化しない。
-- 高メモリ要件はメモリ、スキューやshuffleは実行計画を確認。単純な巨大クラスタ化は根本解決でない。
-- UIだけで作って終わりにせずAPI/CLIによるジョブ定義・実行状態取得も対応づける。秘密情報はコードに埋め込まない。
+<a id="sec-1-8"></a>
+#### 1.8 ★Structured StreamingとLakeflow Pipelinesの使い分け
 
-### 1.8 ★単体／統合テスト・DataFrame.transform
+**何か**：Structured Streamingは自分で実行・状態・sinkを組み立てるAPI、Lakeflowはテーブル等の定義から依存と更新を管理する宣言型の仕組みです。**なぜ**：運用工数と自由度のトレードオフを判断するため。**仕組み**：標準的な取り込み・品質・CDCを宣言するか、特殊な外部sink等を自前制御するかで選びます。
 
-単体テストは小さな固定入力と期待結果で変換関数を検証。統合テストは権限・テーブルI/O・依存タスクを含めて検証します。行数一致だけでは値・型の誤りを検出できません。順序を保証しないDataFrameの表示順だけに依存するテストは避けます。
+| 判断軸 | Structured Streaming | Lakeflow |
+|---|---|---|
+| 独自の書き込み制御 | 自分で組み込みやすい | 対応する宣言型機能を確認 |
+| 依存・品質・更新の運用 | 実装責務が大きい | 統合して管理しやすい |
+| checkpoint・再実行 | 自前設定と整合確認 | フレームワーク管理の範囲がある |
+
+```python
+# 任意sinkを扱う形の例。外部副作用には別途冪等性が必要。
+query = (events.writeStream.foreachBatch(write_idempotently)
+         .option('checkpointLocation', checkpoint_dir).start())
+```
+
+**頻出・罠**：コード量だけではなく運用制約から選ぶ。foreachBatchは既定でat-least-once。checkpointだけで外部APIの二重処理を防げません。根拠：[FOREACH]、[LDP]。
+
+<a id="sec-1-9"></a>
+#### 1.9 ★If/Else・For Eachによる制御フロー
+
+**何か**：If/Elseは条件分岐、For Eachは入力配列ごとの反復。**なぜ**：品質結果や対象一覧に応じて同じジョブを柔軟に動かすため。**仕組み**：条件結果への依存を作り、For Eachの入れ子タスクへ各要素をパラメーターとして渡します。
+
+```text
+For Each Inputs: [{"table":"sales"},{"table":"orders"}]
+入れ子タスクのtable引数: {{input.table}}
+条件分岐: 品質判定 → If/Else → 公開 または 隔離レポート
+```
+
+| 方式 | 適するもの | 注意 |
+|---|---|---|
+| If/Else | 真偽で異なる処理 | 前タスクの終了だけでは分岐しない |
+| For Each | 同じ処理を複数入力へ適用 | 並列度と同一ターゲットへの競合 |
+
+**頻出・罠**：For Eachの配列と巨大な業務データ本体を混同しない。For EachをFor Eachの入れ子タスクにすることはできないと公式に記載されています。下流依存は親For Eachに設定します。根拠：[FOREACHJOB]。
+
+<a id="sec-1-10"></a>
+#### 1.10 ★環境・依存・高メモリ・自動最適化の再試行設定
+
+**何か**：ワークロードに合う実行資源と、再試行の動作を選ぶ設定。**なぜ**：メモリ不足と、二重の外部副作用では解決策が違うため。**仕組み**：実行環境の依存を定義し、ノートブックの高メモリ要件や、serverless自動最適化による追加再試行を確認します。
+
+| 制約 | 判断 |
+|---|---|
+| ノートブックタスクのメモリ不足 | 実行計画・driver/executorを診断し、対応する高メモリ設定を検討 |
+| 非冪等な副作用がありat-most-onceが必要 | 明示的retryだけでなくserverless auto-optimizationも確認 |
+| 環境にないライブラリ | タスクと同じ環境へ互換依存を宣言 |
+
+```text
+Retry Policy:
+  業務上の再試行を許可するか？
+  Enable serverless auto-optimization (may include additional retries) は適切か？
+```
+
+**頻出・罠**：`max_retries=0`だけで追加再試行も完全に止まると決めつけない。公式はat-most-once要件の例としてauto-optimization無効化を案内。高メモリは確認時点でPublic Preview・notebook taskのみと記載。提供条件は要確認。根拠：[SERVERLESS]。
+
+<a id="sec-1-11"></a>
+#### 1.11 ★ユニット／統合テスト・DataFrame.transform・組み込みデバッガー
+
+**何か**：単体テストは小さな変換の正しさ、統合テストは実際のI/Oや権限・依存の接続を確認します。**なぜ**：実行成功や行数一致だけでは、誤った値・型を見逃すため。**仕組み**：変換を関数へ分離し、固定入力と期待DataFrame・スキーマを比較します。
 
 ```python
 from pyspark.testing.utils import assertDataFrameEqual, assertSchemaEqual
 
 def keep_valid(df):
     return df.filter('id IS NOT NULL AND amount >= 0')
-
 actual = input_df.transform(keep_valid)
 assertDataFrameEqual(actual, expected_df)
 assertSchemaEqual(actual.schema, expected_df.schema)
 ```
 
-### 1.9 状態付きStreaming（新試験で明示、現行理解の補助）
-
-watermarkは処理タイムアウトではなくイベント時刻ベースの遅延と状態保持の管理。checkpointはオフセット・状態・コミット等の復旧情報。クエリごとに永続的で独立した場所を使います。
-
-| 概念 | 誤解しない点 |
-|---|---|
-| append / update / complete | 「新規行／更新された結果／全結果」。利用可否は演算・sinkと整合させる |
-| watermark | しきい値以内の遅延を守る保証と、それを超えた遅延の挙動を区別。正確な破棄時点を断定しない |
-| foreachBatch | **デフォルトat-least-once**。外部sinkにはbatchId等の冪等制御が必要 |
-| exactly-once | ソース・状態・sink全体の条件が必要。checkpointだけで外部APIの二重送信を防げない |
-
-根拠：[FOREACH]。新ガイドの「exactly-once状態復旧」と、任意の外部sinkのend-to-end保証を混同しないでください。
-
-## 2. コスト・性能最適化（現行13%／新15%）
-
-### 2.1 ★UC managed tablesが減らす運用
-
-管理対象テーブルはデータライフサイクルと最適化をプラットフォームと統合しやすい。外部テーブルは外部保存先の運用責務を持ちます。管理対象だから権限・課金・リカバリ設計が不要ではありません。新ガイドで明示されるPredictive OptimizationはUC管理対象テーブルの保守を自動化します。対応形式・計算資源・有効化条件を公式で確認し、「外部テーブルにも必ず適用」としません。[PO]
-
-### 2.2 ★最適化手法を症状から選ぶ
-
-| 症状・要件 | 主な候補 | 違う目的のもの |
+| 道具 | 役割 | 罠 |
 |---|---|---|
-| 小さなファイルが多く読み取りが非効率 | OPTIMIZEによるcompaction | VACUUMは小ファイル結合ではない |
-| フィルタ時に不要ファイルを読み過ぎる | 統計・データスキッピング・適切なクラスタリング | クラスタのCPU追加だけで不要I/Oは消えない |
-| 頻繁な行削除・更新による書き換え負担 | Deletion vectors | 即座の物理消去を保証しない |
-| 多様で変化する検索列に対応 | Liquid Clustering、条件が合えばCLUSTER BY AUTO | 高カーディナリティ列の細かすぎるpartitioningを避ける |
-| 変更分だけ下流へ伝搬 | CDF | OPTIMIZEだけでは更新・削除イベントは得られない |
+| assertDataFrameEqual / assertSchemaEqual | 期待結果・型の検証 | 行順やNULL/型の前提を明確に |
+| 組み込みデバッガー | breakpoint、step、変数確認 | 確認時点でPython用。全executorの状態が見える道具ではない |
+| 統合テスト | テーブル・権限・ジョブ連携 | 単体テストだけでは代替不可 |
 
-Liquid Clusteringは従来のpartitioning/ZORDERと同時に重ねるものではありません。同一テーブルでの互換性と移行条件を確認。キー変更後に既存全データが一瞬ですべて再配置されるという理解も誤りです。[LIQUID]
+**頻出・罠**：デバッガーで一度通すことと、自動回帰テストは別。Notebookデバッガーの対応compute/Runtimeは公式で確認。根拠：[TEST]、[DEBUGGER]。
 
-### 2.3 ★Data skipping / pruning / Query Profile
+## 2. コスト・性能最適化（現行Section 6：13%）
 
-「読み取ったファイル・バイトが多い」→フィルタと統計・データ配置。「特定taskだけ極端に遅い」→キー分布・スキュー。「shuffleやspillが大きい」→join/集約・データ量・メモリ。「小さい表とのjoin」→broadcast候補だが実サイズを確認。**計測→ボトルネック特定→変更→再計測**で答えを選びます。broadcastは大きな表を無条件に配布する命令ではありません。
+<a id="sec-2-1"></a>
+### 2.1 ★Unity Catalog managed tablesが運用を減らす理由
 
-### 2.4 ★CDFで更新・削除を伝搬
+**何か**：UCがメタデータだけでなくデータのライフサイクルも管理するテーブル。**なぜ**：ファイル配置、統計、保守を個々の開発者に任せると運用が増えるため。**仕組み**：プラットフォームの保守・最適化と統合し、権限をテーブル名で扱います。
+
+```sql
+CREATE TABLE main.study.orders (id BIGINT, amount DECIMAL(12,2)) USING DELTA;
+```
+
+| 種類 | 主な責務 |
+|---|---|
+| UC managed | UCが保存・ライフサイクル・最適化を管理 |
+| external | メタデータをUC管理、外部保存先の運用責務は残る |
+| foreign | 外部システム上のデータを表現 |
+
+**頻出・罠**：managedでも権限・保持・費用の設計は必要。外部テーブルにもmanaged専用の機能が必ず効くとは限りません。根拠：[MANAGED]、[PO]。
+
+<a id="sec-2-1-1"></a>
+#### 2.1.1 原文の継続項目：オーバーヘッドとメンテナンスの負担
+
+日本語PDFでは「理解する」の次に「オーバーヘッドとメンテナンスの負担。」が別の黒丸になっています。意味は2.1の継続と読み、見落としを防ぐため見出しを分けました。独立した新しい公式出題目標と断定するものではありません。
+
+**基礎**：保守負担はファイル整理・統計更新・安全な古いデータ削除等の作業量です。**頻出・罠**：自動化は保守を統合しますが、データ品質や法的保持要件の判断まで代行しません。SQL例・比較は2.1を参照。根拠：[MANAGED]、[PO]。
+
+<a id="sec-2-2"></a>
+### 2.2 ★Deletion vectors・Liquid Clustering等のDelta最適化
+
+**何か**：更新・削除時の書き換えや、読み取りのファイル量を減らす機能。**なぜ**：CPU追加だけではI/Oや小ファイルの負担を減らせないため。**仕組み**：DVは行の無効化を管理し、Liquidは検索パターンに沿うデータ配置、OPTIMIZEはファイル整理を担います。
+
+```sql
+OPTIMIZE main.study.orders;
+```
+
+| 手法 | 主な目的 | 罠 |
+|---|---|---|
+| OPTIMIZE | 小ファイルのcompaction等 | VACUUMと同じではない |
+| Deletion vectors | 行変更の書き換え負担抑制 | 即時物理消去ではない |
+| Liquid Clustering | データ配置・検索効率 | partition/ZORDERと無条件に併用不可 |
+
+**頻出・罠**：問題の症状が更新書き換え、ファイル数、不要スキャンのどれかを見分けます。根拠：[LIQUID]、[DV]、[OPTIMIZE]。
+
+<a id="sec-2-3"></a>
+### 2.3 ★Data skippingとfile pruningの仕組み
+
+**何か**：クエリに不要なファイルを読まない最適化。**なぜ**：大規模データではI/O量が支配的になりやすいため。**仕組み**：フィルタと統計、partitionやデータ配置を使い、対象を絞り込みます。
+
+```sql
+SELECT SUM(amount) FROM main.study.orders
+WHERE order_date >= DATE '2026-11-01' AND order_date < DATE '2026-12-01';
+```
+
+| 観測 | 確認すること |
+|---|---|
+| 対象が少ないのにスキャンが多い | フィルタ、統計、配置 |
+| 絞り込み列へ複雑な変換を適用 | predicateが最適化されるか実行計画で確認 |
+
+**頻出・罠**：結果の行数と読んだファイル量は別。高カーディナリティ列で過細分化すると小ファイル問題も起こります。根拠：[SKIPPING]、[QUERY]。
+
+<a id="sec-2-4"></a>
+### 2.4 ★CDFでStreaming Tableの変更追跡制限と遅延に対処
+
+**何か**：Deltaの行変更を公開するChange Data Feed。**なぜ**：通常のappendストリームでは更新・削除を下流へ正しく伝えられないため。**仕組み**：変更種別・commit情報を読み、必要な更新・削除を適用します。
 
 ```sql
 ALTER TABLE main.study.orders
 SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
--- CDFを有効化した後の有効な履歴versionを指定する。
-SELECT _change_type, _commit_version, order_id
+SELECT _change_type, _commit_version, id
 FROM table_changes('main.study.orders', 12, 15);
 ```
 
-`insert / delete / update_preimage / update_postimage`を解釈。集計・最新状態への適用でpreimageとpostimageを両方新規売上として足さないこと。有効化前の変更が後から全部復元できるわけではありません。CDFは保持期間の制約があり、永続の監査履歴の代替ではありません。[CDF]
+| 種別 | 現在状態への適用の考え方 |
+|---|---|
+| insert / update_postimage | 新規作成・更新後を反映 |
+| delete | 対象を削除 |
+| update_preimage | 更新前。用途に応じ処理、単純な新規売上として足さない |
 
-### 2.5 Liquid / partition / ZORDERの比較
+**頻出・罠**：有効化前の全変更を復元する機能ではありません。保持期間と下流遅延を整合させ、永久監査履歴とは区別。CDFを読むだけでターゲットへ自動適用されるわけでもありません。根拠：[CDF]。
 
-| 方法 | 判断の軸 | 落とし穴 |
-|---|---|---|
-| partition | 安定した低〜中カーディナリティ、適切なpartitionサイズ | user_id等で過度に細分化すると小ファイル問題 |
-| ZORDER | 非LiquidのDeltaで複数検索列へのデータ配置 | Liquidと同時適用しない |
-| Liquid Clustering | 検索パターンの変化、データ偏り、配置柔軟性 | すべての遅延が配置だけで解消するわけではない |
+<a id="sec-2-5"></a>
+### 2.5 ★Query Profileでdata skipping・join・shuffleを分析
 
-### 2.6 キャッシュ（新試験で明示）
+**何か**：SQLの演算子やI/O、実行時間を観察する道具。**なぜ**：遅い理由を測定せずに設定を変えても、費用だけ増えるため。**仕組み**：スキャン、join、shuffle、spill等を追い、改善後に再計測します。
 
-disk/Delta cacheは繰り返し読むファイルのI/O、Spark cacheはDataFrameの再利用、SQL結果キャッシュはクエリ結果の再利用と目的が違います。初回読み取り・動的な外部更新・計算資源の入れ替えまで万能ではありません。まず無駄なスキャン／shuffleを減らしてから再利用を考えます。
+```sql
+EXPLAIN FORMATTED
+SELECT f.id, d.category FROM main.study.orders f
+JOIN main.study.products d ON f.product_id = d.product_id;
+```
 
-## 3. 変換・クレンジング・品質（現行10%／新「データ操作」12%）
+| 症状 | 第一に検討 |
+|---|---|
+| 大量スキャン | pruning・統計・配置 |
+| 一部taskだけ極端に遅い | キー偏り・skew |
+| 大きなshuffle/spill | join/集約のデータ量・戦略・メモリ |
 
-### 3.1 ★Window / join / aggregation
+**頻出・罠**：broadcastは小さい側の実サイズと資源を確認。何でも巨大クラスタ化、何でもbroadcastは避けます。根拠：[QUERY]。
 
-最新1件抽出は `row_number` と**決定的な同順位の解消**。`rank`では同順位が複数行残り得ます。joinはキーの一意性とNULLを先に確認。多対多join後のSUMは意図せず膨らみます。WHEREでouter join先の列を絞ると実質inner joinになるケースに注意。
+## 3. 変換・クレンジング・品質（現行Section 3：10%）
+
+<a id="sec-3-1"></a>
+### 3.1 ★Window関数・join・aggregationによる大規模変換
+
+**何か**：Windowは行を残してグループ内の順序・集計を計算し、GROUP BYは粒度を変え、joinは関係を結びます。**なぜ**：似た出力でも重複・NULL・期間の意味で誤集計するため。**仕組み**：粒度、キー一意性、順序、window frameを先に決めます。
 
 ```sql
 SELECT * EXCEPT (rn) FROM (
-  SELECT *, row_number() OVER (
+  SELECT *, ROW_NUMBER() OVER (
     PARTITION BY customer_id ORDER BY changed_at DESC, event_id DESC
-  ) AS rn
-  FROM main.study.customer_events
+  ) AS rn FROM main.study.customer_events
 ) WHERE rn = 1;
 ```
 
-集約前の行フィルタはWHERE、集約後の条件はHAVING。`count(*)` と `count(nullable_col)` はNULLに対する挙動が異なります。
-
-### 3.2 ★不正データの隔離：パイプラインとクラシックAuto Loader
-
-| 方法 | 違反行 | 他の正常行 | 適した要件 |
-|---|---|---|---|
-| EXPECT（既定の記録） | 残す・メトリクス記録 | 処理継続 | 観測してからルールを強化 |
-| ON VIOLATION DROP ROW | 捨てる | 処理継続 | 品質未達行は不要 |
-| ON VIOLATION FAIL UPDATE | 更新を失敗 | 対象フローの更新を止める | 不整合を公開してはいけない |
-| quarantine分岐 | 不正側へ保存 | 正常側へ保存 | 後で原因分析・再処理が必要 |
-
-```sql
-CREATE OR REFRESH STREAMING TABLE main.study.valid_orders (
-  CONSTRAINT positive_amount EXPECT (amount >= 0) ON VIOLATION DROP ROW
-) AS SELECT * FROM STREAM(main.study.raw_orders);
-```
-
-★DROPは隔離ではありません。隔離が要件なら、同じルールから正常・不正の二つの出力を設計します。`NOT (条件)` でNULLがUNKNOWNになってどちらにも入らない事故に注意し、`coalesce(条件, false)` 等で意味を明確にします。クラシックAuto Loaderの `_rescued_data` は型不一致や未知の列等の救済情報であり、負の売上などの業務品質を自動判定する列ではありません。[EXPECT]
-
-### 3.3 新試験追加の半構造化・AI関数（今週は後回し可）
-
-VARIANTは揺れるJSON構造の保持とパス抽出。単なる正規表現処理に置換しない。`parse_json`の失敗と、パスがない／JSON nullの違いを確認します。[VARIANT]
-
-```sql
-WITH x AS (SELECT parse_json('{"customer":{"id":42}}') AS payload)
-SELECT variant_get(payload, '$.customer.id', 'INT') AS id FROM x;
-```
-
-`ai_query`等のAI Functionsは推論呼び出し。ルールベース判定で足りるものまで使わず、機密データの送信・モデル権限・コスト・失敗処理・出力の品質検証を含めて設計します。新試験で明示された論点であり、現行範囲の拡張を勝手に断定しません。
-
-## 4. 監視・アラート（現行10%／新10%）
-
-### 4.1 ★System tablesと診断ツールの役割
-
-| 確認したいもの | 最初に見るもの |
+| 道具 | 要確認の契約 |
 |---|---|
-| 期間・ワークロード別の利用量 | `system.billing.usage`。金額換算は価格・期間等を確認 |
-| 誰がどの操作をしたか | `system.access.audit`等の監査情報 |
-| ジョブの実行・タスク推移 | Jobs UI/API、`system.lakeflow`の関連テーブル |
-| パイプラインの品質違反・flow状態 | Pipeline event log |
-| クエリ演算子の時間・スキャン・shuffle | Query Profile |
-| Sparkのstage/task、スキュー、spill | Spark UI |
-| import例外・driver起動失敗 | driver/cluster logsとタスク出力 |
+| ROW_NUMBER / RANK | 一件だけ残すか、同順位を残すか |
+| ROWS / RANGE frame | 物理行ベースか、順序値ベースか |
+| LEFT JOIN | 右側のWHERE条件で実質innerにならないか |
+| SUM / COUNT | NULL、重複、join後の粒度 |
+
+**頻出・罠**：非一意dimensionをjoinしてSUMすると金額が膨らみます。SUM(DISTINCT amount)は正しいキー対応の代わりではありません。集約前のWHEREと集約後のHAVINGを区別。根拠：[WINDOW]、[JOIN]。
+
+<a id="sec-3-2"></a>
+### 3.2 ★LakeflowとクラシックAuto Loaderで不正データを隔離
+
+**何か**：正常データと不正データを分離し、検証・修復可能にする品質設計。**なぜ**：破棄だけでは原因分析や再処理の要件を満たさないため。**仕組み**：同じ品質規則からvalidフラグを作り、正常・隔離の二系統へ分岐します。
 
 ```sql
-SELECT usage_date, sku_name, SUM(usage_quantity) AS quantity
-FROM system.billing.usage
-GROUP BY usage_date, sku_name;
+SELECT *, coalesce(amount >= 0 AND customer_id IS NOT NULL, false) AS valid
+FROM main.study.raw_orders;
 ```
 
-これは利用量であってドルではありません。単位の異なるSKUを無差別に合計して「コスト」と呼ばないこと。価格表と結合する場合はSKU・クラウド・価格有効期間・通貨等を確認。利用可能なsystem tableは権限・リージョン・提供状態に依存します。[SYSTEM]
+| 方法 | 違反行 | 影響 |
+|---|---|---|
+| EXPECT（記録） | 保持 | メトリクスで観測 |
+| DROP ROW | 破棄 | 他の正常行は継続 |
+| FAIL UPDATE | 更新を失敗 | 不整合の公開を止める |
+| quarantine | 別出力へ保存 | 原因分析・再処理を可能に |
 
-### 4.2 ★REST API / CLI / SDKでジョブ・パイプラインを監視
+**頻出・罠**：`NOT(condition)`はNULLを自動的にtrueにしません。`_rescued_data`は解析・スキーマの救済で、負額等の業務ルールを自動判定しません。クラシックではforeachBatch等で分岐先と再実行の冪等性を設計し、複数出力が自動で一つの原子的更新になると考えない。根拠：[EXPECT]、[AUTO]、[FOREACH]。
 
-ジョブ定義ID、実行ID、タスク実行を区別。UIで原因を追い、継続監視にはAPI/CLI/SDKの取得結果を使います。「APIが200だった」ことと「実行が成功した」ことは別です。runのlife-cycle、result、taskの状態を確認します。
+## 4. モニタリング・アラート（現行Section 5：10%）
 
-### 4.3 ★イベントログで品質とflowを確認
+<a id="sec-4-a"></a>
+### 4.A モニタリング
 
-品質違反が増えたなら期待条件・失敗行数・flow進捗を調べる。請求の全体傾向をイベントログだけで代替しません。複数の観測源を実行ID・時間帯で関連づけます。ログを読む権限と元データを読む権限を混同しないこと。
+モニタリングは継続的に状態・品質・費用を把握する工程です。アプリの成功終了、データ品質の達成、予算内であることは別の観測対象であり、単一のログだけではすべてを証明できません。
 
-### 4.4 ★SQL AlertsとJob通知
+<a id="sec-4-1"></a>
+#### 4.1 ★system tablesでリソース・費用・監査・ワークロードを観測
 
-SQL結果のしきい値評価と、ジョブ失敗・所要時間の通知は役割が違います。品質ゼロ件も異常か、遅延更新のテーブルを読んでいないか、実行頻度と評価窓が合うかを設計。SQLが正しいだけでは通知先・評価スケジュールまで正しいとはいえません。新ガイドはLakehouse alertsを広い監視領域として記載します。
-
-## 5. セキュリティ・コンプライアンス（現行10%／新8%）
-
-### 5.1 ★最小権限：UCとワークスペースACL
-
-ジョブの実行権限、ノートブックの編集権限、データのSELECT権限、クラウド認証は別です。個人でなく適切なグループ／サービスプリンシパルに必要な範囲だけ付与します。
+**何か**：Databricks運用情報をUC上でクエリ可能にしたテーブル群。**なぜ**：個々の画面やログを集めるだけでは横断分析が難しいため。**仕組み**：billing、compute、access、lakeflow等を適切なキーと時間で関連づけます。
 
 ```sql
+SELECT usage_date, sku_name, usage_unit, SUM(usage_quantity) AS quantity
+FROM system.billing.usage
+GROUP BY usage_date, sku_name, usage_unit;
+```
+
+| 対象 | 主な参照先 |
+|---|---|
+| 利用量 | system.billing.usage |
+| 監査 | system.access.audit等 |
+| ジョブ実行 | system.lakeflowの関連テーブル |
+
+**頻出・罠**：利用量≠ドル。価格と結合するならSKU・クラウド・有効期間・通貨等を確認。system tableの権限・提供リージョン・保持条件は個別に確認します。根拠：[SYSTEM]。
+
+<a id="sec-4-2"></a>
+#### 4.2 ★Query Profiler UIとSpark UIでワークロードを監視
+
+**何か**：Query Profileはクエリの演算計画、Spark UIはjob/stage/task等の実行情報。**なぜ**：スキャン過多と一部taskのスキューでは観察すべき粒度が違うため。**仕組み**：時間帯・run・クエリを対応づけ、分布とボトルネックを確認します。
+
+| 道具 | 向く問い | 代用できないもの |
+|---|---|---|
+| Query Profile | どのSQL演算子が重いか | 全社の課金集計 |
+| Spark UI | 特定taskの遅延・spill・偏り | 品質ルールごとの違反数 |
+| system tables | 横断的な傾向 | すべての局所的な実行詳細 |
+
+```sql
+EXPLAIN FORMATTED SELECT customer_id, SUM(amount)
+FROM main.study.orders GROUP BY customer_id;
+```
+
+**頻出・罠**：EXPLAINは計画であり実測値ではありません。計画とUIの実行結果を合わせて確認。根拠：[QUERY]、[SPARKUI]。
+
+<a id="sec-4-3"></a>
+#### 4.3 ★REST API・CLIでジョブ／パイプラインを監視
+
+**何か**：運用情報をプログラムから取得する公開インターフェース。**なぜ**：人手で画面を見続けずに継続監視するため。**仕組み**：ジョブ定義とrunを区別し、非同期状態を取得、必要なtask結果を判定します。
+
+```bash
+databricks jobs get-run <run-id>
+databricks pipelines get <pipeline-id>
+```
+
+**頻出・罠**：HTTP 200は情報取得の成功。runのライフサイクル／resultやflowの更新結果は別です。定義IDと実行IDの取り違え、ページング・取得間隔・権限にも注意。根拠：[JOBS]、[CLI]。
+
+<a id="sec-4-4"></a>
+#### 4.4 ★Lakeflow Pipeline event logで健全性と品質を監視
+
+**何か**：パイプラインの更新・flow・品質等のイベント情報。**なぜ**：ジョブが成功しても大量のDROPがあればデータ品質は悪化しているため。**仕組み**：イベントの種類、実行、flow、期待条件のメトリクスを関連づけます。
+
+```sql
+-- pipeline_idと参照権限がある演習環境の例。
+SELECT timestamp, event_type, details
+FROM event_log('<pipeline-id>')
+ORDER BY timestamp DESC;
+```
+
+| 調査対象 | event logが役立つ点 |
+|---|---|
+| DROP行の増加 | 期待条件ごとの品質統計 |
+| 更新失敗 | 対象flow・エラーの文脈 |
+
+**頻出・罠**：公式はevent deliveryがbest-effortであり、全イベントの到達を保証しないと説明しています。品質メトリクスにも利用条件があります。event logは全社の請求台帳ではありません。event logへの権限と元テーブルの権限も同義ではない。根拠：[EVENTLOG]。
+
+<a id="sec-4-b"></a>
+### 4.B アラート通知
+
+通知は観測結果を担当者へ届ける工程です。しきい値の評価、鮮度、実行時刻、宛先、ミュート条件が揃って初めて運用上の検知になります。
+
+<a id="sec-4-5"></a>
+#### 4.5 ★SQL Alertsによるデータ品質監視
+
+**何か**：SQL結果を条件評価して通知する機能。**なぜ**：正常終了でも欠損や件数異常を検出する必要があるため。**仕組み**：不正件数や鮮度をクエリにし、評価タイミング・閾値・通知先を設計します。
+
+```sql
+SELECT count_if(amount < 0 OR amount IS NULL) AS invalid_rows,
+       MAX(ingested_at) AS last_ingest
+FROM main.study.orders;
+```
+
+**頻出・罠**：古い正常値を毎分評価しても、当日のデータ未着を発見できません。ゼロ行を正常とするか欠測とするかを決める。品質検査SQLと通知設定は別工程です。新ガイドはLakehouse alertsという広い表記も使用。根拠：[ALERT]。
+
+<a id="sec-4-6"></a>
+#### 4.6 ★Lakeflow JobsのUI／Jobs APIで状態・性能の通知を設定
+
+**何か**：ジョブやタスクの開始・成功・失敗・実行時間等に基づく通知。**なぜ**：業務データの条件だけでなく実行障害・遅延を知るため。**仕組み**：job-level/task-level、duration閾値、宛先、retry時の通知条件を分けて設定します。
+
+| 条件 | 設計ポイント |
+|---|---|
+| タスク再試行ごとの失敗を検知 | task-level通知とmute条件 |
+| ジョブ全体の長時間化 | expected durationとDuration Warning |
+| 一部失敗を含む成功状態 | 通知イベントと実際のresultの意味 |
+
+```text
+通知設計票：対象(job/task) → イベント → 閾値 → 宛先 → 再試行中のmute
+```
+
+**頻出・罠**：公式はjob-level通知が失敗タスクのretryごとには送られないと説明。Succeeded with failuresは通知上の成功として扱われる点に注意。Slack等への実通知は本教材では送信しません。根拠：[NOTIFY]。
+
+## 5. セキュリティ・コンプライアンス（現行Section 7：10%）
+
+<a id="sec-5-a"></a>
+### 5.A データセキュリティメカニズムの適用
+
+認証は「誰か」、認可は「何をしてよいか」です。ワークスペースのジョブ・ノートブックと、UCのデータには異なるアクセス制御があります。行・列の可視制御と、保存データの削除も分けます。
+
+<a id="sec-5-1"></a>
+#### 5.1 ★Workspace ACLと最小権限
+
+**何か**：ジョブ・ノートブック等に対する閲覧・実行・編集等の許可。**なぜ**：データを読めることと本番ジョブを変更できることは異なるため。**仕組み**：グループやサービスプリンシパルへ必要な操作だけ付与し、ジョブ実行主体のデータ権限も確認します。
+
+| 層 | 保護するもの |
+|---|---|
+| Workspace ACL | ジョブ・ノートブック等 |
+| UC権限 | catalog/schema/table等 |
+| クラウド側認証 | ストレージや外部サービス |
+
+```sql
+-- データ読取り側の最小例。これだけでジョブ編集権限は得ない。
 GRANT USE CATALOG ON CATALOG main TO `study_analysts`;
 GRANT USE SCHEMA ON SCHEMA main.study TO `study_analysts`;
 GRANT SELECT ON TABLE main.study.orders TO `study_analysts`;
 ```
 
-★テーブルにSELECTがあっても親のUSE CATALOG / USE SCHEMAが必要。逆にUSEだけでは行データを読めません。必要以上にcatalog全体へSELECTを広げるのは最小権限ではありません。[PRIV]
+**頻出・罠**：SELECTがあっても親のUSE権限が必要。ジョブを起動する権限とrun-as主体の権限を混同しない。根拠：[ACL]、[PRIV]。
 
-### 5.2 ★行フィルタ・列マスク／ABAC
+<a id="sec-5-2"></a>
+#### 5.2 ★行フィルターと列マスク
 
-| 要件 | 制御 |
+**何か**：行フィルターは見える行、列マスクは見える列値を制御。**なぜ**：全行の集計は許すがPIIは伏せる等の要件を満たすため。**仕組み**：利用者の属性等に応じる関数・ポリシーをテーブル／列へ適用します。
+
+| 要件 | 選択 |
 |---|---|
-| 部門ごとに見える行を変える | 行フィルタ／適切な動的ビュー |
-| 同じ行のPII列だけ隠す | 列マスク |
-| 多数のテーブルにタグ基準で統一ポリシー | ABAC（新アウトラインで明示） |
+| 自部門の行だけ | 行フィルター |
+| 全取引は見せるがemailを伏せる | 列マスク |
+| 複数テーブルにタグで統一制御 | ABACは新試験で明示、対応条件を確認 |
 
-マスクは利用時の表示制御であり、保存ファイルの物理消去ではありません。マスクされたSELECT結果だけで生データへの別経路の権限が安全とは判断しません。ABACは通常のコメント・タグを付けるだけで成立するわけではなく、governed tagsとポリシーを設計します。[ABAC]
-
-### 5.3 ★匿名化と仮名化を区別
-
-ハッシュ化：同じ入力が同じ値になるなら結合・追跡はできるが、辞書攻撃や再識別リスクを残す。トークン化：置換と対応管理。抑制：値・列を出さない。一般化：年齢を範囲、位置を粗くするなど。**ハッシュ化＝不可逆だから必ず法的匿名化**とは答えません。用途と再識別可能性で判断します。
-
-### 5.4 ★PII検出とバッチ・Streamingの制御
-
-検出は所在を発見する工程、マスキングは利用制御、削除は保持制御。検出しただけでは保護は完了しません。bronze→silver→gold、隔離テーブル、再処理入力、ログにPIIが漏れないかを一貫して追います。取り込み経路が複数でも同じポリシーを適用する設計が必要です。
-
-### 5.5 ★消去要求：DELETEで終わらない
-
-1. 対象者・キーとbronze/silver/gold/派生物の範囲を特定。
-2. 論理削除を実施し、CDCや再取り込みによる復活を防ぐ。
-3. 旧ファイル・履歴・削除ベクター・バックアップ・外部共有先を保持ルールと照合。
-4. 必要な物理再書き込み（対応テーブルではREORG等）と、安全な保持期間後のVACUUMを検討。
-5. 監査証跡・実施結果と、他の実行中読み取りへの影響を確認。
-
-★DELETEは論理的非表示、VACUUMは不要な古いデータファイルの削除。**ゼロ時間VACUUMを無条件に選ばない**。復旧・長時間実行・ストリームの遅延読取りを壊し得ます。法令の期限とプラットフォームの保持・複製条件を担当者と確認します。[VACUUM]
-
-## 6. デバッグ・デプロイ（現行10%／新10%）
-
-### 6.1 ★診断情報の選択
-
-OOMならdriverかexecutorか、スキューか、collectしすぎか、データ量増加かを切り分け。ModuleNotFoundErrorならインストール先・タスク環境・importパス。権限エラーなら実行主体とUC／ワークスペース／クラウド側を分けます。遅延は待ち時間・起動・実処理・外部I/Oに分解。データ品質の原因にはPipeline event logと入力の変化を確認します。
-
-### 6.2 ★repair run / パラメーターのoverride
-
-上流が成功・下流だけ失敗した時、原因を直して失敗タスクと必要な依存タスクをrepairする方法を検討。毎回全タスクを再実行して副作用を増やさない。パラメーター変更は再処理範囲を明確にし、先に成功した出力との整合を確認。repairはコードのバグを自動修正しません。
-
-### 6.3 ★Bundleを使った再現可能なデプロイ
-
-```yaml
-# 構造の最小例。実際のリソース定義はresources/に配置。
-bundle:
-  name: dep-study
-include:
-  - resources/*.yml
-targets:
-  dev:
-    mode: development
-    default: true
-  prod:
-    mode: production
+```sql
+-- 専用演習環境の例。関数と列の型・適用権限を先に確認。
+CREATE OR REPLACE FUNCTION main.study.mask_email(s STRING)
+RETURNS STRING
+RETURN CASE WHEN is_account_group_member('pii_readers') THEN s ELSE '***' END;
+ALTER TABLE main.study.customers ALTER COLUMN email
+SET MASK main.study.mask_email;
 ```
 
+**頻出・罠**：マスクは物理消去ではない。動的ビューだけ保護しても元テーブルへの別経路が開いていれば要件を満たさない。根拠：[MASK]。
+
+<a id="sec-5-3"></a>
+#### 5.3 ★ハッシュ化・トークン化・抑制・一般化
+
+**何か**：識別情報を加工する方法。**なぜ**：分析の有用性を保ちながら個人の識別リスクを下げるため。**仕組み**：用途に応じ、置換・削除・粒度低下等を選びます。
+
+| 方法 | 使い方 | 注意 |
+|---|---|---|
+| ハッシュ化 | 一貫した置換で照合 | 辞書攻撃・再識別。匿名化とは限らない |
+| トークン化 | 代替値へ置換 | 対応表と鍵の保護 |
+| 抑制 | 不要な値や列を出さない | 分析可能性が減る |
+| 一般化 | 年齢帯等へ粒度を落とす | 組み合わせによる再識別 |
+
+```sql
+SELECT sha2(email, 256) AS email_hash FROM main.study.customers;
+```
+
+**頻出・罠**：例のハッシュだけで「完全匿名化」と主張しない。決定的ハッシュは同じ入力を照合でき、候補が狭い入力は推測可能です。法的分類は再識別可能性と利用条件で評価。根拠：[MASK]。
+
+<a id="sec-5-b"></a>
+### 5.B コンプライアンスの確保
+
+技術設定だけでなく、情報の所在、利用目的、保持期限、削除・監査の手順を一貫させることです。特定の関数を使っただけで法令遵守が完了するわけではありません。
+
+<a id="sec-5-4"></a>
+#### 5.4 ★PIIを検出・マスクするバッチ／Streamingパイプライン
+
+**何か**：PIIの所在を把握し、各経路で保護する設計。**なぜ**：silverだけマスクしてもbronze、隔離、ログ等に漏れ得るため。**仕組み**：分類→アクセス制御→マスク→観測を、再処理を含む全経路へ適用します。
+
+```text
+入力 → bronze → 検証・隔離 → silver → gold
+           各保存物・ログ・再処理入力に同じ保護方針を適用
+```
+
+| 工程 | 達成すること | それだけでは未達のもの |
+|---|---|---|
+| PII検出 | 所在の発見 | アクセス拒否 |
+| マスク | 利用時の可視制御 | 原本の消去 |
+| 監査 | 利用の追跡 | 不正利用の自動防止すべて |
+
+**頻出・罠**：バッチだけにルールを適用し、ストリームの別入口を放置しない。検査のエラー出力やサンプルログにも実値を書き過ぎない。根拠：[CLASSIFY]、[MASK]。
+
+<a id="sec-5-5"></a>
+#### 5.5 ★保持ポリシーに準拠したパージ
+
+**何か**：不要な個人データ等を安全に削除するライフサイクル管理。**なぜ**：SQLのDELETEだけでは古いファイルや再取り込み経路が残るため。**仕組み**：対象範囲を洗い出し、論理削除・再導入防止・物理整理・保持・監査を組み合わせます。
+
+```sql
+-- 例示。対象と保持要件を確認した専用環境でのみ実行する。
+DELETE FROM main.study.customers WHERE customer_id = 123;
+-- 旧ファイル整理は長時間読み取りや保持規則の確認後に検討する。
+```
+
+| 操作 | 意味 |
+|---|---|
+| DELETE | 現在の論理状態から除去 |
+| 必要なREORG等 | DV等で残るデータの物理再書き込みを検討 |
+| VACUUM | 保持条件を満たした不要ファイルを削除 |
+
+**頻出・罠**：ゼロ時間保持でのVACUUMを一般解にしない。bronze/silver/gold、バックアップ、共有先、再処理の復活も対象範囲に含めます。根拠：[VACUUM]、[DV]。
+
+## 6. デバッグ・デプロイ（現行Section 9：10%）
+
+<a id="sec-6-a"></a>
+### 6.A デバッグとトラブルシューティング
+
+デバッグは失敗した層を特定し、根拠を集めて原因を狭める工程です。driver、executor、外部I/O、認可、品質、依存関係のどこで止まったかを先に確認します。
+
+<a id="sec-6-1"></a>
+#### 6.1 ★Spark UI・cluster logs・system tables・Query Profileを使う診断
+
+**何か**：異なる粒度の診断情報を組み合わせる方法。**なぜ**：import例外をshuffle指標で調べても原因は見つからないため。**仕組み**：失敗の段階と実行ID・時刻を揃えて追います。
+
+| 症状 | まず確認 |
+|---|---|
+| import時に失敗 | タスク出力・driver logs・依存 |
+| 一部taskの遅延 | Spark UI、キー分布 |
+| SQLの大量スキャン | Query Profile |
+| 長期的な実行・費用増加 | system tables |
+
+```python
+# driverへ全件collectせず、小さな再現入力で切り分ける。
+small = spark.createDataFrame([(1, 10.0)], 'id long, amount double')
+small.explain('formatted')
+```
+
+**頻出・罠**：OOMはdriverかexecutorかを区別。大きなcollectやスキューを資源追加だけで隠さない。根拠：[SPARKUI]、[QUERY]、[SYSTEM]。
+
+<a id="sec-6-2"></a>
+#### 6.2 ★失敗runの修復とパラメーターoverride
+
+**何か**：原因修正後、必要なタスクを選んで実行を回復する仕組み。**なぜ**：成功した高コストな上流まで毎回再実行すると副作用と費用が増えるため。**仕組み**：repair対象・後続依存・再処理範囲のパラメーターを確認し、既存出力との整合を保ちます。
+
+```text
+A成功 → B失敗 → C未実行
+原因修正 → Bと必要なCをrepair
+期間引数を変える場合 → Aの既存出力と処理範囲が整合するか確認
+```
+
+**頻出・罠**：repairはバグの自動修正ではありません。引数を変えたのに既存checkpointや出力の意味を見直さないと不整合になります。根拠：[REPAIR]。
+
+<a id="sec-6-3"></a>
+#### 6.3 ★Pipeline event logとSpark UIでLakeflow／Sparkをデバッグ
+
+**何か**：flowの失敗理由と分散実行のボトルネックを結びつける調査。**なぜ**：品質ルール違反とshuffleのメモリ不足では修正が異なるため。**仕組み**：event logで対象flow・期待条件・エラーを絞り、必要ならSpark UIや入力サンプルで確認します。
+
+```sql
+SELECT timestamp, event_type, details
+FROM event_log('<pipeline-id>')
+WHERE event_type IN ('flow_progress', 'update_progress')
+ORDER BY timestamp DESC;
+```
+
+**頻出・罠**：FAIL UPDATEのエラーを無条件にDROPへ変えて隠さない。原因が品質なら入力／規則、資源なら実行計画と分布を調べます。根拠：[EVENTLOG]、[SPARKUI]。
+
+<a id="sec-6-b"></a>
+### 6.B CI/CDのデプロイ
+
+CIは変更を検証する工程、CDは検証した成果物を環境へ配備する工程です。Gitに置いただけ、validateが通っただけでは、本番の設定・依存・権限・業務結果は保証されません。
+
+<a id="sec-6-4"></a>
+#### 6.4 ★Declarative Automation Bundlesでリソースをbuild/deploy
+
+**何か**：ジョブ等のリソースと環境差を宣言する仕組み。**なぜ**：UIでの手作業の差を減らし、同じ定義を昇格するため。**仕組み**：`databricks.yml`、resources、targetsをソース管理し、検証・配備・実行を分離します。
+
 ```bash
-# 例示のみ。本教材はDatabricks環境へのデプロイを実行しない。
 databricks bundle validate -t dev
 databricks bundle deploy -t dev
 databricks bundle run -t dev <resource-key>
 ```
 
-validateは設定の妥当性、deployはリソース配備、runは実行。validateだけでは業務データの正しさは保証しません。CIはテストと検証、CDは承認と環境の分離を含める。バンドルのdeploy stateを異なるプロジェクトで共有しない設計にします。[BUNDLE]
+| 工程 | 保証する範囲 |
+|---|---|
+| validate | 設定の検証 |
+| deploy | リソースの配備 |
+| run | ワークロード実行の開始・追跡 |
 
-### 6.4 ★Git folders（旧Repos）をCI/CDへつなぐ
+**頻出・罠**：validateは業務品質テストではありません。環境の保存先・実行主体・アクセス権、deploy stateの分離まで確認。根拠：[BUNDLE]。
 
-レビュー済みのコミット／タグとデプロイ成果物を追跡。Git pullだけでジョブ設定やライブラリがすべて一致したと考えない。devとprodはパラメーター・データ先・権限を分離し、同じソースを昇格します。prodのノートブックをその場で修正してGitへ戻さない運用を避けます。
+<a id="sec-6-5"></a>
+#### 6.5 ★Git folders（旧Repos）によるGitベースCI/CD
 
-## 7. 取り込み・取得（現行7%／新12%）
+**何か**：コード変更を履歴・レビュー・配備へつなげる運用。**なぜ**：本番UI上の手動修正とGitが乖離すると次の配備で消えるため。**仕組み**：特定コミットやタグをテストし、同じソースを環境別設定で昇格します。
 
-### 7.1 ★ソースとフォーマットから入口を決める
-
-| ソース／目的 | 入口の候補 | 注意 |
-|---|---|---|
-| クラウドストレージへの継続的ファイル到着 | Auto Loader | フォーマット・スキーマ・救済列・到着検出を設計 |
-| Kafka等のイベントバス | 対応Structured Streamingコネクタ | オフセットとイベント重複、認証を区別 |
-| 小規模な既存ファイルの一括処理 | バッチ読取り等 | わざわざ常時ストリーム化しない |
-| RDBMSの更新・削除まで取り込む | 新アウトラインはLakeflow Connectのmanaged CDCを明示 | JDBC全件上書きはCDCと同じではない |
-
-現行の列挙はDelta / Parquet / ORC / AVRO / JSON / CSV / XML / Text / Binary。**列挙されるすべてが同じAuto Loaderオプションで読めるという意味ではありません**。必要なコネクタと読取り方式を選びます。新ガイドはIcebergを明示。クラウド別の対応差をAWSの例から全環境へ一般化しません。[CONNECT]
-
-### 7.2 ★Deltaの追記パイプラインと更新の違い
-
-追記専用の上流から増分読取りする設計と、UPDATE/DELETEがある上流の読取りを分ける。変更コミットをスキップすれば下流も正しく更新される、とは限りません。下流への変更反映が要件ならCDFやCDCを検討。チェックポイント削除による全再取込みは重複と再処理の影響を伴います。
-
-### 7.3 スキーマと救済データ
-
-推論スキーマの保存、意図的な型の指定、スキーマ進化、想定外データの救済を区別。新規列の到着と、既存列が不正な値になることは別の故障です。`_rescued_data`をそのまま破棄する前に監視・隔離と再処理の要件を確認します。
-
-## 8. ガバナンス（現行7%／新5%）
-
-### 8.1 ★コメント・タグ・データ発見性
-
-コメントは意味・所有者・更新頻度・制約の説明、タグは分類や検索の一貫した属性。タグを付けただけでSELECTが許可／拒否されるわけではありません。governed tagとABACポリシーが結びつくケースを区別。個人情報そのものをタグやコメントに記録しないこと。
-
-```sql
-COMMENT ON TABLE main.study.orders IS '注文単位の検証済みデータ。個人情報列は別途制御。';
+```text
+変更 → PR/レビュー → 単体・統合テスト → Bundle検証
+     → dev/staging配備 → 承認 → 同一コミットをprodへ
 ```
 
-### 8.2 ★権限継承：親から将来の子へ、ただし万能でない
+**頻出・罠**：Git pullだけでジョブ設定・依存・権限がすべて同期されるとは限りません。秘密情報をGitへ入れず、環境差は設定に分離。根拠：[GIT]、[BUNDLE]。
 
-catalog/schemaへの適用可能な権限は配下の現在・将来の対象へ継承されます。テーブルだけのSELECT付与が親のUSEまで自動付与するわけではありません。親のSELECTを持つなら子の個別GRANTを外すだけでアクセスを止められると考えないこと。どこから権限が来たか、グループ所属も調べます。
+## 7. 取り込み・取得（現行Section 2：7%）
 
-★所有権・MANAGE・ALL PRIVILEGES・実際のデータ操作権限を同一視しない。権限によって継承可能な対象が違うためリファレンスを確認。[PRIV]
+<a id="sec-7-1"></a>
+### 7.1 ★メッセージバス／クラウドから各種フォーマットを取り込む
 
-## 9. モデリング（現行ページ6%／現行日本語PDF7%：要確認、新5%）
+**何か**：入力源とフォーマットに対応する読取り方式を選ぶ設計。**なぜ**：ファイルとメッセージバスでは進捗・認証・スキーマの扱いが違うため。**仕組み**：ソースコネクタで取り込み、フォーマットのreaderで解釈、状態と救済を管理します。
 
-### 9.1 ★粒度とデータ配置
+| 現行Outlineの形式 | 読み方の軸 |
+|---|---|
+| Delta Lake / Parquet / ORC / AVRO | 対応するテーブル・ファイルreaderとスキーマ |
+| JSON / CSV / XML | パース、型、壊れた入力・救済を検討 |
+| Text / Binary | 文字列行やバイナリの意味を定義 |
+| Kafka等のメッセージバス | 専用source・認証・offsetとpayloadのdecode |
 
-先に「1行は何か」を決める。注文ヘッダーと明細を無条件にjoinして注文合計をSUMすると明細数だけ重複します。粒度が違うfact同士は必要な粒度に集約してから結合を検討。物理レイアウトは検索・joinのアクセスパターンとデータサイズで決め、業務の正しい粒度とは別の層として判断します。小ファイルはcompaction、高カーディナリティを細かく分け過ぎない設計。[LIQUID]
+```python
+parquet_df = spark.read.format('parquet').load(parquet_path)
+# Kafkaをファイルパスとして読むのではなく、対応sourceを使う。
+# 認証情報等の必要設定は環境に応じて別途指定する。
+kafka_df = (spark.readStream.format('kafka')
+            .option('kafka.bootstrap.servers', broker)
+            .option('subscribe', topic).load())
+```
 
-### 9.2 ★ディメンショナルモデル
+**頻出・罠**：列挙された全形式が同じAuto Loaderオプションで読めるという意味ではありません。クラウド別コネクタ、Runtime、ライブラリ対応は公式で確認。`_rescued_data`を業務品質の判定器と思わない。根拠：[AUTO]、[FORMAT]、[KAFKA]。
 
-factは測定イベント、dimensionは分析軸。代理キー・業務キー・履歴の有効期間を区別。Type 1更新で過去時点の属性を失いたくないならType 2を検討。Type 2のdimensionをfactへ結合する時は業務キーだけでなく有効期間や該当する代理キーを扱います。
+<a id="sec-7-2"></a>
+### 7.2 ★DeltaでバッチとStreamingの追記専用パイプラインを作る
 
-新試験：**Metric Viewは指標定義の統一とガバナンス、MVは結果の事前計算**が主目的。Metric Viewだけを作って全クエリ結果が自動で物理保存されると考えない。[METRIC]
+**何か**：履歴を上書きせず、新規データをDeltaへ足すパターン。**なぜ**：同じ保存層からバッチ分析と増分処理を接続しやすくするため。**仕組み**：追記の契約、schema、checkpointと再実行時の重複防止を合わせます。
 
-## 10. 共有・フェデレーション（現行ページ5%／現行日本語PDF10%：要確認、新では取り込みへ統合）
+```python
+batch_df.write.format('delta').mode('append').saveAsTable('main.study.events')
+stream_df = spark.readStream.table('main.study.events')
+# start()する時はクエリ固有の永続checkpointとsinkを指定する。
+```
 
-### 10.1 ★D2D / Open Sharing（D2O）
+| 上流の契約 | 下流の設計 |
+|---|---|
+| 追記のみ | 通常の増分readを検討 |
+| UPDATE/DELETEあり | CDF等で変更を適用する設計を検討 |
 
-Databricks間の共有と、Databricksを使わない受信者へのオープンプロトコル経由の共有を区別。D2Dは受信側metastore等の識別、D2Oは受信側の利用方法・認証・資格情報の保護を確認します。どちらも全データを公開バケットに置く方法ではありません。
+**頻出・罠**：変更コミットを読み飛ばしても下流が正しい現在状態になるとは限りません。appendモードだけで業務イベントの二重登録まで防げるわけでもありません。根拠：[CDF]、[STREAMDELTA]。
 
-### 10.2 ★Federationと共有の比較
+## 8. ガバナンス（現行Section 8：7%）
 
-| 要件 | 主に検討する仕組み | コスト・制約 |
+<a id="sec-8-1"></a>
+### 8.1 ★説明・タグ等のメタデータで発見性を高める
+
+**何か**：データの意味・責任者・分類をカタログへ記録すること。**なぜ**：列名だけでは正しい粒度や使い方がわからず誤利用されるため。**仕組み**：コメントで意味を説明し、タグで分類・検索を一貫させます。
+
+```sql
+COMMENT ON TABLE main.study.orders IS '注文単位。返品は別レコード。責任部署は営業分析。';
+```
+
+| 道具 | 適するもの |
+|---|---|
+| コメント | 粒度・制約・更新頻度等の文脈 |
+| タグ | 機密分類・部門等の統一属性 |
+| 権限／ポリシー | アクセスの強制 |
+
+**頻出・罠**：「confidential」と書いただけではSELECTを拒否しません。PII実値をタグやコメントへ拡散しない。governed tagsとABACの連携は一般タグだけの動作と区別。根拠：[COMMENTS]、[TAGS]。
+
+<a id="sec-8-2"></a>
+### 8.2 ★Unity Catalogの権限継承モデル
+
+**何か**：catalog/schemaで付与した適用可能な権限が配下へ及ぶ仕組み。**なぜ**：大量の現在・将来のオブジェクトを個別付与せず管理するため。**仕組み**：どの親やグループから権限を得ているかを評価します。
+
+```sql
+-- 広い範囲へ付与する例。最小権限として妥当か先に評価。
+GRANT SELECT ON SCHEMA main.study TO `study_analysts`;
+```
+
+| 区別 | 正しい理解 |
+|---|---|
+| SELECTとUSE | テーブル読取りと親の使用権限は別 |
+| 直接付与と継承 | 子の直接GRANTを外しても親の権限が残り得る |
+| SELECTと所有権 | 読取り可能でも所有者になるわけではない |
+
+**頻出・罠**：すべての権限が同じ対象へ同じように継承されるとは限りません。ALL PRIVILEGES、MANAGE、所有権の意味はリファレンスで確認。根拠：[PRIV]。
+
+## 9. モデリング（現行Section 10：Web6%／日本語PDF7%：要確認）
+
+<a id="sec-9-1"></a>
+### 9.1 ★大規模データ向けのスケーラブルなDeltaモデル
+
+**何か**：正しい業務粒度と効率的な保存・更新を両立するモデル。**なぜ**：高速な誤集計も、正しいが運用不能な表も本番要件を満たさないため。**仕組み**：一行の意味、キー、履歴、更新方式、配置、ファイル粒度を分けて決めます。
+
+```sql
+CREATE TABLE main.study.sales_lines (
+  order_id BIGINT, line_id BIGINT, product_id BIGINT, amount DECIMAL(12,2)
+) USING DELTA;
+```
+
+| 設計層 | 問い |
+|---|---|
+| 論理モデル | 一行は注文か明細か、どの金額を加算できるか |
+| 更新モデル | 追記か、upsertか、履歴保持か |
+| 物理モデル | 検索・joinに合う配置とファイルサイズか |
+
+**頻出・罠**：Liquidを有効にしても粒度不一致は修正されません。冗長列の追加で更新整合性を悪化させない。根拠：[MANAGED]、[LIQUID]。
+
+<a id="sec-9-2"></a>
+### 9.2 ★Liquid Clusteringでレイアウト判断を簡素化
+
+**何か**：クラスタリングキーに基づき検索に適した配置を維持する方式。**なぜ**：静的なpartition設計がデータの増加や検索の変化へ追随しにくいため。**仕組み**：利用パターンに応じたキーと最適化を選びます。
+
+```sql
+CREATE TABLE main.study.clicks (
+  user_id BIGINT, event_time TIMESTAMP, page STRING
+) USING DELTA CLUSTER BY (user_id);
+```
+
+**頻出・罠**：キー変更だけで全ファイルが即座に再配置されるとは限りません。対応Runtime・形式・既存表の状態を確認。新試験ではCLUSTER BY AUTOも明示。根拠：[LIQUID]。
+
+<a id="sec-9-3"></a>
+### 9.3 ★Liquidとpartitioning／ZORDERを比較
+
+**何か**：物理的にデータをまとめる異なる方式。**なぜ**：誤ったpartitioningは小ファイル・偏りを増やすため。**仕組み**：表サイズ、検索列、カーディナリティ、運用工数で選びます。
+
+| 方法 | 適する条件の考え方 | 罠 |
 |---|---|---|
-| 外部DBを大規模コピーせず問い合わせ | Lakehouse Federation | ソース負荷、pushdown、ネットワーク、対応システムと権限 |
-| 管理下データを別組織／プラットフォームへ共有 | Delta Sharing / OpenSharing | 受信者の認証・アクセス制御・対応機能 |
-| データを取り込みローカルに保持して継続加工 | ingest / CDC | 保存・鮮度・複製の責務 |
-| 生データを直接開示せず共同分析 | Clean Rooms（新アウトラインで明示） | 許可された処理・出力・協業ポリシーの設計 |
+| partition | 安定した列で十分なデータ量をまとめる | user_id等で細分化し過ぎる |
+| ZORDER | 非LiquidのDeltaで検索列の配置 | Liquidと同じ表へ重ねない |
+| Liquid | 変化するアクセスや配置の柔軟性 | 不要なjoin・全件collectまで解消はしない |
 
-Federationはconnection（接続資格情報等）とforeign catalog（外部オブジェクトのUC表現）を区別。UC権限があっても外部側の認証・ネットワークが不要にはなりません。ソースDBの負荷を完全にゼロにする機能でもありません。[FED]
+```sql
+-- 非Liquidの既存Deltaで検討する例。Liquid表には適用しない。
+OPTIMIZE main.study.legacy_events ZORDER BY (customer_id);
+```
+
+**頻出・罠**：どの方法も無条件に併用すればよいわけではありません。根拠：[LIQUID]、[PARTITION]。
+
+<a id="sec-9-4"></a>
+### 9.4 ★分析向けディメンショナルモデル
+
+**何か**：測定イベントのfactと、分析軸のdimensionを分けたモデル。**なぜ**：売上等を共通の粒度・属性・履歴で解釈するため。**仕組み**：キーと履歴期間を定義し、factが正しいdimensionの版へ対応するよう結合します。
+
+```sql
+SELECT f.order_id, d.segment, f.amount
+FROM main.study.sales f JOIN main.study.customer_dim d
+ON f.customer_id = d.customer_id
+AND f.sold_at >= d.valid_from
+AND (f.sold_at < d.valid_to OR d.valid_to IS NULL);
+```
+
+| モデル | 効果／注意 |
+|---|---|
+| Type 1 dimension | 最新へ上書き、過去属性を失う |
+| Type 2 dimension | 履歴保持。業務キーだけで全履歴へjoinしない |
+| fact粒度 | ヘッダー／明細の総額を重複SUMしない |
+
+**頻出・罠**：履歴を保存することと、factが正しい版へ結びつくことは別です。根拠：[CDC]、[JOIN]。
+
+## 10. 共有・フェデレーション（現行Section 4：Web5%／日本語PDF10%：要確認）
+
+<a id="sec-10-1"></a>
+### 10.1 ★Delta SharingのD2Dとオープン共有D2O
+
+**何か**：管理下のデータを受信者へ安全に提供する仕組み。**なぜ**：CSVの手配布や管理者ログイン共有では制御・鮮度を維持しにくいため。**仕組み**：shareへ対象を追加し、受信者の環境に合う認証・参照方式を選びます。
+
+| 方式 | 受信側 |
+|---|---|
+| D2D | Databricks間。受信側metastore等を識別 |
+| D2O / open sharing | Databricks外。対応クライアントと認証を確認 |
+
+```text
+provider → share（許可した対象のみ）→ recipient
+```
+
+**頻出・罠**：すべてを公開バケットへ置く方法ではありません。受信者へ共有元の管理者アカウントを渡さない。新ガイドはOpenSharing表記も使用。根拠：[SHARE]。
+
+<a id="sec-10-2"></a>
+### 10.2 ★適切なガバナンスを持つLakehouse Federation
+
+**何か**：外部システム上のデータをUC経由で問い合わせる仕組み。**なぜ**：全面コピーを避けつつ統制した参照が必要な場合があるため。**仕組み**：connectionとforeign catalogを用い、接続資格情報・外部権限・UC権限を整合させます。
+
+```sql
+-- 管理者が接続とforeign catalogを設定済みの例。
+SELECT * FROM external_sales.public.orders LIMIT 10;
+```
+
+| 層 | 確認事項 |
+|---|---|
+| connection | 外部認証・到達性 |
+| foreign catalog | 外部オブジェクトのUC表現 |
+| 実行 | pushdown、ソース負荷、対応機能 |
+
+**頻出・罠**：UCのSELECTだけで外部認証も不要にはなりません。ソース側負荷がゼロになる保証もない。根拠：[FED]。
+
+<a id="sec-10-3"></a>
+### 10.3 ★任意のコンピューティング基盤へのライブデータ共有
+
+**何か**：受信者の利用基盤に合う共有方式で、許可したデータを参照させる設計。**なぜ**：毎日の独立コピー配布では鮮度・更新・権限変更が追いにくいため。**仕組み**：対応する共有クライアントを使い、鮮度とアクセスのライフサイクルを管理します。
+
+| 要件 | 候補 |
+|---|---|
+| 管理下データを他者へ提供 | Delta Sharing / OpenSharing |
+| 外部DBをコピーせず自分が照会 | Federation |
+| ローカル保持して継続変換 | 取り込み・CDC |
+
+```text
+受信側：認証・対応クライアント・共有テーブルの参照
+確認：共有停止後の新規アクセスと、既に取得済みのコピーの扱いを分ける
+```
+
+**頻出・罠**：「任意の基盤」は無条件に全機能が同じという意味ではありません。共有を失効しても受信者が既に保存したコピーを魔法のように消せるとは考えない。根拠：[SHARE]。
 
 ## 11. 公式サンプル問題の要点（転載なし）
 
@@ -502,11 +1100,11 @@ Federationはconnection（接続資格情報等）とforeign catalog（外部オ
 | 環境別デプロイ | Bundleのtargetsと再現可能な配備 |
 | 指標と事前集計 | Metric ViewとMVは責務が違う |
 
-新アウトライン向けのサンプルなので、来週の現行試験に全テーマが同じ比重で出るという意味ではありません。
+新アウトライン向けのサンプルなので、現行試験に全テーマが同じ比重で出るという意味ではありません。
 
 ## 12. 模擬試験（HTML版）
 
-[`databricks-de-professional-mock-exam.html`](databricks-de-professional-mock-exam.html) をブラウザで開いてください。**現行10ドメイン向けオリジナル40問**、答え合わせ・選択肢別の解説・根拠リンク・ドメイン別スコア・復元・進捗JSON出力に対応。模試配分は0.3の暫定配点に従います。
+[`databricks-de-professional-mock-exam.html`](databricks-de-professional-mock-exam.html) をブラウザで開いてください。**現行10ドメイン向けオリジナル60問**、答え合わせ・選択肢別の解説・根拠リンク・ドメイン別スコア・復元・進捗JSON出力に対応。模試配分は0.3の暫定配点に従います。
 
 ### 追加の演習問題（外部リソース）
 
@@ -514,19 +1112,19 @@ Federationはconnection（接続資格情報等）とforeign catalog（外部オ
 
 **公式（最優先）**
 1. [日本語公式Exam Guide][JA]：受験日別の範囲と公式サンプル。丸暗記でなく判断理由を説明。
-2. [英語公式Exam Guide][EN]：新旧語の対応とサンプルの根拠。ただし来週の日本語受験は現行版が対象。
+2. [英語公式Exam Guide][EN]：新旧語の対応とサンプルの根拠。ただし11/19までの日本語受験は現行版が対象。
 3. [公式試験ページ][PAGE]／[日本語ページ][JPAGE]：登録・Academyへの入口。受講済みの演習ラボを再利用し、失敗ケースを一つ追加する。
 4. [公式AI Prep Guide](https://www.databricks.com/sites/default/files/2026-06/ai-prep-guide-any-databricks-certification.pdf)：最新の公式範囲を根拠に、未知のシナリオと実機確認のチェックリストを作る。AI回答のコマンド・権限は公式で検証。
 
 **日本語の追加候補**
 - [Yota Arahata「【日本語試験問題集】Databricks認定データエンジニア-プロフェッショナル-」](https://www.udemy.com/course/databricks-data-engineer-professional-jp-ay/)：日本語の練習問題と解説。商品ページは2026年10月更新を表示。購入前に**現行10ドメインへの適合**とサンプル説明を確認。新しい名称だけで最新版対応と判断しない。
-- [立石のぞみ「本番形式 模擬試験 全6回」](https://www.udemy.com/course/databricks-data-engineer-professional-jp-nt/)：ページは**2026-10-09の新9ドメイン対応**を明示。来週の日本語現行試験とは範囲と配点が違うため、今週の主教材にせず共通テーマの補強候補。ページの「新試験に日本語なし」「70%」を、現行日本語の提供状況や公式合格点に読み替えない。
+- [立石のぞみ「本番形式 模擬試験 全6回」](https://www.udemy.com/course/databricks-data-engineer-professional-jp-nt/)：ページは**2026-10-09の新9ドメイン対応**を明示。11/19までの日本語現行試験とは範囲と配点が違うため、現行版の主教材にせず共通テーマの補強候補。ページの「新試験に日本語なし」「70%」を、現行日本語の提供状況や公式合格点に読み替えない。
 
 **英語の追加候補**
 - [Alex Cole: Comprehensive Resource Guide](https://www.alexcole.net/databricks-certified-data-engineer-professional-comprehensive-resource-guide/)：試験目標から公式ドキュメントとデモへ辿れる補助資料。2026-10-09更新、新アウトライン中心。問題集ではなくハンズオンの索引として利用。
 - [CertLake](https://www.certlake.com/)：英語の練習・診断候補。説明ページでProfessional向け練習と根拠リンクを案内。無料／有料の現行条件と現行試験への対応は利用前に確認。問題の中身を本パックへ再配布しない。
 
-**使い方**：今週は教材を増やし過ぎず、誤答分野を一つ選び、未見の10〜15問または同等の小演習→根拠の確認→なぜ他の選択肢が違うか説明、のサイクルを回します。英語問題は元サイト上で理解を補助し、独自の日本語メモは論点だけにします。
+**使い方**：短期対策では教材を増やし過ぎず、誤答分野を一つ選び、未見の10〜15問または同等の小演習→根拠の確認→なぜ他の選択肢が違うか説明、のサイクルを回します。英語問題は元サイト上で理解を補助し、独自の日本語メモは論点だけにします。
 
 **dumpへの警告**：「real exam questions」「本試験そのまま」「流出問題」「合格保証」等を売るサイトや問題集は避けてください。Udemy等のプラットフォーム上でも出所を確認します。試験規約違反・著作権・誤情報のリスクがあります。過去の受験者に実際の問題を提供してもらう方法も使いません。
 
@@ -556,6 +1154,53 @@ Federationはconnection（接続資格情報等）とforeign catalog（外部オ
 
 要確認一覧：現行配点の不一致／日本語PDF自身の更新日・版番号／日本語ページの90分記述／切替日の時刻・地域別適用／11/20以降の日本語試験再提供／予約時の最新細則／各機能のクラウド・Runtime・提供状態。
 
+## 付録A. 11/20以降の新試験へ読み替える
+
+日本語公式PDFは2026-11-20の切替を明記。英語PDFの公開・更新日は2026-10-09で、言語版・資料間の時期表記に差があります。日付境界の適用時刻、予約で選択できる版・言語を確認してください。
+
+### A.1 新試験のドメインと配点
+
+| 新Section | 新分野 | 新配点 | 60問換算 |
+|---|---|---:|---:|
+| 1 | Python / SQLコード開発 | 23% | 13.8 ≈14問 |
+| 5 | コスト・性能最適化 | 15% | 9.0 ≈9問 |
+| 2 | 取り込み・取得 | 12% | 7.2 ≈7問 |
+| 3 | データ操作 | 12% | 7.2 ≈7問 |
+| 4 | 監視・アラート | 10% | 6.0 ≈6問 |
+| 8 | デバッグ・デプロイ | 10% | 6.0 ≈6問 |
+| 6 | セキュリティ・コンプライアンス | 8% | 4.8 ≈5問 |
+| 7 | ガバナンス | 5% | 3.0 ≈3問 |
+| 9 | モデリング | 5% | 3.0 ≈3問 |
+
+共有は取り込みへ統合。新アウトラインで明示が強まるもの：状態付きStreaming（watermark / foreachBatch / checkpoint）、serverless環境、Lakeflow ConnectのDB CDC、Iceberg、VARIANT、AI Functions、Predictive Optimization、Delta cache、ABAC、Metric Views。既存機能がすべて11/20に初登場するという意味ではありません。現行版の受験では★の現行論点を先に固めます。
+
+### A.2 このガイドを新試験に使う手順
+
+1. まず現行版の基礎・比較・運用判断を学ぶ。共有は新Section 2へ、監視は新Section 4へ読み替える。
+2. 下表の追加・強化項目を公式の新Outlineとドキュメントで学び直す。
+3. 本HTML60問は現行版の確認用。**新試験の範囲・配点を再現する模試ではなく、新範囲の追加演習が必要**です。
+4. 11/20以降の日本語提供は本PDFでは確認できず、新試験は英語のみと記載。予約と新情報を再確認する。
+
+| 新試験で追加・明示が強い領域 | 本書の土台 | 追加で読む公式根拠 |
+|---|---|---|
+| 状態付きStreaming、watermark、output modes、foreachBatch、checkpoint | 1.4、1.8、7.2 | [foreachBatch][FOREACH]と新Outline |
+| serverless環境・性能モード・依存、SQL/UC UDF | 1.2、1.3、1.10 | [serverless][SERVERLESS]、[UDF][UDF] |
+| Lakeflow ConnectのDB CDC、Iceberg | 1.7、7章 | [Connect][CONNECT]と新Outlineの対象・条件 |
+| VARIANT・parse_json・variant_get | 3章の型と品質 | [VARIANT][VARIANT] |
+| AI Functions / ai_query | 3章の変換・品質、5章のPII | 新Outlineと[AI関数][AIQUERY] |
+| Predictive Optimization、CLUSTER BY AUTO、Delta/disk cache | 2章、9章 | [PO][PO]、[Liquid][LIQUID]、[cache][CACHE] |
+| ABAC・governed tags | 5.2、8.1 | [ABAC][ABAC] |
+| OpenSharing・Clean Rooms | 10章 | [共有][SHARE]、[Clean Rooms][CLEAN] |
+| Lakehouse alertsとSDK監視 | 4章 | [alerts][ALERT]、[SDK][SDK] |
+| Metric ViewsとMV | 1.6、9.4 | [Metric Views][METRIC] |
+
+**新試験での取り違え防止**：watermarkは処理タイムアウトでなくイベント時刻と状態保持の意味を持つ。foreachBatchは自動で外部sinkのexactly-onceを保証しない。Metric Viewは指標定義・意味の再利用、MVは結果の事前計算が中心。ABACは通常タグだけで成立する制御ではない。VARIANTは揺れる構造を保持・抽出するための型であり、解析成功と業務品質の達成は別です。
+
+### A.3 継続して要確認とする事項
+
+既存の配点・時間・版番号・切替時刻・言語再提供の不一致は0章と14章のままです。追加して、現行OutlineのSection 6にある改行断片の解釈、serverless高メモリのPreview/タスク対応、Notebookデバッガーの言語・compute/Runtime条件、共有受信側の対応クライアント・機能差を、利用環境に合わせて確認してください。資料の数値や機能を別のクラウドへ無条件に一般化しません。
+
+
 [JA]: https://www.databricks.com/jp/sites/default/files/2026-10/databricks-certified-data-engineer-professional-exam-guide-oct-2026-ja.pdf
 [EN]: https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf
 [PAGE]: https://www.databricks.com/learn/certification/data-engineer-professional
@@ -575,3 +1220,41 @@ Federationはconnection（接続資格情報等）とforeign catalog（外部オ
 [FED]: https://docs.databricks.com/aws/en/query-federation/
 [METRIC]: https://docs.databricks.com/aws/en/uc-semantics/metric-views
 [VACUUM]: https://docs.databricks.com/aws/en/tables/operations/vacuum
+
+[LIBRARY]: https://docs.databricks.com/aws/en/libraries/
+[SERVERLESS]: https://docs.databricks.com/aws/en/jobs/run-serverless-jobs
+[UDF]: https://docs.databricks.com/aws/en/udf/
+[AUTO]: https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/
+[LDP]: https://docs.databricks.com/aws/en/ldp/
+[FOREACHJOB]: https://docs.databricks.com/aws/en/jobs/for-each
+[TEST]: https://docs.databricks.com/aws/en/notebooks/testing
+[DEBUGGER]: https://docs.databricks.com/aws/en/notebooks/debugger
+[MANAGED]: https://docs.databricks.com/aws/en/tables/managed
+[DV]: https://docs.databricks.com/aws/en/delta/deletion-vectors
+[OPTIMIZE]: https://docs.databricks.com/aws/en/delta/optimize
+[SKIPPING]: https://docs.databricks.com/aws/en/delta/data-skipping
+[QUERY]: https://docs.databricks.com/aws/en/sql/user/queries/query-profile
+[WINDOW]: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions
+[JOIN]: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join
+[JOBS]: https://docs.databricks.com/aws/en/jobs/
+[SPARKUI]: https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui
+[CLI]: https://docs.databricks.com/aws/en/dev-tools/cli/
+[EVENTLOG]: https://docs.databricks.com/aws/en/ldp/monitor-event-logs
+[ALERT]: https://docs.databricks.com/aws/en/sql/user/alerts/
+[NOTIFY]: https://docs.databricks.com/aws/en/jobs/notifications
+[ACL]: https://docs.databricks.com/aws/en/security/auth/access-control/
+[MASK]: https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/
+[CLASSIFY]: https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-classification
+[REPAIR]: https://docs.databricks.com/aws/en/jobs/repair-job-failures
+[GIT]: https://docs.databricks.com/aws/en/repos/
+[FORMAT]: https://docs.databricks.com/aws/en/ingestion/
+[KAFKA]: https://docs.databricks.com/aws/en/connect/streaming/kafka
+[STREAMDELTA]: https://docs.databricks.com/aws/en/delta/delta-streaming
+[COMMENTS]: https://docs.databricks.com/aws/en/comments
+[TAGS]: https://docs.databricks.com/aws/en/database-objects/tags
+[PARTITION]: https://docs.databricks.com/aws/en/tables/partitions
+[SHARE]: https://docs.databricks.com/aws/en/delta-sharing/
+[AIQUERY]: https://docs.databricks.com/aws/en/sql/language-manual/functions/ai_query
+[CACHE]: https://docs.databricks.com/aws/en/optimizations/disk-cache
+[CLEAN]: https://docs.databricks.com/aws/en/clean-rooms/
+[SDK]: https://docs.databricks.com/aws/en/dev-tools/sdk-python/

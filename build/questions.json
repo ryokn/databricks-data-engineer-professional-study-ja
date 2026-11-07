@@ -20,7 +20,11 @@
     "explanation": "Professionalでは実行できることに加え、再現性・テスト可能性・環境分離を満たす設計を選ぶ。",
     "source": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
     "guide": "1.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D1.A",
+      "D1.1"
+    ]
   },
   {
     "id": "DEP-02",
@@ -43,7 +47,11 @@
     "explanation": "どのPython環境・依存セットでタスクが動いたかを確認する。対話実行の成功をそのままジョブへ一般化しない。",
     "source": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
     "guide": "1.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D1.A",
+      "D1.2"
+    ]
   },
   {
     "id": "DEP-03",
@@ -66,7 +74,11 @@
     "explanation": "SQLで十分なら組み込み関数を優先。UDFは必要な処理と制約から選び、名称だけで高速性を決めない。",
     "source": "https://docs.databricks.com/aws/en/udf/",
     "guide": "1.3",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D1.A",
+      "D1.3"
+    ]
   },
   {
     "id": "DEP-04",
@@ -89,7 +101,11 @@
     "explanation": "スキーマ管理と復旧状態を分ける。チェックポイントを破棄して再開する場合は、sinkへの再書き込みも考える。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "1.4",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.4"
+    ]
   },
   {
     "id": "DEP-05",
@@ -111,8 +127,13 @@
     ],
     "explanation": "STは追記型の処理に向く。一方、入力履歴の修正を含む集計結果が必要ならMV等の別設計を検討する。",
     "source": "https://docs.databricks.com/aws/en/ldp/",
-    "guide": "1.5",
-    "original": true
+    "guide": "1.6",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.4",
+      "D1.6"
+    ]
   },
   {
     "id": "DEP-06",
@@ -134,8 +155,12 @@
     ],
     "explanation": "キー・順序列・履歴モデルを分けて設計する。同じ順序値があり得るなら適切なタイブレークも必要。",
     "source": "https://docs.databricks.com/aws/en/ldp/cdc",
-    "guide": "1.6",
-    "original": true
+    "guide": "1.7",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.7"
+    ]
   },
   {
     "id": "DEP-07",
@@ -157,8 +182,13 @@
     ],
     "explanation": "「前のタスクが終わった」と「条件を満たした」を分けて依存関係を作る。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
-    "guide": "1.7",
-    "original": true
+    "guide": "1.9",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.5",
+      "D1.9"
+    ]
   },
   {
     "id": "DEP-08",
@@ -180,8 +210,12 @@
     ],
     "explanation": "自動再試行は正しさの保証ではない。副作用を冪等にするか、要件に応じて再試行を抑止する。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
-    "guide": "1.7",
-    "original": true
+    "guide": "1.10",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.10"
+    ]
   },
   {
     "id": "DEP-09",
@@ -203,8 +237,12 @@
     ],
     "explanation": "純粋な変換をDataFrame.transform等で切り出すと小さなデータで期待値テストを作りやすい。",
     "source": "https://docs.databricks.com/aws/en/ldp/",
-    "guide": "1.8",
-    "original": true
+    "guide": "1.11",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.11"
+    ]
   },
   {
     "id": "DEP-10",
@@ -227,7 +265,10 @@
     "explanation": "OPTIMIZEとVACUUMは目的が違う。小ファイル問題には取り込み粒度や自動最適化も合わせて検討する。",
     "source": "https://docs.databricks.com/aws/en/delta/optimize",
     "guide": "2.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D6.2"
+    ]
   },
   {
     "id": "DEP-11",
@@ -249,8 +290,12 @@
     ],
     "explanation": "配置方式はテーブルサイズ・検索パターン・運用負担から選ぶ。万能な設定を重ねればよいわけではない。",
     "source": "https://docs.databricks.com/aws/en/tables/clustering",
-    "guide": "2.5",
-    "original": true
+    "guide": "2.2・9.3",
+    "original": true,
+    "objectives": [
+      "D6.2",
+      "D10.3"
+    ]
   },
   {
     "id": "DEP-12",
@@ -273,7 +318,10 @@
     "explanation": "変更の公開（CDF）と、変更の適用（MERGE/AUTO CDC等）の責務を区別する。保持期間も下流の遅延と整合させる。",
     "source": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
     "guide": "2.4",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D6.4"
+    ]
   },
   {
     "id": "DEP-13",
@@ -295,8 +343,11 @@
     ],
     "explanation": "一部taskだけ遅いなら偏りを疑う。すべての性能問題に「クラスタを大きくする」を選ばない。",
     "source": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
-    "guide": "2.3",
-    "original": true
+    "guide": "2.5",
+    "original": true,
+    "objectives": [
+      "D6.5"
+    ]
   },
   {
     "id": "DEP-14",
@@ -319,7 +370,10 @@
     "explanation": "書き換えコスト削減と消去要請の完了を混同しない。REORG/VACUUM等は保持・復旧要件と一緒に判断する。",
     "source": "https://docs.databricks.com/aws/en/delta/deletion-vectors",
     "guide": "2.2・5.5",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D6.2"
+    ]
   },
   {
     "id": "DEP-15",
@@ -342,7 +396,10 @@
     "explanation": "「最新」と「一意」を両方満たす順序を定義する。ORDER BYの決定性が重要。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
     "guide": "3.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D3.1"
+    ]
   },
   {
     "id": "DEP-16",
@@ -364,8 +421,12 @@
     ],
     "explanation": "性能を見る前に粒度・一意性・履歴期間を確認する。履歴dimensionとのjoinは業務キーだけでは足りない場合がある。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
-    "guide": "3.1・9.2",
-    "original": true
+    "guide": "3.1・9.4",
+    "original": true,
+    "objectives": [
+      "D3.1",
+      "D10.4"
+    ]
   },
   {
     "id": "DEP-17",
@@ -388,7 +449,10 @@
     "explanation": "正常側・不正側の条件がNULLを含めて全体を網羅し、重複もないか確認する。",
     "source": "https://docs.databricks.com/aws/en/ldp/expectations",
     "guide": "3.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D3.2"
+    ]
   },
   {
     "id": "DEP-18",
@@ -410,8 +474,11 @@
     ],
     "explanation": "取り込みの救済列を品質エンジンと同一視しない。期待条件・隔離・再処理を設計する。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
-    "guide": "3.2・7.3",
-    "original": true
+    "guide": "3.2",
+    "original": true,
+    "objectives": [
+      "D3.2"
+    ]
   },
   {
     "id": "DEP-19",
@@ -434,7 +501,11 @@
     "explanation": "コスト分析では単位と価格条件を確認する。本教材は価格数値を推測しない。",
     "source": "https://docs.databricks.com/aws/en/admin/system-tables/",
     "guide": "4.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D5.A",
+      "D5.1"
+    ]
   },
   {
     "id": "DEP-20",
@@ -456,8 +527,13 @@
     ],
     "explanation": "監視対象はAPI呼出しだけでなく非同期の実行状態。job・run・taskを区別する。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
-    "guide": "4.2",
-    "original": true
+    "guide": "4.3",
+    "original": true,
+    "objectives": [
+      "D1.5",
+      "D5.A",
+      "D5.3"
+    ]
   },
   {
     "id": "DEP-21",
@@ -479,8 +555,12 @@
     ],
     "explanation": "成功終了と品質達成は同じでない。DROPは処理を止めずに不正行を減らすため、品質の観測が必要。",
     "source": "https://docs.databricks.com/aws/en/ldp/expectations",
-    "guide": "4.3",
-    "original": true
+    "guide": "4.4",
+    "original": true,
+    "objectives": [
+      "D5.A",
+      "D5.4"
+    ]
   },
   {
     "id": "DEP-22",
@@ -502,8 +582,12 @@
     ],
     "explanation": "アラートは条件式だけでなく、データ鮮度・実行時刻・通知経路まで一体で設計する。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
-    "guide": "4.4",
-    "original": true
+    "guide": "4.5",
+    "original": true,
+    "objectives": [
+      "D5.B",
+      "D5.5"
+    ]
   },
   {
     "id": "DEP-23",
@@ -525,8 +609,13 @@
     ],
     "explanation": "テーブルSELECT、USE CATALOG、USE SCHEMAの責務は別。必要最小限の不足だけを補う。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
-    "guide": "5.1",
-    "original": true
+    "guide": "5.1・8.2",
+    "original": true,
+    "objectives": [
+      "D7.A",
+      "D7.1",
+      "D8.2"
+    ]
   },
   {
     "id": "DEP-24",
@@ -549,7 +638,11 @@
     "explanation": "行の可視範囲と列値の可視範囲を区別する。マスキングは保存データの物理消去ではない。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
     "guide": "5.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D7.A",
+      "D7.2"
+    ]
   },
   {
     "id": "DEP-25",
@@ -572,7 +665,11 @@
     "explanation": "匿名性は再識別可能性と利用条件で判断。ハッシュ、トークン、抑制、一般化の違いを押さえる。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
     "guide": "5.3",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D7.A",
+      "D7.3"
+    ]
   },
   {
     "id": "DEP-26",
@@ -595,7 +692,11 @@
     "explanation": "保持・削除・再処理は一つの設計。DELETE、物理再書き込み、VACUUM、複製物の責務を分離する。",
     "source": "https://docs.databricks.com/aws/en/tables/operations/vacuum",
     "guide": "5.5",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D7.B",
+      "D7.5"
+    ]
   },
   {
     "id": "DEP-27",
@@ -618,7 +719,11 @@
     "explanation": "repairは原因を直した後の回復手段。再実行範囲と既存出力の整合性を判断する。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "6.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D9.A",
+      "D9.2"
+    ]
   },
   {
     "id": "DEP-28",
@@ -640,8 +745,12 @@
     ],
     "explanation": "validate成功を統合テスト成功や本番実行成功へ飛躍させない。各工程の証跡を確認する。",
     "source": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
-    "guide": "6.3",
-    "original": true
+    "guide": "6.4",
+    "original": true,
+    "objectives": [
+      "D9.B",
+      "D9.4"
+    ]
   },
   {
     "id": "DEP-29",
@@ -663,8 +772,12 @@
     ],
     "explanation": "Git foldersはソース管理の入口。CI/CDと組み合わせてコミット・設定・実行環境を追跡する。",
     "source": "https://docs.databricks.com/aws/en/repos/",
-    "guide": "6.4",
-    "original": true
+    "guide": "6.5",
+    "original": true,
+    "objectives": [
+      "D9.B",
+      "D9.5"
+    ]
   },
   {
     "id": "DEP-30",
@@ -687,7 +800,11 @@
     "explanation": "診断ツールは失敗の層から選ぶ。すべての障害をSparkのデータ処理として扱わない。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "6.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D9.A",
+      "D9.1"
+    ]
   },
   {
     "id": "DEP-31",
@@ -709,8 +826,11 @@
     ],
     "explanation": "スキーマの変化への方針を明示する。実際に許可する進化や再起動の条件は設定・環境に合わせて確認する。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
-    "guide": "7.1・7.3",
-    "original": true
+    "guide": "7.1",
+    "original": true,
+    "objectives": [
+      "D2.1"
+    ]
   },
   {
     "id": "DEP-32",
@@ -733,7 +853,10 @@
     "explanation": "append-only設計の前提が破れたときに、単にエラーを回避するか正しさを満たすかを区別する。",
     "source": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
     "guide": "7.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D2.2"
+    ]
   },
   {
     "id": "DEP-33",
@@ -756,7 +879,10 @@
     "explanation": "フォーマットの列挙とコネクタの対応を分ける。入力源・認証・オフセット／ファイル進捗を確認する。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "7.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D2.1"
+    ]
   },
   {
     "id": "DEP-34",
@@ -779,7 +905,10 @@
     "explanation": "どこからアクセスが来たかを追う。親の広い付与と子の限定を矛盾させない設計が必要。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
     "guide": "8.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D8.2"
+    ]
   },
   {
     "id": "DEP-35",
@@ -802,7 +931,10 @@
     "explanation": "governed tagsとABACポリシーの連携はあるが、一般のタグ追加だけで任意のアクセス制御が成立するとはいえない。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/",
     "guide": "8.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D8.1"
+    ]
   },
   {
     "id": "DEP-36",
@@ -825,7 +957,10 @@
     "explanation": "公式サンプルの継承の説明を、USE権限不要や所有権付与まで拡大解釈しない。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
     "guide": "8.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D8.2"
+    ]
   },
   {
     "id": "DEP-37",
@@ -848,7 +983,10 @@
     "explanation": "Professionalでは物理的な高速性より先に、正しい粒度・加算可能性・結合関係を確認する。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
     "guide": "9.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D10.1"
+    ]
   },
   {
     "id": "DEP-38",
@@ -870,8 +1008,11 @@
     ],
     "explanation": "履歴を保持するだけでなく、factがどの履歴行へ対応するかまで設計する。",
     "source": "https://docs.databricks.com/aws/en/ldp/cdc",
-    "guide": "9.2",
-    "original": true
+    "guide": "9.4",
+    "original": true,
+    "objectives": [
+      "D10.4"
+    ]
   },
   {
     "id": "DEP-39",
@@ -894,7 +1035,10 @@
     "explanation": "Federationはデータをコピーしない選択肢だが、認証・pushdown・ソース負荷の検討が必要。",
     "source": "https://docs.databricks.com/aws/en/query-federation/",
     "guide": "10.2",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D4.2"
+    ]
   },
   {
     "id": "DEP-40",
@@ -917,6 +1061,543 @@
     "explanation": "D2Dとオープン共有を受信者の環境から選ぶ。資格情報・対応機能・共有解除の運用も確認する。",
     "source": "https://docs.databricks.com/aws/en/delta-sharing/",
     "guide": "10.1",
-    "original": true
+    "original": true,
+    "objectives": [
+      "D4.1",
+      "D4.3"
+    ]
+  },
+  {
+    "id": "DEP-41",
+    "domain": "code",
+    "topic": "宣言型か自前制御か",
+    "prompt": "標準的な取り込み・品質・CDCを扱うチームは、依存順と更新状態の手動管理を減らしたい。一方、別チームは特殊な外部sinkへの書き込み契約を細かく制御したい。適切な判断は？",
+    "options": [
+      "常に低水準APIを使い、手動の依存管理を増やす方が運用最小である",
+      "前者はLakeflow、後者は対応機能を確認してStructured Streaming等を検討し、運用責務と自由度を比較する",
+      "両者とも短いSQLなら通常Viewだけで障害復旧と書き込みまで完了する",
+      "両者ともforeachBatchを使えば任意の外部sinkで追加実装なしにexactly-onceになる"
+    ],
+    "optionExplanations": [
+      "低水準APIは柔軟だが、自前の状態・依存管理の責務も増える。",
+      "要件が標準的な宣言型処理か、独自の書き込み制御かを分けて判断する。",
+      "Viewの定義は書き込み・復旧・運用の全機能を代替しない。",
+      "foreachBatchは既定でat-least-onceであり、sink側の冪等性等が必要。"
+    ],
+    "answer": 1,
+    "explanation": "製品名の好みでなく、運用負担と必要な制御から選択する。DatabricksのLakeflow拡張とOSS SDPの対応範囲も区別する。",
+    "source": "https://docs.databricks.com/aws/en/ldp/",
+    "guide": "1.8",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.8"
+    ]
+  },
+  {
+    "id": "DEP-42",
+    "domain": "code",
+    "topic": "For Eachの入力と並列制御",
+    "prompt": "取り込み対象テーブル一覧を上流タスクで作り、同じ処理を各テーブルへ実行したい。外部DBへの同時負荷を制限する必要もある。適切なのは？",
+    "options": [
+      "入れ子タスクをさらにFor Eachにして任意の深さへ反復を重ねる",
+      "並列度を最大にすれば外部DBの接続制限もなくなる",
+      "配列をFor Each入力へ渡し、入れ子タスクへ各要素をパラメーター化し、並列度を外部負荷に合わせる",
+      "If/Elseのtrue側へ全テーブル名を一つの文字列として渡せば反復は自動になる"
+    ],
+    "optionExplanations": [
+      "公式はFor Eachを入れ子タスクにできないと明記。",
+      "並列実行は外部接続数や競合を増やし得る。",
+      "入力ごとの反復、パラメーター、外部サービスの上限を一緒に扱う。",
+      "If/Elseは反復ではない。文字列の一括引数だけでは各対象への反復を定義しない。"
+    ],
+    "answer": 2,
+    "explanation": "制御フローの分岐と反復を区別する。下流の依存先は親For Eachとし、複数反復の副作用・競合を確認する。",
+    "source": "https://docs.databricks.com/aws/en/jobs/for-each",
+    "guide": "1.9",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.9"
+    ]
+  },
+  {
+    "id": "DEP-43",
+    "domain": "code",
+    "topic": "高メモリと追加再試行",
+    "prompt": "serverless notebook taskが非冪等な外部書き込みを含む。担当者はmax_retries=0だから追加実行はないと考えている。またメモリ不足も起きる。正しい確認方針は？",
+    "options": [
+      "max_retries=0ならserverless auto-optimizationの動作は確認不要",
+      "メモリ不足を解消すると外部書き込みの冪等性も自動的に保証される",
+      "すべてのtask typeで同じ高メモリ設定が使えると仮定する",
+      "serverless auto-optimizationの追加再試行を確認し、at-most-once要件なら無効化を検討する。高メモリは対応するnotebook設定を別に評価する"
+    ],
+    "optionExplanations": [
+      "公式はauto-optimizationが追加再試行を含むことを説明している。",
+      "メモリ設定は外部副作用の重複防止にならない。",
+      "確認時点で高メモリはnotebook taskのみと記載されている。",
+      "retryの仕組みと資源設定は別の問題であり、両方を確認する。"
+    ],
+    "answer": 3,
+    "explanation": "現行Outlineにも高メモリと自動最適化のretry設定が含まれる。Preview等の提供条件は実際の環境で確認する。",
+    "source": "https://docs.databricks.com/aws/en/jobs/run-serverless-jobs",
+    "guide": "1.10",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.10"
+    ]
+  },
+  {
+    "id": "DEP-44",
+    "domain": "code",
+    "topic": "デバッガーと回帰テスト",
+    "prompt": "純粋なPython変換関数の分岐で誤った値が出る。再現入力は少量で、以降の変更でも同じ不具合を防ぎたい。適切な組み合わせは？",
+    "options": [
+      "Pythonのbreakpointと変数確認で原因を絞り、期待DataFrame/スキーマを比較する自動テストを追加する",
+      "デバッガーで一度成功したら回帰テストは不要",
+      "driverのbreakpointで全executorの全UDF処理を必ず同時に観測できるとする",
+      "行数が一致するassertだけにして値・型は検証しない"
+    ],
+    "optionExplanations": [
+      "対話的な原因調査と継続的な回帰防止の役割を分けている。",
+      "単発の対話調査は将来の変更を自動検証しない。",
+      "driverのデバッグを全分散taskの観測と同一視できない。",
+      "値や型が誤っていても行数は一致し得る。"
+    ],
+    "answer": 0,
+    "explanation": "デバッガー、単体テスト、統合テストは補完関係。対応言語・compute/Runtimeも公式で確認する。",
+    "source": "https://docs.databricks.com/aws/en/notebooks/debugger",
+    "guide": "1.11",
+    "original": true,
+    "objectives": [
+      "D1.B",
+      "D1.11"
+    ]
+  },
+  {
+    "id": "DEP-45",
+    "domain": "ingestion",
+    "topic": "形式とソースの対応",
+    "prompt": "Parquetファイル、CSVファイル、Kafka内のJSON payloadを取り込みたい。すべてに同じreader設定を適用しようとしている。正しい設計は？",
+    "options": [
+      "試験範囲に形式が列挙されるので、すべての形式は同一Auto Loader設定で読めるとする",
+      "ソースのコネクタとpayloadの形式を分け、ファイルには対応reader、Kafkaには専用sourceとJSONの解釈を設定する",
+      "JSONならソースがファイルでもKafkaでもread_filesへ同じパスを渡す",
+      "CSVで型不一致が起きても救済情報を必ず捨ててから正常と判定する"
+    ],
+    "optionExplanations": [
+      "列挙はコネクタや設定の互換性を保証しない。",
+      "運搬するsourceとデータ表現のformatは別の設計軸。",
+      "Kafkaの接続とファイルパスは同じではない。",
+      "不正な入力の調査・再処理に必要な情報を失う。"
+    ],
+    "answer": 1,
+    "explanation": "認証・offset/ファイル進捗・スキーマ・解析エラーをそれぞれ設計する。",
+    "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
+    "guide": "7.1",
+    "original": true,
+    "objectives": [
+      "D2.1"
+    ]
+  },
+  {
+    "id": "DEP-46",
+    "domain": "ingestion",
+    "topic": "バッチとStreamingの共通Delta層",
+    "prompt": "バッチの追記をDeltaへ保存し、そこからStreamingの下流処理を動かす。上流は追記専用だが、同じバッチが再実行される可能性がある。適切な設計は？",
+    "options": [
+      "下流のcheckpointを毎回変更すれば再開位置を安全に維持できる",
+      "上流のappendを毎回overwriteに変えても下流には全く影響しない",
+      "appendの契約とschemaを維持し、下流に独立したcheckpointを用意し、上流の再投入重複も業務キー等で対処する",
+      "Deltaへappendすれば同じ業務イベントを何度書いても自動で一行になる"
+    ],
+    "optionExplanations": [
+      "進捗を引き継げず新規処理となり、再読取りの影響がある。",
+      "上書きは追記の契約を壊し、通常の増分読取りへ影響する。",
+      "テーブルのトランザクションと業務重複、ストリームの進捗を分けている。",
+      "ACIDなappendは業務キーでの自動重複除去を意味しない。"
+    ],
+    "answer": 2,
+    "explanation": "バッチとStreamingの接続は容易でも、再実行時のデータ契約が必要。",
+    "source": "https://docs.databricks.com/aws/en/delta/delta-streaming",
+    "guide": "7.2",
+    "original": true,
+    "objectives": [
+      "D2.2"
+    ]
+  },
+  {
+    "id": "DEP-47",
+    "domain": "quality",
+    "topic": "Window frameの意味",
+    "prompt": "日付と同日の一意な取引IDで順序づけ、同じ顧客の一行前から現在行までの合計を計算したい。「二行」を窓の単位にしたい。考え方として適切なのは？",
+    "options": [
+      "同じ日付の取引は必ず一行なので同順位やframeを考えなくてよい",
+      "GROUP BY顧客だけで元の各取引行を残した移動合計が得られる",
+      "RANGEとROWSは順序列の値や同順位があっても常に同じ結果になる",
+      "決定的な順序を定義し、ROWS BETWEEN 1 PRECEDING AND CURRENT ROW等の行ベースframeを使う"
+    ],
+    "optionExplanations": [
+      "同じ日付に複数取引があり得るという前提を無視している。",
+      "GROUP BYは集約後の粒度へ変え、元の各行をそのまま残さない。",
+      "同順位や値の分布によってframeの意味は異なる。",
+      "要求は値の範囲ではなく物理的な行数。順序の同順位も解消する。"
+    ],
+    "answer": 3,
+    "explanation": "Windowのpartition、順序、frameは別指定。どの行を集計対象に含めるかを明確にする。",
+    "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
+    "guide": "3.1",
+    "original": true,
+    "objectives": [
+      "D3.1"
+    ]
+  },
+  {
+    "id": "DEP-48",
+    "domain": "quality",
+    "topic": "クラシックジョブの隔離と再試行",
+    "prompt": "クラシックAuto LoaderのforeachBatch内で、正常行と隔離行を別々のDeltaへ書く。片方の書き込み後に失敗する可能性がある。適切な方針は？",
+    "options": [
+      "NULLを含む品質条件を完全に二分し、両出力に再試行の冪等性を設計し、二つの出力が自動で一つの原子操作になると仮定しない",
+      "最初のwriteが成功したら、二つ目も同じトランザクションで必ず成功すると考える",
+      "DROP ROWを指定しただけで隔離テーブルも自動生成されると考える",
+      "エラーをすべて握りつぶせば欠落も重複も発生しないとする"
+    ],
+    "optionExplanations": [
+      "複数sink、品質の分岐、部分失敗をすべて設計対象にしている。",
+      "別出力への書き込みを自動的な単一原子操作と一般化できない。",
+      "DROPは破棄であり、隔離先への保存は別の実装が必要。",
+      "握りつぶしは失敗を隠し、欠落・部分処理の検知を妨げる。"
+    ],
+    "answer": 0,
+    "explanation": "正常データを守るだけでなく、不正側の調査・再処理の完全性も必要。",
+    "source": "https://docs.databricks.com/aws/en/structured-streaming/foreach",
+    "guide": "3.2",
+    "original": true,
+    "objectives": [
+      "D3.2"
+    ]
+  },
+  {
+    "id": "DEP-49",
+    "domain": "sharing",
+    "topic": "D2Dの受信者",
+    "prompt": "共有元と共有先の双方がDatabricksとUnity Catalogを利用している。対象の受信側へ限定した共有を行い、秘密情報の手配布を減らしたい。第一に検討する方式は？",
+    "options": [
+      "受信側がDatabricksでも必ずCSV添付メールしか選べないとする",
+      "D2D共有として受信側metastore等を識別し、必要な対象だけをshareへ追加する",
+      "受信側を特定せず全インターネットへ公開したファイルを使う",
+      "共有元の個人管理者アカウントを受信側全員で共用する"
+    ],
+    "optionExplanations": [
+      "D2D等の共有機能があるため、手配布に限定されない。",
+      "受信側の環境に合った識別・共有範囲の制御になる。",
+      "受信者限定と統制の要件に反する。",
+      "個人の過剰権限を拡散し、監査も困難になる。"
+    ],
+    "answer": 1,
+    "explanation": "D2Dとopen sharingを受信側環境から使い分ける。受信者の識別と共有範囲を混同しない。",
+    "source": "https://docs.databricks.com/aws/en/delta-sharing/",
+    "guide": "10.1",
+    "original": true,
+    "objectives": [
+      "D4.1"
+    ]
+  },
+  {
+    "id": "DEP-50",
+    "domain": "sharing",
+    "topic": "ライブ共有と取得済みコピー",
+    "prompt": "共有テーブルへのアクセスを停止した。受信者は停止前に一部データを独自保存していた。「共有停止でそのコピーも自動消去される」と言われた。正しい説明は？",
+    "options": [
+      "共有元のVACUUMで相手の独立コピーも削除できる",
+      "ライブ共有なら受信者が結果を保存することは技術的に一切不可能である",
+      "今後の共有アクセスの失効と、既に受信者が保存したコピーの削除は別であり、契約・保持・削除手順も必要",
+      "共有を停止すると受信者のすべての保存媒体が自動で消去される"
+    ],
+    "optionExplanations": [
+      "共有元のファイル整理は他者の保存物を操作しない。",
+      "取得した結果の利用・保存を無条件に不可能と一般化できない。",
+      "技術的なアクセス制御と、取得後のデータライフサイクルを分けている。",
+      "独立したコピーまで自動で消えると保証する根拠はない。"
+    ],
+    "answer": 2,
+    "explanation": "共有は制御された参照の仕組みだが、受信後の扱いも含むガバナンスが必要。",
+    "source": "https://docs.databricks.com/aws/en/delta-sharing/",
+    "guide": "10.3",
+    "original": true,
+    "objectives": [
+      "D4.3"
+    ]
+  },
+  {
+    "id": "DEP-51",
+    "domain": "monitor",
+    "topic": "Query ProfileとSpark UI",
+    "prompt": "SQL全体の遅延を調べると、あるjoin演算子が重い。さらに特定のtaskだけ長時間spillしている。最も適切な調査は？",
+    "options": [
+      "system.billing.usageの合計があればすべてのtaskの原因も特定できる",
+      "EXPLAINの推定計画だけで実際のすべての実行時間を証明する",
+      "ジョブ成功の通知だけで演算子の性能を判断する",
+      "Query Profileで演算子とスキャン/shuffleを把握し、Spark UIでtask分布や偏りを調べる"
+    ],
+    "optionExplanations": [
+      "課金利用量は局所的なtaskの詳細の代替ではない。",
+      "計画と実測は別である。",
+      "成功状態だけでは性能の原因を把握できない。",
+      "クエリ単位と分散task単位の観測を補完させている。"
+    ],
+    "answer": 3,
+    "explanation": "同じ「遅い」でも粒度の異なる情報を使い分ける。",
+    "source": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
+    "guide": "4.2",
+    "original": true,
+    "objectives": [
+      "D5.A",
+      "D5.2",
+      "D9.1"
+    ]
+  },
+  {
+    "id": "DEP-52",
+    "domain": "monitor",
+    "topic": "Job/task通知と再試行",
+    "prompt": "個別taskが失敗して再試行された時点でも通知が欲しい。しかしjob-levelの失敗通知しか設定していない。修正は？",
+    "options": [
+      "task-level通知を設定し、最後のretryまでmuteする等の条件が要件と合うか確認する",
+      "job-level失敗通知はすべてのtask再試行失敗ごとに必ず届くので変更不要",
+      "データ品質のSQL Alertだけに変えれば個別task失敗も必ず同じように通知される",
+      "想定実行時間を設定せずDuration Warningだけを選べば、任意の遅延を自動判定できる"
+    ],
+    "optionExplanations": [
+      "task失敗の粒度とmute方針を合わせている。",
+      "公式はjob-levelがtask retryの都度には通知しないと説明する。",
+      "データ条件の評価と実行状態の通知は同じではない。",
+      "実行時間の閾値等の設定が必要。"
+    ],
+    "answer": 0,
+    "explanation": "対象、イベント、閾値、宛先、再試行中の抑止を一緒に設計する。",
+    "source": "https://docs.databricks.com/aws/en/jobs/notifications",
+    "guide": "4.6",
+    "original": true,
+    "objectives": [
+      "D5.B",
+      "D5.6"
+    ]
+  },
+  {
+    "id": "DEP-53",
+    "domain": "performance",
+    "topic": "管理対象テーブルと保守負担",
+    "prompt": "チームは手作業の統計・ファイル保守を減らし、UC統制を維持したい。データのライフサイクルもプラットフォームへ管理させられる。適切な選択は？",
+    "options": [
+      "すべての利用者にストレージへの直接書き込みを許可すれば保守負担はなくなる",
+      "UC managed tableと対応する自動保守・最適化を検討し、権限・保持・費用の責務は引き続き確認する",
+      "external tableへ変えればmanaged専用機能がすべて必ずそのまま使える",
+      "managedにすれば品質ルールと法的保持要件は一切検討不要になる"
+    ],
+    "optionExplanations": [
+      "統制を迂回し、整合性やアクセス管理のリスクを増やす。",
+      "自動保守の利点と、残る設計責務を区別している。",
+      "機能の適用対象を無条件に外部テーブルへ広げてはいけない。",
+      "プラットフォームは業務品質や法的判断をすべて代行しない。"
+    ],
+    "answer": 1,
+    "explanation": "公式Outlineのmanagedと保守負担の文が日本語PDFで分割されているが、意味上は連続して読む。",
+    "source": "https://docs.databricks.com/aws/en/tables/managed",
+    "guide": "2.1・2.1.1",
+    "original": true,
+    "objectives": [
+      "D6.1",
+      "D6.1-cont"
+    ]
+  },
+  {
+    "id": "DEP-54",
+    "domain": "performance",
+    "topic": "不要スキャンの切り分け",
+    "prompt": "クエリは少数の日付だけを対象とするのに、読み取りファイルとバイトが非常に多い。CPUは飽和していない。まず評価する対策は？",
+    "options": [
+      "VACUUMだけで現在の全ファイルが検索列順へ自動並べ替えされると考える",
+      "CPUコアを増やせば不要ファイルの読み取り自体は必ずゼロになる",
+      "フィルタの形・統計・データ配置を実行計画とProfileで確認し、pruning/skippingが効くよう改善する",
+      "クエリ結果が少数行ならI/O量も必ず少ないと判断する"
+    ],
+    "optionExplanations": [
+      "VACUUMはデータ配置を再編する操作ではない。",
+      "資源追加だけで読み取り対象の選択性は変わらない。",
+      "観測された不要I/Oに対応する調査と改善。",
+      "出力行数と入力スキャン量は異なる。"
+    ],
+    "answer": 2,
+    "explanation": "データスキッピングとファイルプルーニングの狙いは読まなくてよいデータを除外すること。",
+    "source": "https://docs.databricks.com/aws/en/delta/data-skipping",
+    "guide": "2.3",
+    "original": true,
+    "objectives": [
+      "D6.3"
+    ]
+  },
+  {
+    "id": "DEP-55",
+    "domain": "performance",
+    "topic": "CDF保持と下流遅延",
+    "prompt": "CDFを読む下流の長期停止があった。担当者は「CDFは永久保存だから、どれだけ遅れても全履歴を同じように再開できる」と主張した。適切な評価は？",
+    "options": [
+      "CDF有効化前の全変更も有効化後に自動復元されるので確認不要",
+      "CDFの保持とVACUUM等の運用は完全に無関係である",
+      "checkpointがあればソースの消失した変更も必ず再生成される",
+      "CDFと関連履歴の保持条件を確認し、必要な変更が利用可能か判定し、失われた場合の再構築方針を用意する"
+    ],
+    "optionExplanations": [
+      "有効化前の履歴を自動ですべて作る機能ではない。",
+      "変更データの利用可能性は保持・履歴管理と関係する。",
+      "checkpointは消失したソースデータを再生成しない。",
+      "保持と下流の回復可能性を整合させる。"
+    ],
+    "answer": 3,
+    "explanation": "低遅延の増分処理と永久監査保存を区別する。",
+    "source": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
+    "guide": "2.4",
+    "original": true,
+    "objectives": [
+      "D6.4"
+    ]
+  },
+  {
+    "id": "DEP-56",
+    "domain": "security",
+    "topic": "Workspaceとデータの権限",
+    "prompt": "運用者にはジョブ起動だけを許し、定義の編集は許可しない。データへのアクセスはジョブの実行主体へ必要な範囲だけ付けたい。適切なのは？",
+    "options": [
+      "ジョブのACLとrun-as主体のUC権限を分け、起動者の必要な操作とデータアクセスをそれぞれ最小化する",
+      "テーブルSELECTだけ付ければジョブの編集・起動も同時に制御できる",
+      "起動者全員をworkspace管理者にしてから操作を依頼する",
+      "ジョブを閲覧できる人は必ずすべての元データを読めると仮定する"
+    ],
+    "optionExplanations": [
+      "ワークスペース資源とデータの制御を分離している。",
+      "UCの読取りとジョブのACLは別の層。",
+      "起動だけの要件に対し過剰権限。",
+      "ジョブの可視性と元テーブルの読取りは同一権限ではない。"
+    ],
+    "answer": 0,
+    "explanation": "認可は対象と操作の組み合わせ。起動者と実行主体の違いを確認する。",
+    "source": "https://docs.databricks.com/aws/en/security/auth/access-control/",
+    "guide": "5.1",
+    "original": true,
+    "objectives": [
+      "D7.A",
+      "D7.1"
+    ]
+  },
+  {
+    "id": "DEP-57",
+    "domain": "security",
+    "topic": "PII保護の経路",
+    "prompt": "PIIをsilverでマスクしたが、bronzeの原本と隔離テーブルが広く読め、エラーログにも実値を記録していた。適切な改善は？",
+    "options": [
+      "バッチだけ保護しStreamingの別入口は同じデータだから未確認でよい",
+      "全経路のPIIを洗い出し、bronze/隔離/ログ/再処理入力にも最小権限と必要なマスク・削除方針を適用する",
+      "silverだけ保護すれば他の経路も自動的に読めなくなる",
+      "PIIを検出してタグを付けた時点で、アクセス制御の確認は終わりとする"
+    ],
+    "optionExplanations": [
+      "保護されない入口や派生物が残る可能性がある。",
+      "データ経路全体での漏洩と再導入を扱う。",
+      "別のオブジェクトへの権限を自動で閉じるとは限らない。",
+      "検出・分類と認可の強制は別工程。"
+    ],
+    "answer": 1,
+    "explanation": "コンプライアンスは単一テーブルの見た目ではなく、保存・利用・再処理を含むライフサイクルで考える。",
+    "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
+    "guide": "5.4",
+    "original": true,
+    "objectives": [
+      "D7.B",
+      "D7.4"
+    ]
+  },
+  {
+    "id": "DEP-58",
+    "domain": "governance",
+    "topic": "意味を共有するメタデータ",
+    "prompt": "同名のamount列が、ある表では税抜、別の表では税込を表す。利用者は検索で表を見つけても意味を誤解する。最も適切な改善は？",
+    "options": [
+      "説明文を付ければSELECT権限も自動で最小化されるとする",
+      "理解できない利用者全員へ所有権を付与する",
+      "列・テーブルの説明に定義・粒度・更新頻度を記し、統一した分類タグと所有部門情報を整備する",
+      "列名が同じなら同じ意味であるとする"
+    ],
+    "optionExplanations": [
+      "説明メタデータと強制的な認可は別。",
+      "意味の共有に所有権の拡大は不要。",
+      "発見した後に正しく利用するための文脈を与える。",
+      "名称だけで業務定義を推測してはいけない。"
+    ],
+    "answer": 2,
+    "explanation": "ガバナンスはアクセスだけでなく、データの意味を一貫して理解できることも含む。",
+    "source": "https://docs.databricks.com/aws/en/comments",
+    "guide": "8.1",
+    "original": true,
+    "objectives": [
+      "D8.1"
+    ]
+  },
+  {
+    "id": "DEP-59",
+    "domain": "deploy",
+    "topic": "品質失敗と性能障害",
+    "prompt": "Lakeflowの更新が失敗した。event logには特定の期待条件違反が記録され、Spark UIには大きなspillはない。最初に選ぶ調査は？",
+    "options": [
+      "CPUとメモリを必ず増やし、データ条件は調べない",
+      "FAIL UPDATEをDROPへ無条件に変えて成功表示だけを回復する",
+      "VACUUMで現在のデータを消してすべてのエラーをなくす",
+      "該当flowの入力と期待条件を確認し、ルール違反の原因を切り分ける"
+    ],
+    "optionExplanations": [
+      "品質規則の違反を資源追加で解決するとは限らない。",
+      "品質契約を変えて失敗を隠すだけになり得る。",
+      "ファイル整理は品質条件の原因解決ではない。",
+      "観測された失敗原因の層に対応している。"
+    ],
+    "answer": 3,
+    "explanation": "event logでflowとエラーを絞り、必要ならSpark UI等で実行側を確認。品質の契約を勝手に緩めない。",
+    "source": "https://docs.databricks.com/aws/en/ldp/monitor-event-logs",
+    "guide": "6.3",
+    "original": true,
+    "objectives": [
+      "D9.A",
+      "D9.3"
+    ]
+  },
+  {
+    "id": "DEP-60",
+    "domain": "model",
+    "topic": "論理と物理のモデル",
+    "prompt": "大量の明細factがあり、検索列が変化している。担当者は「Liquidへ変更すれば、注文ヘッダーとの重複joinもSCD履歴の誤結合も直る」と述べた。正しい設計レビューは？",
+    "options": [
+      "粒度・キー・履歴対応を先に正し、検索とファイルサイズに合う物理配置としてLiquid等を別途評価する",
+      "Liquidのキーを増やせば業務粒度の定義は不要になる",
+      "高カーディナリティ列ごとに細かいpartitionを必ず作る",
+      "LiquidとZORDERとpartitioningを同一テーブルへ常に重ねる"
+    ],
+    "optionExplanations": [
+      "論理的な正しさと物理的な効率を別の設計層として扱う。",
+      "配置方式は誤ったjoinの意味を修正しない。",
+      "過細分化による小ファイル・管理負担を招き得る。",
+      "配置方式の互換性を無視している。"
+    ],
+    "answer": 0,
+    "explanation": "大規模Deltaモデルでは業務の粒度・更新と物理配置の両方が必要。",
+    "source": "https://docs.databricks.com/aws/en/tables/clustering",
+    "guide": "9.1・9.2・9.3",
+    "original": true,
+    "objectives": [
+      "D10.1",
+      "D10.2",
+      "D10.3"
+    ]
   }
 ]

@@ -3,8 +3,14 @@ import concurrent.futures,datetime,json,re
 from pathlib import Path
 import requests
 P=Path(__file__).resolve().parent
-md=(P.parent/'databricks-de-professional-study-guide.md').read_text()
-urls=set(re.findall(r'https://[^\s)\]>]+',md))
+texts=[
+    (P.parent/'databricks-de-professional-study-guide.md').read_text(),
+    (P.parent/'README.md').read_text(),
+    (P/'template.html').read_text(),
+]
+urls=set()
+for text in texts:
+    urls.update(re.findall(r'https://[^\s)\]>"\']+', text))
 urls.update(q['source'] for q in json.loads((P/'questions.json').read_text()))
 def check(u):
     try:

@@ -1,11 +1,35 @@
 {
-  "checked_at": "2026-11-07T09:03:32.433800+09:00",
+  "checked_at": "2026-11-07T11:01:29.615458+09:00",
   "results": [
     {
       "url": "https://docs.databricks.com/aws/en/admin/system-tables/",
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/admin/system-tables/",
       "title": "System tables reference | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/clean-rooms/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/clean-rooms/",
+      "title": "What is Databricks Clean Rooms? | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/comments",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/comments",
+      "title": "Add comments to data and AI assets | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui",
+      "title": "Debugging with the Spark UI | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/connect/streaming/kafka",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/connect/streaming/kafka",
+      "title": "Connect to Apache Kafka | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/",
@@ -20,10 +44,22 @@
       "title": "Unity Catalog privileges reference | Databricks on AWS"
     },
     {
+      "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-classification",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-classification",
+      "title": "Data Classification | Databricks on AWS"
+    },
+    {
       "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
       "title": "Row filters and column masks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/database-objects/tags",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/database-objects/tags",
+      "title": "Apply tags to Unity Catalog securable objects | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/delta-sharing/",
@@ -32,10 +68,22 @@
       "title": "What is OpenSharing? | Databricks on AWS"
     },
     {
+      "url": "https://docs.databricks.com/aws/en/delta/data-skipping",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/data-skipping",
+      "title": "Data skipping | Databricks on AWS"
+    },
+    {
       "url": "https://docs.databricks.com/aws/en/delta/deletion-vectors",
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/tables/features/deletion-vectors",
       "title": "Deletion vectors in Databricks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/delta/delta-streaming",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake",
+      "title": "Delta Lake table streaming reads and writes | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/delta/optimize",
@@ -48,6 +96,24 @@
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
       "title": "What are Declarative Automation Bundles? | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/dev-tools/cli/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/dev-tools/cli/",
+      "title": "Databricks CLI | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/dev-tools/sdk-python/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/dev-tools/sdk-python/",
+      "title": "Databricks SDK for Python | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ingestion/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ingestion/",
+      "title": "Ingest with SQL and Spark APIs | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
@@ -68,6 +134,30 @@
       "title": "Lakeflow Jobs | Databricks on AWS"
     },
     {
+      "url": "https://docs.databricks.com/aws/en/jobs/for-each",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/jobs/tasks/for-each",
+      "title": "Use a For each task to run another task in a loop | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/jobs/notifications",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/jobs/notifications",
+      "title": "Add notifications on a job | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/jobs/repair-job-failures",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/jobs/repair-job-failures",
+      "title": "Troubleshoot and repair job failures | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/jobs/run-serverless-jobs",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/jobs/run-serverless-jobs",
+      "title": "Run your Lakeflow Jobs with serverless compute for workflows | Databricks on AWS"
+    },
+    {
       "url": "https://docs.databricks.com/aws/en/ldp/",
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/ldp/",
@@ -84,6 +174,36 @@
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/ldp/expectations",
       "title": "Manage data quality with pipeline expectations | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ldp/monitor-event-logs",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ldp/monitor-event-logs",
+      "title": "Pipeline event log | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/libraries/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/libraries/",
+      "title": "Install libraries | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/notebooks/debugger",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/notebooks/debugger",
+      "title": "Debug Databricks notebooks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/notebooks/testing",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/notebooks/testing",
+      "title": "Unit testing for Databricks notebooks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/optimizations/disk-cache",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/optimizations/disk-cache",
+      "title": "Optimize performance with caching on Databricks | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/optimizations/predictive-optimization",
@@ -104,10 +224,22 @@
       "title": "Databricks Git folders | Databricks on AWS"
     },
     {
+      "url": "https://docs.databricks.com/aws/en/security/auth/access-control/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/security/auth/access-control/",
+      "title": "Access control lists | Databricks on AWS"
+    },
+    {
       "url": "https://docs.databricks.com/aws/en/semi-structured/variant",
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/semi-structured/variant",
       "title": "Query variant data | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/ai_query",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/ai_query",
+      "title": "ai_query function | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
@@ -120,6 +252,12 @@
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
       "title": "Window functions | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/sql/user/alerts/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/sql/user/alerts/",
+      "title": "Databricks SQL alerts | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
@@ -146,10 +284,22 @@
       "title": "Use change data feed on Databricks | Databricks on AWS"
     },
     {
+      "url": "https://docs.databricks.com/aws/en/tables/managed",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/managed",
+      "title": "Unity Catalog managed tables for Delta Lake and Apache Iceberg | Databricks on AWS"
+    },
+    {
       "url": "https://docs.databricks.com/aws/en/tables/operations/vacuum",
       "status": 200,
       "final_url": "https://docs.databricks.com/aws/en/tables/operations/vacuum",
       "title": "Remove unused data files with vacuum | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/tables/partitions",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/partitions",
+      "title": "When to partition tables on Databricks | Databricks on AWS"
     },
     {
       "url": "https://docs.databricks.com/aws/en/uc-semantics/metric-views",
