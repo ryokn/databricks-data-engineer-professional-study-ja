@@ -1,7 +1,10 @@
 'use strict';
 const QUESTIONS = __QUESTIONS__;
 const DOMAINS = __DOMAINS__;
-const STORAGE_KEY = 'dep-study-ja-current-20261107-v1';
+// v2 is the 60-question pack. v1 was the retired 40-question pack.
+// Same DEP-01..DEP-40 ids keep their option indexes, so v1 answers migrate.
+const STORAGE_KEY = 'dep-study-ja-current-20261107-v2';
+const LEGACY_STORAGE_KEYS = ['dep-study-ja-current-20261107-v1'];
 function freshState(){ return {version:1, answers:{}, graded:{}}; }
 function normalizeState(raw){
   const clean=freshState();
@@ -16,9 +19,22 @@ function normalizeState(raw){
   return clean;
 }
 let storageAvailable=true;
+let migratedFromLegacy=false;
 let state=freshState();
-try{ state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')); }
-catch(e){ storageAvailable=false; }
+try{
+  const current=localStorage.getItem(STORAGE_KEY);
+  if(current){
+    state=normalizeState(JSON.parse(current));
+  }else{
+    for(const key of LEGACY_STORAGE_KEYS){
+      const legacy=localStorage.getItem(key);
+      if(!legacy) continue;
+      state=normalizeState(JSON.parse(legacy));
+      migratedFromLegacy=true;
+      break;
+    }
+  }
+}catch(e){ storageAvailable=false; state=freshState(); migratedFromLegacy=false; }
 function persist(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
   catch(e){storageAvailable=false;}
@@ -29,6 +45,7 @@ function showStorage(){
     '進捗はこのブラウザに保存します。file://での保存はブラウザ設定によります。大切な記録はJSON出力してください。' :
     '自動保存が利用できません。今の画面では解答できます。必要なら進捗をJSON出力してください。';
 }
+if(migratedFromLegacy) persist();
 function calculateScore(s){
   const out={total:QUESTIONS.length, selected:0, graded:0, correct:0, domains:{}};
   Object.keys(DOMAINS).forEach(k=>out.domains[k]={total:0,selected:0,graded:0,correct:0});
@@ -57,7 +74,9 @@ function percent(n,d){return d ? Math.round(n/d*100)+'%' : '—';}
 function renderScore(){
   const s=calculateScore(state);
   document.getElementById('summary').textContent=`選択 ${s.selected}/${s.total} ・採点 ${s.graded}/${s.total} ・正解 ${s.correct}/${s.graded}（採点済み正答率 ${percent(s.correct,s.graded)}）`;
-  document.getElementById('progress').value=s.graded;
+  const progress=document.getElementById('progress');
+  progress.max=s.total;
+  progress.value=s.graded;
   document.getElementById('scorebody').innerHTML=Object.entries(DOMAINS).map(([k,d])=>{
     const v=s.domains[k];
     return `<tr><th scope="row">${esc(d.name)}</th><td>${d.weight}%</td><td>${v.graded}/${v.total}</td><td>${v.correct}/${v.graded}</td><td>${percent(v.correct,v.graded)}</td></tr>`;
@@ -132,9 +151,13 @@ document.getElementById('import').addEventListener('change',async e=>{
   const f=e.target.files[0];if(!f)return;
   try{
     const data=JSON.parse(await f.text());
-    if(data.pack!==STORAGE_KEY || !data.state || data.state.version!==1)throw new Error('pack mismatch');
+    const accepted=new Set([STORAGE_KEY,...LEGACY_STORAGE_KEYS]);
+    if(!accepted.has(data.pack) || !data.state || data.state.version!==1)throw new Error('pack mismatch');
     state=normalizeState(data.state);persist();render();document.getElementById('notice').textContent='進捗を復元しました。';
   }catch(err){document.getElementById('notice').textContent='この模試の正しい進捗JSONを選んでください。';}
   e.target.value='';
 });
 render();
+if(migratedFromLegacy){
+  document.getElementById('notice').textContent='以前の40問模試（保存キー dep-study-ja-current-20261107-v1）の進捗を引き継ぎました。同じ問題番号の解答は残し、追加問題は未回答です。今後の自動保存は dep-study-ja-current-20261107-v2 です。';
+}

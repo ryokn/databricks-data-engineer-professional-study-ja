@@ -3,60 +3,60 @@
     "name": "コード開発",
     "section": 1,
     "weight": 22,
-    "count": 9
+    "count": 13
   },
   "ingestion": {
     "name": "取り込み・取得",
     "section": 2,
     "weight": 7,
-    "count": 3
+    "count": 5
   },
   "quality": {
     "name": "変換・品質",
     "section": 3,
     "weight": 10,
-    "count": 4
+    "count": 6
   },
   "sharing": {
     "name": "共有・フェデレーション",
     "section": 4,
     "weight": 5,
-    "count": 2
+    "count": 4
   },
   "monitor": {
     "name": "監視・アラート",
     "section": 5,
     "weight": 10,
-    "count": 4
+    "count": 6
   },
   "performance": {
     "name": "コスト・性能",
     "section": 6,
     "weight": 13,
-    "count": 5
+    "count": 8
   },
   "security": {
     "name": "セキュリティ・準拠",
     "section": 7,
     "weight": 10,
-    "count": 4
+    "count": 6
   },
   "governance": {
     "name": "ガバナンス",
     "section": 8,
     "weight": 7,
-    "count": 3
+    "count": 4
   },
   "deploy": {
     "name": "デバッグ・デプロイ",
     "section": 9,
     "weight": 10,
-    "count": 4
+    "count": 5
   },
   "model": {
     "name": "モデリング",
     "section": 10,
     "weight": 6,
-    "count": 2
+    "count": 3
   }
 }

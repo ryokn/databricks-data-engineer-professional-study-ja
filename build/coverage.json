@@ -1,0 +1,535 @@
+[
+  {
+    "id": "D1.A",
+    "title": "Pythonとツールの使用（親項目）",
+    "section": "1.A",
+    "questions": [
+      1,
+      2,
+      3
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D1.1",
+    "title": "Bundlesに適したPythonプロジェクト",
+    "section": "1.1",
+    "questions": [
+      1
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.2",
+    "title": "PyPI・wheel・ソースアーカイブと依存",
+    "section": "1.2",
+    "questions": [
+      2
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.3",
+    "title": "Pandas/Python UDF",
+    "section": "1.3",
+    "questions": [
+      3
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.B",
+    "title": "ETLの構築とテスト（親項目）",
+    "section": "1.B",
+    "questions": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      41,
+      42,
+      43,
+      44
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D1.4",
+    "title": "Lakeflow/Auto Loaderのバッチ・Streaming",
+    "section": "1.4",
+    "questions": [
+      4,
+      5
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.5",
+    "title": "UI/API/CLIによるJobsの自動化",
+    "section": "1.5",
+    "questions": [
+      7,
+      20
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.6",
+    "title": "STとMVの利点・欠点",
+    "section": "1.6",
+    "questions": [
+      5
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.7",
+    "title": "AUTO CDC（旧APPLY CHANGES）",
+    "section": "1.7",
+    "questions": [
+      6
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.8",
+    "title": "Structured StreamingとLakeflowの比較",
+    "section": "1.8",
+    "questions": [
+      41
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.9",
+    "title": "If/Else・For Each",
+    "section": "1.9",
+    "questions": [
+      7,
+      42
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.10",
+    "title": "環境・依存・高メモリ・追加再試行",
+    "section": "1.10",
+    "questions": [
+      8,
+      43
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D1.11",
+    "title": "単体/統合テスト・transform・デバッガー",
+    "section": "1.11",
+    "questions": [
+      9,
+      44
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D2.1",
+    "title": "各種形式・メッセージバス・クラウドから取り込み",
+    "section": "7.1",
+    "questions": [
+      31,
+      33,
+      45
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D2.2",
+    "title": "Deltaでバッチ/Streamingの追記専用パイプライン",
+    "section": "7.2",
+    "questions": [
+      32,
+      46
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D3.1",
+    "title": "Window・join・aggregation",
+    "section": "3.1",
+    "questions": [
+      15,
+      16,
+      47
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D3.2",
+    "title": "Lakeflow/クラシックAuto Loaderの隔離",
+    "section": "3.2",
+    "questions": [
+      17,
+      18,
+      48
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D4.1",
+    "title": "Delta SharingのD2D/D2O",
+    "section": "10.1",
+    "questions": [
+      40,
+      49
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D4.2",
+    "title": "ガバナンスのあるFederation",
+    "section": "10.2",
+    "questions": [
+      39
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D4.3",
+    "title": "任意のcomputeへライブ共有",
+    "section": "10.3",
+    "questions": [
+      40,
+      50
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D5.A",
+    "title": "モニタリング（親項目）",
+    "section": "4.A",
+    "questions": [
+      19,
+      20,
+      21,
+      51
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D5.1",
+    "title": "system tablesで利用・費用・監査・workload",
+    "section": "4.1",
+    "questions": [
+      19
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D5.2",
+    "title": "Query Profiler UIとSpark UI",
+    "section": "4.2",
+    "questions": [
+      51
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D5.3",
+    "title": "REST API/CLIでjob/pipeline監視",
+    "section": "4.3",
+    "questions": [
+      20
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D5.4",
+    "title": "Pipeline event logの監視",
+    "section": "4.4",
+    "questions": [
+      21
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D5.B",
+    "title": "アラート通知（親項目）",
+    "section": "4.B",
+    "questions": [
+      22,
+      52
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D5.5",
+    "title": "SQL Alertsの品質監視",
+    "section": "4.5",
+    "questions": [
+      22
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D5.6",
+    "title": "Jobs UI/APIで状態・性能の通知",
+    "section": "4.6",
+    "questions": [
+      52
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D6.1",
+    "title": "UC managed tablesと保守削減",
+    "section": "2.1",
+    "questions": [
+      53
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D6.1-cont",
+    "title": "原文の「オーバーヘッドとメンテナンスの負担」",
+    "section": "2.1.1",
+    "questions": [
+      53
+    ],
+    "kind": "fragment"
+  },
+  {
+    "id": "D6.2",
+    "title": "Deletion vectors・Liquid等の最適化",
+    "section": "2.2",
+    "questions": [
+      10,
+      11,
+      14
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D6.3",
+    "title": "data skipping・file pruning",
+    "section": "2.3",
+    "questions": [
+      54
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D6.4",
+    "title": "CDFでStreamingの制限・遅延に対処",
+    "section": "2.4",
+    "questions": [
+      12,
+      55
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D6.5",
+    "title": "Profileでskipping/join/shuffle分析",
+    "section": "2.5",
+    "questions": [
+      13
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D7.A",
+    "title": "セキュリティ適用（親項目）",
+    "section": "5.A",
+    "questions": [
+      23,
+      24,
+      25,
+      56
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D7.1",
+    "title": "Workspace ACLと最小権限",
+    "section": "5.1",
+    "questions": [
+      23,
+      56
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D7.2",
+    "title": "行フィルタ・列マスク",
+    "section": "5.2",
+    "questions": [
+      24
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D7.3",
+    "title": "ハッシュ/トークン/抑制/一般化",
+    "section": "5.3",
+    "questions": [
+      25
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D7.B",
+    "title": "コンプライアンス（親項目）",
+    "section": "5.B",
+    "questions": [
+      26,
+      57
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D7.4",
+    "title": "バッチ/StreamingでPII検出・マスク",
+    "section": "5.4",
+    "questions": [
+      57
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D7.5",
+    "title": "保持に準拠するパージ",
+    "section": "5.5",
+    "questions": [
+      26
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D8.1",
+    "title": "説明・メタデータで発見性",
+    "section": "8.1",
+    "questions": [
+      35,
+      58
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D8.2",
+    "title": "UC権限継承",
+    "section": "8.2",
+    "questions": [
+      23,
+      34,
+      36
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D9.A",
+    "title": "デバッグ（親項目）",
+    "section": "6.A",
+    "questions": [
+      27,
+      30,
+      59
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D9.1",
+    "title": "Spark UI/logs/system/Profileで診断",
+    "section": "6.1",
+    "questions": [
+      30,
+      51
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D9.2",
+    "title": "repairとparameter override",
+    "section": "6.2",
+    "questions": [
+      27
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D9.3",
+    "title": "event log/Spark UIでpipelineデバッグ",
+    "section": "6.3",
+    "questions": [
+      59
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D9.B",
+    "title": "CI/CDデプロイ（親項目）",
+    "section": "6.B",
+    "questions": [
+      28,
+      29
+    ],
+    "kind": "group"
+  },
+  {
+    "id": "D9.4",
+    "title": "Bundlesでbuild/deploy",
+    "section": "6.4",
+    "questions": [
+      28
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D9.5",
+    "title": "Git foldersによるGitベースCI/CD",
+    "section": "6.5",
+    "questions": [
+      29
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D10.1",
+    "title": "スケーラブルなDeltaモデル",
+    "section": "9.1",
+    "questions": [
+      37,
+      60
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D10.2",
+    "title": "Liquidによる配置判断の簡素化",
+    "section": "9.2",
+    "questions": [
+      60
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D10.3",
+    "title": "Liquidとpartition/ZORDERの比較",
+    "section": "9.3",
+    "questions": [
+      11,
+      60
+    ],
+    "kind": "objective"
+  },
+  {
+    "id": "D10.4",
+    "title": "ディメンショナルモデル",
+    "section": "9.4",
+    "questions": [
+      16,
+      38
+    ],
+    "kind": "objective"
+  }
+]
