@@ -1,0 +1,221 @@
+{
+  "checked_at": "2026-11-07T09:03:32.433800+09:00",
+  "results": [
+    {
+      "url": "https://docs.databricks.com/aws/en/admin/system-tables/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/admin/system-tables/",
+      "title": "System tables reference | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/",
+      "title": "Attribute-based access control in Unity Catalog | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
+      "title": "Unity Catalog privileges reference | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
+      "title": "Row filters and column masks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/delta-sharing/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/opensharing",
+      "title": "What is OpenSharing? | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/delta/deletion-vectors",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/features/deletion-vectors",
+      "title": "Deletion vectors in Databricks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/delta/optimize",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/operations/optimize",
+      "title": "Optimize data file layout | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
+      "title": "What are Declarative Automation Bundles? | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
+      "title": "What is Auto Loader? | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/",
+      "title": "Lakeflow Connect connector concepts | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/jobs/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/jobs/",
+      "title": "Lakeflow Jobs | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ldp/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ldp/",
+      "title": "Spark Declarative Pipelines on Lakeflow | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ldp/cdc",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ldp/cdc",
+      "title": "The AUTO CDC APIs: Simplify change data capture with pipelines | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/ldp/expectations",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/ldp/expectations",
+      "title": "Manage data quality with pipeline expectations | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/optimizations/predictive-optimization",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/optimizations/predictive-optimization",
+      "title": "Predictive optimization for Unity Catalog managed tables | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/query-federation/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/query-federation/",
+      "title": "Connect to external databases and catalogs | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/repos/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/repos/",
+      "title": "Databricks Git folders | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/semi-structured/variant",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/semi-structured/variant",
+      "title": "Query variant data | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+      "title": "JOIN | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
+      "title": "Window functions | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
+      "title": "Query profile | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/structured-streaming/foreach",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/structured-streaming/foreach",
+      "title": "Use foreachBatch to write to arbitrary data sinks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/tables/clustering",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/clustering",
+      "title": "Use liquid clustering for tables | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
+      "title": "Use change data feed on Databricks | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/tables/operations/vacuum",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/tables/operations/vacuum",
+      "title": "Remove unused data files with vacuum | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/uc-semantics/metric-views",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/uc-semantics/metric-views",
+      "title": "Unity Catalog metric views | Databricks on AWS"
+    },
+    {
+      "url": "https://docs.databricks.com/aws/en/udf/",
+      "status": 200,
+      "final_url": "https://docs.databricks.com/aws/en/udf/",
+      "title": "What are user-defined functions (UDFs)? | Databricks on AWS"
+    },
+    {
+      "url": "https://www.alexcole.net/databricks-certified-data-engineer-professional-comprehensive-resource-guide/",
+      "status": 200,
+      "final_url": "https://www.alexcole.net/databricks-certified-data-engineer-professional-comprehensive-resource-guide/",
+      "title": "Databricks Certified Data Engineer Professional - Comprehensive Resource Guide"
+    },
+    {
+      "url": "https://www.certlake.com/",
+      "status": 200,
+      "final_url": "https://www.certlake.com/",
+      "title": "CertLake — Databricks Certification Practice Exams"
+    },
+    {
+      "url": "https://www.databricks.com/jp/learn/certification/data-engineer-professional",
+      "status": 200,
+      "final_url": "https://www.databricks.com/jp/learn/certification/data-engineer-professional",
+      "title": "Databricks 認定データ エンジニア プロフェッショナル | Databricks"
+    },
+    {
+      "url": "https://www.databricks.com/jp/sites/default/files/2026-10/databricks-certified-data-engineer-professional-exam-guide-oct-2026-ja.pdf",
+      "status": 200,
+      "final_url": "https://www.databricks.com/jp/sites/default/files/2026-10/databricks-certified-data-engineer-professional-exam-guide-oct-2026-ja.pdf",
+      "title": null
+    },
+    {
+      "url": "https://www.databricks.com/learn/certification/data-engineer-professional",
+      "status": 200,
+      "final_url": "https://www.databricks.com/learn/certification/data-engineer-professional",
+      "title": "Databricks Certified Data Engineer Professional | Databricks"
+    },
+    {
+      "url": "https://www.databricks.com/sites/default/files/2026-06/ai-prep-guide-any-databricks-certification.pdf",
+      "status": 200,
+      "final_url": "https://www.databricks.com/sites/default/files/2026-06/ai-prep-guide-any-databricks-certification.pdf",
+      "title": null
+    },
+    {
+      "url": "https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf",
+      "status": 200,
+      "final_url": "https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf",
+      "title": null
+    },
+    {
+      "url": "https://www.udemy.com/course/databricks-data-engineer-professional-jp-ay/",
+      "status": 200,
+      "final_url": "https://www.udemy.com/course/databricks-data-engineer-professional-jp-ay/",
+      "title": "【日本語試験問題集】Databricks認定データエンジニア-プロフェッショナル-"
+    },
+    {
+      "url": "https://www.udemy.com/course/databricks-data-engineer-professional-jp-nt/",
+      "status": 200,
+      "final_url": "https://www.udemy.com/course/databricks-data-engineer-professional-jp-nt/",
+      "title": "Databricks Data Engineer Professional 本番形式 模擬試験 全6回（計360問）"
+    }
+  ]
+}

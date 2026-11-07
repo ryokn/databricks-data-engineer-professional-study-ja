@@ -1,0 +1,1 @@
+PASS: exact embedded JS; 160 option selections/checks; 40/40 all-correct; 0/40 all-wrong; per-domain scoring; progress reload; re-selection; filters; reset confirmation; JSON import/export; invalid state; blocked storage fallback.
