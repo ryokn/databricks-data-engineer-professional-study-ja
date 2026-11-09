@@ -5,19 +5,19 @@
     "topic": "プロジェクト構成",
     "prompt": "分析チームのノートブックには、純粋な変換関数、テストデータ、prodの保存先、ジョブ作成コードが混在している。レビュー済みの同じコードをdevとprodに昇格させたい。最も再現性の高い改善は？",
     "options": [
-      "環境ごとにノートブックを複製し、prodだけ直接編集する",
-      "すべてを一つのセルに集め、手動の実行順を手順書に残す",
-      "保存先をすべてdevに固定し、prod利用者にもdevへの書き込みを許可する",
-      "変換をモジュール化し、テストとリソース定義を分離し、保存先等の環境差をBundle targetsで管理する"
+      "変換をモジュール化し、テストとリソース定義を分け、保存先などの環境差は各環境のノートブック複製で吸収する",
+      "変換をモジュール化し、テストとリソース定義を分け、保存先などの環境差はBundle artifactsのwheel名で切り替える",
+      "変換をモジュール化し、テストとリソース定義を分け、保存先などの環境差はBundle targetsで切り替える",
+      "変換は元のノートブックに残し、テストとリソース定義を分け、保存先などの環境差はBundle targetsで切り替える"
     ],
-    "answer": 3,
+    "answer": 2,
     "optionExplanations": [
-      "環境間のコード差が追跡しにくくなり、同一成果物の昇格を保証できない。",
-      "手動手順はモジュール性・自動検証・再現可能な配備の代替ではない。",
-      "環境分離と最小権限を壊す。",
-      "同一ソースと環境差を分離でき、テストとデプロイを再現しやすい。"
+      "「ノートブック複製で吸収する」が違う。環境ごとにコードが分かれ、レビュー済みの同じ成果物をdevからprodへ昇格できない。",
+      "「artifactsのwheel名で切り替える」が違う。artifactsはビルドする成果物の定義で、カタログやパスなどの環境差はtargetsで切り替える。",
+      "変換、テスト、リソース定義を分けたうえで、環境差だけをtargetsに置いている。",
+      "「変換は元のノートブックに残し」が違う。targetsで保存先を分けても、変換とテストデータとジョブ作成コードの混在は解消しない。"
     ],
-    "explanation": "Professionalでは実行できることに加え、再現性・テスト可能性・環境分離を満たす設計を選ぶ。",
+    "explanation": "同じソースを昇格するには、変換のモジュール化、テストと定義の分離、環境差のtargets管理が揃う必要がある。成果物のビルド定義やノートブックの複製は、その一部だけを満たす。",
     "source": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
     "guide": "1.1",
     "original": true,
@@ -32,19 +32,19 @@
     "topic": "依存関係",
     "prompt": "対話ノートブックでは独自wheelのimportが成功するが、定期ジョブではModuleNotFoundErrorになる。ジョブが別の実行環境を使っている。最初の対応は？",
     "options": [
-      "ジョブの実行環境とライブラリ指定を確認し、互換性を検証したwheelをその環境にも宣言する",
-      "ソーステーブルをOPTIMIZEする",
-      "ノートブック上の表示件数を増やす",
-      "すべての依存を無条件に最新版へ上げる"
+      "対話側の%pip指定をジョブのenvironment dependenciesへ写し、バージョンは未固定のままその環境で再実行する",
+      "ジョブの実行環境とライブラリ指定を確認し、互換性を検証したwheelをその環境のdependenciesへ宣言する",
+      "検証済みのwheelをジョブのlibrariesへ追加し、インストール先をdriverのPython pathだけに限定して再実行する",
+      "ジョブのenvironment_keyを外し、serverlessの既定環境が対話ノートブックの%pip状態を引き継ぐようにする"
     ],
-    "answer": 0,
+    "answer": 1,
     "optionExplanations": [
-      "対話環境とジョブ環境の差を直接確認する。",
-      "データ配置はPythonモジュール未検出の原因ではない。",
-      "import環境の差を解消しない。",
-      "互換性問題を増やし、再現性も失う可能性がある。"
+      "「バージョンは未固定のまま」が違う。対話環境で動いた版を特定して宣言する前に、範囲指定のまま取り込むと別の版が入る。",
+      "ジョブ側の環境に、互換を確認したwheelを明示して足している。対話実行の成功をジョブへそのまま一般化していない。",
+      "「driverのPython pathだけに限定」が違う。ジョブのlibrariesやenvironmentは実行環境への宣言であり、driverだけへ分ける指定ではない。",
+      "「environment_keyを外し、serverlessの既定環境が対話ノートブックの%pip状態を引き継ぐ」が違う。ノートブックの対話インストールはジョブの環境へ自動では引き継がれない。"
     ],
-    "explanation": "どのPython環境・依存セットでタスクが動いたかを確認する。対話実行の成功をそのままジョブへ一般化しない。",
+    "explanation": "ModuleNotFoundErrorは、対話環境とジョブ環境の依存の差から疑う。宣言する場所はジョブのlibrariesまたはserverlessのenvironment dependenciesで、版は検証したものに固定する。",
     "source": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
     "guide": "1.2",
     "original": true,
@@ -59,19 +59,19 @@
     "topic": "UDFの選択",
     "prompt": "文字列の前後空白を除き小文字へ統一する処理が大規模テーブルで繰り返される。追加のPython固有処理はない。最初に選ぶ実装は？",
     "options": [
-      "Pandas UDFなら常に速いため無条件に採用する",
-      "lower(trim(col))など組み込みSQL関数を使う",
-      "各行を外部HTTP APIへ送るPython UDF",
-      "全件をcollectしてdriverでPythonの文字列処理をする"
+      "lower(trim(col))などの組み込みSQL関数で、Pythonの実行境界を増やさずに列を変換する",
+      "同じlowerとtrimをScalar Python UDFとしてカタログへ登録し、SQLからそのUDFを呼んで列を変換する",
+      "同じlowerとtrimをpandas UDFで実装し、Arrowで列を転送してから各バッチの文字列を変換する",
+      "同じlowerとtrimをPython UDFの中でSQL関数へ委譲し、行ごとにUDF経由で列を変換する"
     ],
-    "answer": 1,
+    "answer": 0,
     "optionExplanations": [
-      "Pandas UDFも型・転送・実行のコストがあり、常に最良ではない。",
-      "必要な変換が標準関数で表現でき、不要なPython実行境界を避けられる。",
-      "不要な外部通信と副作用・遅延が発生する。",
-      "大規模データをdriverへ集約し、分散処理を失う。"
+      "追加のPython固有処理がないため、Catalystが扱える組み込み関数で足りる。",
+      "「Scalar Python UDFとしてカタログへ登録」が違う。式自体はSQL関数と同じでも、UDFの呼び出し境界が増える。",
+      "「pandas UDFで実装し、Arrowで列を転送」が違う。組み込み関数で表現できる処理に、バッチ転送のコストを先に足している。",
+      "「Python UDFの中でSQL関数へ委譲」が違う。最終的に呼ぶ関数は同じでも、一度Python UDFを経由する必要がない。"
     ],
-    "explanation": "SQLで十分なら組み込み関数を優先。UDFは必要な処理と制約から選び、名称だけで高速性を決めない。",
+    "explanation": "標準の文字列関数で書ける変換は、SQLの組み込み関数を先に選ぶ。Scalar Python UDFもpandas UDFも実在する実装だが、この処理では実行境界が増えるだけで先に選ぶ理由がない。",
     "source": "https://docs.databricks.com/aws/en/udf/",
     "guide": "1.3",
     "original": true,
@@ -86,19 +86,19 @@
     "topic": "Auto Loaderの状態",
     "prompt": "クラシックStructured StreamingジョブのAuto Loader取り込みで、schemaLocationは保存されているがcheckpointLocationを毎回変えていた。既存ファイルの再処理が発生した。根本的な対策は？",
     "options": [
-      "異なる全クエリで同じチェックポイントを使う",
-      "出力取り込み先のDeltaテーブルだけをOPTIMIZEする",
-      "クエリ専用の永続的なcheckpointLocationを再利用し、再処理時の重複対策も設計する",
-      "schemaLocationだけを共有すれば進捗も完全に引き継げる"
+      "schemaLocationを固定し、checkpointLocationは実行ごとに分け、進捗はスキーマ保存先のファイル一覧で引き継ぐ",
+      "クエリ専用のcheckpointLocationを固定して再利用し、作り直す場合の重複書き込みもあわせて設計する",
+      "クエリ専用のschemaLocationを固定して再利用し、checkpointLocationは実行ごとに新しくして進捗を引き継ぐ",
+      "別の取り込みクエリとcheckpointLocationを共有し、schemaLocationだけをこのクエリ専用にして進捗を分離する"
     ],
-    "answer": 2,
+    "answer": 1,
     "optionExplanations": [
-      "独立したクエリが状態を共有すると整合性が壊れる。",
-      "出力ファイルの配置最適化はソースの取り込み進捗の復旧にはならない。",
-      "チェックポイントが進捗を保持する。新しい場所は新たなストリームの状態として扱われる。",
-      "推論スキーマの管理と取り込み進捗は別である。"
+      "「進捗はスキーマ保存先のファイル一覧で引き継ぐ」が違う。schemaLocationは推論スキーマの保存先で、どこまで処理したかはcheckpointが持つ。",
+      "進捗を持つcheckpointをクエリ専用の場所で再利用し、捨ててやり直すときの再書き込みも見ている。",
+      "「checkpointLocationは実行ごとに新しくして進捗を引き継ぐ」が違う。新しいcheckpointは別のストリーム状態になり、処理済みファイルを覚えていない。",
+      "「別の取り込みクエリとcheckpointLocationを共有」が違う。独立したクエリのオフセットを同じ場所に置くと、互いの進捗を上書きする。"
     ],
-    "explanation": "スキーマ管理と復旧状態を分ける。チェックポイントを破棄して再開する場合は、sinkへの再書き込みも考える。",
+    "explanation": "スキーマの管理と取り込みの進捗は別である。進捗はクエリ専用のcheckpointに残し、その場所を変えて再開するときはsinkへの重複書き込みを設計に含める。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "1.4",
     "original": true,
@@ -113,19 +113,19 @@
     "topic": "Streaming Tableの使いどころ",
     "prompt": "改変されない機器ログが追記で到着する。各ログの単純な型変換を行い、低遅延に新規到着分を処理したい。過去全件の再集計は不要。Lakeflowで基本となるオブジェクトは？",
     "options": [
-      "通常Viewを作れば入力を読まずに変換結果が物理保存される",
-      "すべての追記のたびに全履歴を手動再作成する",
-      "外部DBのforeign catalogを作ればログファイルの取り込み状態が管理される",
-      "Streaming Tableを使い、新規到着を増分処理する"
+      "通常のビューを定義し、参照のたびに型変換を計算して、到着した分だけを物理テーブルとして保存する",
+      "Streaming tableを定義し、改変されない機器ログの追記分だけを増分で読み取って型変換する",
+      "Materialized viewを定義し、追記のたびに定義クエリの結果全体を維持する更新として型変換する",
+      "AUTO CDCのターゲットをStreaming tableにし、追記の各行をSEQUENCE BYで上書きしながら型変換する"
     ],
-    "answer": 3,
+    "answer": 1,
     "optionExplanations": [
-      "通常Viewは結果を物理保存する仕組みではない。",
-      "不要な全再計算で、低遅延・増分処理の要件に合わない。",
-      "foreign catalogはこのファイル取り込みの状態管理用ではない。",
-      "追記データの継続的な処理という要件に適する。"
+      "「到着した分だけを物理テーブルとして保存する」が違う。通常のビューは問い合わせ時に計算する定義で、増分の結果を蓄えるオブジェクトではない。",
+      "改変されない追記を、低遅延で増分処理する基本のオブジェクトとしてStreaming tableを選んでいる。",
+      "「定義クエリの結果全体を維持する更新」が違う。Materialized viewはクエリ結果の維持向きで、過去全件の再集計が不要な追記変換の基本形ではない。",
+      "「SEQUENCE BYで上書き」が違う。AUTO CDCはキーと順序を持つ変更の適用であり、変更イベントではない追記ログの型変換ではない。"
     ],
-    "explanation": "STは追記型の処理に向く。一方、入力履歴の修正を含む集計結果が必要ならMV等の別設計を検討する。",
+    "explanation": "追記専用で行ごとの変換だけならStreaming tableが基本になる。ビューは保存しない。Materialized viewは結果の維持、AUTO CDCは変更の適用で、この要件の中心ではない。",
     "source": "https://docs.databricks.com/aws/en/ldp/",
     "guide": "1.6",
     "original": true,
@@ -141,19 +141,19 @@
     "topic": "CDCの順序",
     "prompt": "顧客属性のCDCには業務上の変更番号revがあるが、ネットワーク遅延でrev=20の後にrev=18が届くことがある。AUTO CDCの順序は何を使うべきか？",
     "options": [
-      "キーを顧客IDとし、SEQUENCE BYにはrevのようなソースの変更順序を使う",
-      "到着時に付けた連番だけで順序づける",
-      "顧客名をキーにし、文字列の長さを順序に使う",
-      "毎回チェックポイントを消して順序をリセットする"
+      "KEYSを顧客ID、SEQUENCE BYを到着時の処理連番にし、遅れて届いた小さいrevを新しい状態として適用する",
+      "KEYSを顧客名、SEQUENCE BYをrevにし、同じ氏名の顧客を一つのキーとしてrev順に適用する",
+      "KEYSを顧客ID、SEQUENCE BYをソースのrevにし、遅れて届いた小さいrevを古い変更として扱う",
+      "KEYSを顧客ID、SEQUENCE BYをrevにし、同じrevが並んだときはcheckpointを削除して順序を取り直す"
     ],
-    "answer": 0,
+    "answer": 2,
     "optionExplanations": [
-      "到着順でなく業務的な変更順序を扱える。",
-      "遅延した古い変更が新しい状態を上書きする恐れがある。",
-      "一意性と変更順序の意味の両方を満たさない。",
-      "状態の再構築は順序の正しい定義の代わりではなく、再処理も引き起こす。"
+      "「SEQUENCE BYを到着時の処理連番」が違う。rev=20のあとに届いたrev=18の方が大きい連番になり、古い変更が新しい状態を上書きする。",
+      "「KEYSを顧客名」が違う。順序にrevを使っていても、氏名は顧客の一意なキーにならない。",
+      "業務上のキーと、ソースが持つ変更順序を分けている。到着が前後しても小さいrevは古い変更として残る。",
+      "「checkpointを削除して順序を取り直す」が違う。同じ順序値の決着は追加の順序列で定義する話で、進捗の削除は順序の定義にならない。"
     ],
-    "explanation": "キー・順序列・履歴モデルを分けて設計する。同じ順序値があり得るなら適切なタイブレークも必要。",
+    "explanation": "AUTO CDCでは、どのエンティティかをKEYS、どの変更が新しいかをSEQUENCE BYに置く。遅延到着があるなら到着順や処理連番ではなく、ソースのrevを使う。",
     "source": "https://docs.databricks.com/aws/en/ldp/cdc",
     "guide": "1.7",
     "original": true,
@@ -168,19 +168,19 @@
     "topic": "制御フロー",
     "prompt": "品質判定タスクが合格なら公開タスク、不合格なら隔離レポートタスクを実行したい。両方が毎回起動することは避ける。適切な構成は？",
     "options": [
-      "公開側だけ実行し、不合格データを後で手で消す",
-      "If/Else条件タスクを置き、各後続タスクを対応する条件結果に依存させる",
-      "両後続タスクを品質判定の終了だけに依存させる",
-      "For Eachで二つの後続タスクを必ず反復する"
+      "品質判定をcondition taskにし、公開タスクと隔離タスクの両方をoutcome trueへdepends_onする",
+      "品質判定をFor eachタスクにし、入力配列の各要素について公開タスクのあとに隔離タスクを実行する",
+      "品質判定タスクの成功に両方をdepends_onし、run_ifはALL_SUCCESSのまま公開と隔離を起動する",
+      "品質判定をcondition taskにし、公開をoutcome true、隔離をoutcome falseへdepends_onする"
     ],
-    "answer": 1,
+    "answer": 3,
     "optionExplanations": [
-      "公開前の品質ゲートを満たさない。",
-      "判定結果を明示的な制御依存として扱える。",
-      "成功終了だけでは条件の真偽による排他的な分岐にならない。",
-      "反復は条件分岐の代わりではない。"
+      "「両方をoutcome trueへdepends_on」が違う。条件が真のときに公開と隔離がどちらも起動し、偽のときの隔離が定義されない。",
+      "「公開タスクのあとに隔離タスクを実行する」が違う。For eachは配列の反復で、合格と不合格の排他的な分岐ではない。",
+      "「run_ifはALL_SUCCESSのまま」が違う。判定タスクが成功終了すれば両方の依存が満たされ、品質の真偽では分岐しない。",
+      "condition taskのtrueとfalseに、公開と隔離をそれぞれ結び、両方が同時に起動する依存を避けている。"
     ],
-    "explanation": "「前のタスクが終わった」と「条件を満たした」を分けて依存関係を作る。",
+    "explanation": "タスクが終わったことと、条件が真だったことは別である。If/elseのcondition taskでは、後続をoutcome trueとoutcome falseへ分けて依存させる。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "1.9",
     "original": true,
@@ -196,19 +196,19 @@
     "topic": "再試行と副作用",
     "prompt": "タスクは課金APIを呼んだ直後に失敗することがある。APIには冪等キーの仕組みがある。ジョブの再試行で二重課金を避けたい。最善の改善は？",
     "options": [
-      "別タスクから同じAPIを同時に呼ぶ",
-      "driverログを無効にする",
-      "同じ業務処理で安定する冪等キーをAPIへ渡し、再試行時も同じ処理として認識させる",
-      "再試行回数だけを増やす"
+      "同じ業務処理では安定した冪等キーをAPIへ渡し、再試行も同じ処理として認識させる",
+      "再試行のたびに新しい冪等キーを発行してAPIへ渡し、失敗した呼出しを別の処理として記録する",
+      "max_retriesを増やし、冪等キーはAPIが応答を返したあとにサーバ側で採番して保存する",
+      "冪等キーにそのタスク実行のIDを使い、repairや再実行のたびに別の処理としてAPIへ送る"
     ],
-    "answer": 2,
+    "answer": 0,
     "optionExplanations": [
-      "競合と二重処理を増やす。",
-      "観測を減らすだけで二重課金を防止しない。",
-      "外部副作用も含めた重複防止になる。",
-      "成功後に結果応答を失うケースでは重複副作用を増やし得る。"
+      "呼出しの前に決まる安定したキーを再利用し、応答を失った再試行を同じ課金として扱わせている。",
+      "「再試行のたびに新しい冪等キー」が違う。キーが変わると、応答を失った成功済みの課金を別処理として再送することになる。",
+      "「応答を返したあとにサーバ側で採番」が違う。応答が届く前に失敗すると、次回の呼出しを同じ処理だとサーバが判断できない。",
+      "「タスク実行のID」が違う。repairや再試行では実行IDが変わるため、同じ業務処理でも別の冪等キーになる。"
     ],
-    "explanation": "自動再試行は正しさの保証ではない。副作用を冪等にするか、要件に応じて再試行を抑止する。",
+    "explanation": "再試行回数を増やすだけでは、成功後に応答が失われた呼出しの二重課金は防げない。冪等キーは業務処理に対して安定させ、試行ごとに変えない。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "1.10",
     "original": true,
@@ -223,19 +223,19 @@
     "topic": "テスト",
     "prompt": "変換関数のテストは入力100行・出力100行だけを確認している。実際にはamount列がすべてNULLに変わる不具合を見逃した。改善として最も適切なのは？",
     "options": [
-      "行数のassertを同じ条件で二回実行する",
-      "表示結果を人が毎回眺めることだけをCIとする",
-      "prodへの全件書き込みに成功したら内容も正しいと判断する",
-      "固定入力と期待DataFrameを作り、値と必要なスキーマをassertDataFrameEqual / assertSchemaEqual等で確認する"
+      "固定した入力に対して出力の行数だけを比較し、amountがNULLでも行数が同じならそのテストを成功にする",
+      "固定した入力と期待DataFrameを作り、show()の表示文字列が一致することだけをCIの検証にする",
+      "本番のテーブルへのwriteが例外なく終わることを検証し、書き込めた行数だけを期待値として比較する",
+      "固定入力と期待値を作り、値はassertDataFrameEqual、スキーマはassertSchemaEqualで比較する"
     ],
     "answer": 3,
     "optionExplanations": [
-      "同じ不足した条件を繰り返しても検出対象は増えない。",
-      "再現可能な自動検証にならない。",
-      "I/O成功は変換の意味の正しさを保証しない。",
-      "行数だけでなく内容・型の不具合を検出する。"
+      "「行数だけを比較」が違う。amountがNULLに変わっても行数は100のままなので、今回見逃した不具合を検出できない。",
+      "「show()の表示文字列」が違う。表示の省略や並びは値とスキーマの一致を保証しない。",
+      "「writeが例外なく終わる」が違う。書き込みの成功は、変換後の値や型が期待どおりであることを示さない。",
+      "行数ではなく値とスキーマを、固定した入力と期待結果で比較している。"
     ],
-    "explanation": "純粋な変換をDataFrame.transform等で切り出すと小さなデータで期待値テストを作りやすい。",
+    "explanation": "行数が同じでも列の値がNULLへ潰れていることがある。変換を純粋な関数として切り出し、assertDataFrameEqualとassertSchemaEqualで内容と型を見る。",
     "source": "https://docs.databricks.com/aws/en/ldp/",
     "guide": "1.11",
     "original": true,
@@ -250,19 +250,19 @@
     "topic": "Compaction",
     "prompt": "日々の取り込みで大量の小さなDeltaファイルができ、ファイルオープンの負担が大きい。クエリ結果を変えずに読み取りの効率を改善する第一候補は？",
     "options": [
-      "OPTIMIZEで小さなファイルをまとめる",
-      "VACUUMだけを実行して現在参照されている小ファイルを消す",
-      "SQL結果キャッシュだけに頼り、初回読取りのファイル数は対処しない",
-      "すべての行を異なるpartitionへ分ける"
+      "VACUUMで保持期間内に参照されている小ファイルを結合し、クエリ結果を変えずに読むファイル数を減らす",
+      "REORG TABLEのAPPLY (PURGE)で小ファイルを結合し、削除ベクトルがない表でも読むファイル数を減らす",
+      "OPTIMIZEのZORDER BYで列を並べ替え、ファイル自体は結合せずにオープン回数だけを減らす",
+      "OPTIMIZEで小さなファイルを結合し、クエリ結果の行を変えずに読むファイル数を減らす"
     ],
-    "answer": 0,
+    "answer": 3,
     "optionExplanations": [
-      "Compactionでファイル数に起因する負担を減らす。",
-      "VACUUMは不要な古いファイルの削除であり、現行小ファイルの結合ではない。",
-      "結果を再利用できない初回や異なるクエリではファイル数の負担が残る。",
-      "さらに細分化し、ファイル・メタデータ負担を増やす。"
+      "「参照されている小ファイルを結合」が違う。VACUUMは保持期間を過ぎた未参照ファイルの削除で、現在の小ファイルの結合ではない。",
+      "「APPLY (PURGE)で小ファイルを結合」が違う。PURGEは削除ベクトルなどの論理削除をファイルへ反映する書き換えで、小ファイル対策の結合ではない。",
+      "「ファイル自体は結合せず」が違う。OPTIMIZEはファイルをまとめ直すコマンドで、ZORDERは結合しない並べ替えではない。",
+      "OPTIMIZEのcompactionでファイル数を減らし、読める行の内容は変えていない。"
     ],
-    "explanation": "OPTIMIZEとVACUUMは目的が違う。小ファイル問題には取り込み粒度や自動最適化も合わせて検討する。",
+    "explanation": "小ファイルのオープンコストにはOPTIMIZEでファイルをまとめる。VACUUMは古いファイルの削除、REORGのPURGEは論理削除の反映で、目的が違う。",
     "source": "https://docs.databricks.com/aws/en/delta/optimize",
     "guide": "2.2",
     "original": true,
@@ -276,19 +276,19 @@
     "topic": "Liquid Clustering",
     "prompt": "新しい大規模Deltaテーブルは、利用者の検索列が変化しやすい。Liquid Clusteringを採用する設計レビューで、誤りを避けた説明は？",
     "options": [
-      "Liquidを使えばネットワーク障害もなくなる",
-      "検索パターンに合わせてキーを選び、従来のpartitioningやZORDERとの同時利用を前提にしない",
-      "Liquid、ZORDER、日付partitioningを同じテーブルへ必ず同時設定する",
-      "キー変更時点で既存の全ファイルが瞬時に最適配置される"
+      "CLUSTER BYのキーを検索列に合わせ、同じテーブルのPARTITIONED BYとZORDER BYも残して併用する",
+      "CLUSTER BYのキーを変えた時点で、既存ファイルも新しいキーの境界へ書き換わった配置として読む",
+      "CLUSTER BYのキーを検索列に合わせ、partitionやZORDERとは併用せず、既存データはOPTIMIZEで段階的に寄せる",
+      "CLUSTER BY AUTOで検索列の変化に追随させ、キーを変えた既存ファイルは書き換えなしで新しい配置として読む"
     ],
-    "answer": 1,
+    "answer": 2,
     "optionExplanations": [
-      "データ配置は通信障害の対策ではない。",
-      "Liquidの適合条件と非互換な配置方式を考慮している。",
-      "Liquidと従来の配置方式を無条件に併用する設計は誤り。",
-      "既存データの配置変更には最適化処理の条件がある。"
+      "「PARTITIONED BYとZORDER BYも残して併用」が違う。LiquidはpartitioningとZORDERの置き換えで、同じテーブルへの併用はできない。",
+      "「キーを変えた時点で、既存ファイルも新しいキーの境界へ書き換わった」が違う。キーの変更だけでは既存ファイルは書き換わらず、寄せるのはOPTIMIZEである。",
+      "検索列に合わせてキーを選び、非互換な配置方式を重ねず、既存データの再配置はOPTIMIZEに任せている。",
+      "「書き換えなしで新しい配置として読む」が違う。CLUSTER BY AUTOでも、既存ファイルの配置が変わるのはクラスタリングの書き換えが走ってからである。"
     ],
-    "explanation": "配置方式はテーブルサイズ・検索パターン・運用負担から選ぶ。万能な設定を重ねればよいわけではない。",
+    "explanation": "Liquidは検索列の変化に合わせてキーを見直せるが、partitionやZORDERと同時には使えない。既存ファイルが新しい配置になるのは、OPTIMIZEが段階的に書き換えたときである。",
     "source": "https://docs.databricks.com/aws/en/tables/clustering",
     "guide": "2.2・9.3",
     "original": true,
@@ -303,19 +303,19 @@
     "topic": "CDFの解釈",
     "prompt": "下流の「現在の注文状態」テーブルをCDFから更新する。update_preimageとupdate_postimageを両方INSERTし、deleteを無視していた。正しい方針は？",
     "options": [
-      "CDFを有効にしただけで下流へ自動適用されると考える",
-      "すべての変更種別を無視して行数だけ保存する",
-      "変更種別を解釈し、postimage等から現状を更新し、deleteで該当キーを削除する",
-      "preimageとpostimageの金額を常に足す"
+      "update_preimageとupdate_postimageをどちらも現状テーブルへINSERTし、deleteは該当キーの削除として反映する",
+      "update_postimageをINSERTし、update_preimageとdeleteは無視して、更新前の行を現状テーブルに残す",
+      "変更種別を解釈し、update_postimageで現状を更新し、deleteで該当キーを消し、preimageは更新前の値として扱う",
+      "insertとupdate_postimageをMERGEの入力にし、deleteが来たキーは現状テーブルへ追記して残す"
     ],
     "answer": 2,
     "optionExplanations": [
-      "CDFは変更の公開であり、sinkへの適用処理は必要。",
-      "下流の現在状態を再現できない。",
-      "現状テーブルには更新後の状態と削除の反映が必要。",
-      "変更前後を両方新規取引扱いし、重複・過大計上を招く。"
+      "「どちらも現状テーブルへINSERT」が違う。更新の前後を両方とも新しい行として足すと、同じキーが二重になる。",
+      "「deleteは無視して、更新前の行を現状テーブルに残す」が違う。postimageの追加だけでは古い行が残り、削除されたキーも現状に残る。",
+      "現状テーブルに必要なのは更新後の値と削除の反映で、preimageは適用前の値として区別している。",
+      "「deleteが来たキーは現状テーブルへ追記して残す」が違う。削除を追記として残すと、消えるべきキーが現状テーブルに残る。"
     ],
-    "explanation": "変更の公開（CDF）と、変更の適用（MERGE/AUTO CDC等）の責務を区別する。保持期間も下流の遅延と整合させる。",
+    "explanation": "CDFは変更の公開であり、現状テーブルへの適用は別の処理である。updateではpostimageを新しい状態にし、deleteではそのキーを外す。preimageを同時にINSERTしない。",
     "source": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
     "guide": "2.4",
     "original": true,
@@ -329,19 +329,19 @@
     "topic": "スキューの診断",
     "prompt": "join処理でほとんどのtaskは短時間で終わるが、特定taskだけ極端に遅く大量にspillする。結合キーの一部の値へデータが集中している。最初に検証する改善は？",
     "options": [
-      "結合キーの分布を見ず、shuffle partition数だけを大きくする",
-      "全データをdriverへcollectする",
-      "大きい方のテーブルをサイズ確認なしで常にbroadcastする",
-      "キー分布と実行計画を確認し、スキュー対策や適切なjoin戦略を評価する"
+      "結合キーの分布と実行計画を確認し、偏ったキーへの対処と、broadcastを含むjoin戦略を評価する",
+      "結合キーの分布を確認したうえで、行数の多い側のテーブルをbroadcast hintで各executorへ配る",
+      "結合キーの分布を確認したうえで、shuffle partitionの数を増やし、同じキーの集中を複数taskへ分割する",
+      "実行計画のexchangeを確認したうえで、両方のテーブルをdriverへcollectし、driver上でハッシュ結合する"
     ],
-    "answer": 3,
+    "answer": 0,
     "optionExplanations": [
-      "同じキーへの集中はpartition数だけでは解消しない場合があり、観測された偏りの検証が先。",
-      "大規模データを単一driverへ集め、さらにメモリ問題を招く。",
-      "受信側メモリを圧迫し得るため、無条件broadcastは不適切。",
-      "観測された偏りとspillの原因に直接対応する。"
+      "偏りが観測されているので、キー分布と計画を見てから、saltingやjoin方式を評価対象にしている。",
+      "「行数の多い側のテーブルをbroadcast」が違う。broadcastは収まる側のテーブルを配る戦略で、大きい側を配ると受信側のメモリを圧迫する。",
+      "「同じキーの集中を複数taskへ分割」が違う。partition数を増やしても、同一キーの行は同じshuffle先へ集まり、ホットキーは分かれない。",
+      "「driverへcollect」が違う。集中している結合をdriverへ集約すると、偏っていたtaskのメモリ問題をdriverへ移す。"
     ],
-    "explanation": "一部taskだけ遅いなら偏りを疑う。すべての性能問題に「クラスタを大きくする」を選ばない。",
+    "explanation": "一部のtaskだけが遅く大量にspillするときは、キーの偏りを先に確認する。partition数の増加も大きいテーブルのbroadcastも、その偏りを解消する第一手ではない。",
     "source": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
     "guide": "2.5",
     "original": true,
@@ -355,19 +355,19 @@
     "topic": "Deletion vectorsと物理消去",
     "prompt": "Deletion vectorsが有効なテーブルでDELETEした後、担当者が「元ファイルの該当バイトも直ちに消えた」と報告した。最も適切なレビューは？",
     "options": [
-      "論理削除と物理ファイルの消去は別であり、必要に応じた再書き込みと保持ルールに沿う削除を確認する",
-      "DELETEが成功したのでバックアップもすべて自動消去されたと認める",
-      "Deletion vectorsを有効にするとUC権限が不要になる",
-      "VACUUMを常にゼロ時間保持で実行する"
+      "Deletion vectorsが有効なDELETEは対象行を含むParquetを直ちに書き換え、VACUUMなしで旧バイトも現在のファイルから消える",
+      "Deletion vectorsが有効なDELETEは行を無効化し、REORG TABLEのAPPLY (PURGE)だけでtime travel用の旧ファイルも消える",
+      "Deletion vectorsが有効なDELETEは行を無効化し、続けてOPTIMIZEすれば保持期間内の履歴ファイルもVACUUMと同じように消える",
+      "Deletion vectorsが有効なDELETEは行を無効化し、物理的に消すならファイルの書き換えと、その後のVACUUMを保持ルールに沿って行う"
     ],
-    "answer": 0,
+    "answer": 3,
     "optionExplanations": [
-      "Deletion vectorsは行の無効化を管理し、即時の物理消去とは同義でない。",
-      "別の保存物まで消去されたという根拠はない。",
-      "最適化と認可は別の機能。",
-      "実行中ワークロードや復旧を壊す危険があり、安全な一般策でない。"
+      "「Parquetを直ちに書き換え、VACUUMなしで旧バイトも現在のファイルから消える」が違う。削除ベクトルは行を無効化するメタデータで、ファイルの即時書き換えではない。",
+      "「APPLY (PURGE)だけでtime travel用の旧ファイルも消える」が違う。PURGEは論理削除を現在のファイルへ反映するが、過去バージョンのファイルはVACUUMまで残る。",
+      "「履歴ファイルもVACUUMと同じように消える」が違う。OPTIMIZEはファイルの書き換えであり、保持期間内の過去ファイルをVACUUMのように削除はしない。",
+      "論理削除と、書き換え、その後のVACUUMによる物理削除を、保持期間と分けて確認している。"
     ],
-    "explanation": "書き換えコスト削減と消去要請の完了を混同しない。REORG/VACUUM等は保持・復旧要件と一緒に判断する。",
+    "explanation": "削除ベクトルは行の無効化であり、Parquet上のバイトの即時消去ではない。物理的に消すにはREORGのPURGEやOPTIMIZEで書き換え、保持期間のあとVACUUMで古いファイルを外す。",
     "source": "https://docs.databricks.com/aws/en/delta/deletion-vectors",
     "guide": "2.2・5.5",
     "original": true,
@@ -381,19 +381,19 @@
     "topic": "決定的な重複除去",
     "prompt": "customer_idごとにchanged_atが最大の1行を残したい。同時刻の行もあり、一意なevent_idで決着したい。最適なSQLパターンは？",
     "options": [
-      "時刻順で並べずに最初に読み込まれた行を残す",
-      "ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY changed_at DESC, event_id DESC)を付け、1を残す",
-      "RANK()で時刻だけを並べ、rank=1を残す",
-      "GROUP BY customer_idだけで任意の行を選ぶ"
+      "RANK() OVER (PARTITION BY customer_id ORDER BY changed_at DESC) の1を残し、同時刻の行は同じ順位のまま採用する",
+      "ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY changed_at DESC) の1を残し、同時刻のevent_idは順序に使わない",
+      "ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY changed_at DESC, customer_id DESC) の1を残し、取引ごとに1行にする",
+      "ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY changed_at DESC, event_id DESC) の1を残し、同時刻はevent_idで一意にする"
     ],
-    "answer": 1,
+    "answer": 3,
     "optionExplanations": [
-      "分散処理の読取り順は業務的な最新順ではない。",
-      "時刻の同順位をevent_idで解消し、顧客ごとに1行にできる。",
-      "同時刻に複数行が残り得る。",
-      "最大時刻の行とその属性の対応を保証しない。"
+      "「RANK()」と「同時刻の行は同じ順位のまま」が違う。同時刻が複数あると1が複数行残り、顧客ごとに1行へ決まらない。",
+      "「event_idは順序に使わない」が違う。ROW_NUMBERでも、時刻だけを見ると同時刻のどれが残るかがevent_idで決まらない。",
+      "「PARTITION BY event_id」が違う。分割が取引単位になり、customer_idごとの最新1行を選ぶ窓にならない。",
+      "顧客で分け、時刻の同順位を一意なevent_idで決着し、ROW_NUMBERの1だけを残している。"
     ],
-    "explanation": "「最新」と「一意」を両方満たす順序を定義する。ORDER BYの決定性が重要。",
+    "explanation": "最新かつ一意な1行にするには、PARTITION BYを顧客、ORDER BYをchanged_atとevent_idにし、同順位を作らないROW_NUMBERを使う。RANKは同順位を複数残す。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
     "guide": "3.1",
     "original": true,
@@ -407,19 +407,19 @@
     "topic": "Joinの増幅",
     "prompt": "売上factを商品マスタと結合したところ金額が増えた。マスタには同じ商品IDの履歴行が複数ある。最初に直すべき点は？",
     "options": [
-      "結果の行をランダムに半分消す",
-      "クラスタを大きくすれば増幅しなくなる",
-      "factの発生時点に対応するマスタ行を選ぶなど、joinキーと履歴の対応を一意にする",
-      "SUM(DISTINCT amount)へ置き換えれば結合キーの見直しは不要とする"
+      "商品IDだけでマスタの履歴行へ結合し、増えた金額はSUM(DISTINCT amount)で注文件数へ戻す",
+      "売上の発生時点に有効なマスタ行、またはその時点の代理キーへ結合し、商品IDの履歴を一意にする",
+      "商品IDで結合したあとROW_NUMBERで履歴を1行に落とし、いつの属性かはORDER BYに使わない",
+      "マスタを最新行だけ残すType 1として結合し、売上時点の属性ではなく現在の商品属性で一意にする"
     ],
-    "answer": 2,
+    "answer": 1,
     "optionExplanations": [
-      "正しい対応関係を回復しない。",
-      "計算資源ではjoinの意味は変わらない。",
-      "不要な多対多の行増幅を防止する。",
-      "同額の別取引等もあり、業務意味を保つ一般的解決ではない。"
+      "「SUM(DISTINCT amount)」が違う。同じ金額の別取引まで1件に潰れ、履歴のどの行と対応するかも決まらない。",
+      "factの発生時点に対応する履歴行へ絞り、商品IDだけの多対多を解消している。",
+      "「いつの属性かはORDER BYに使わない」が違う。1行に減らしても、売上時点と無関係な履歴行が残ることがある。",
+      "「現在の商品属性で一意にする」が違う。最新行への結合は行数を減らせても、売上当時の属性との対応を捨てている。"
     ],
-    "explanation": "性能を見る前に粒度・一意性・履歴期間を確認する。履歴dimensionとのjoinは業務キーだけでは足りない場合がある。",
+    "explanation": "金額が増えた原因は、商品IDに対してマスタの履歴が複数あることである。発生時点の有効行か、その時点の代理キーまで含めて結合を一意にする。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
     "guide": "3.1・9.4",
     "original": true,
@@ -434,19 +434,19 @@
     "topic": "NULLを含む隔離",
     "prompt": "amount >= 0を正常条件として正常・隔離の両テーブルへ振り分ける。amountがNULLの行も必ず隔離したい。正しい設計は？",
     "options": [
-      "amount >= 0とNOT(amount >= 0)だけを別々に使う",
-      "DROP ROWだけを指定すれば隔離テーブルにも自動保存される",
-      "品質条件を設定せず全件を正常テーブルへ送る",
-      "coalesce(amount >= 0, false)をvalidフラグにし、validとNOT validへ分岐する"
+      "正常側をamount >= 0、隔離側をNOT (amount >= 0)とし、NULLはどちらの条件にも残さない",
+      "正常側をcoalesce(amount >= 0, false)、隔離側をその否定とし、NULLも隔離側へ入れる",
+      "正常側をamount >= 0、隔離側をamount < 0とし、NULLはDROP ROWの結果として隔離テーブルへ書き出す",
+      "正常側をcoalesce(amount >= 0, true)、隔離側をその否定とし、NULLは正常側へ入れる"
     ],
-    "answer": 3,
+    "answer": 1,
     "optionExplanations": [
-      "NULLはUNKNOWNなので、どちらにも入らない場合がある。",
-      "DROPは破棄であり、隔離出力の自動作成ではない。",
-      "NULLを隔離する要件を満たさない。",
-      "NULLの判定をfalseへ明示変換し、二分を完全にできる。"
+      "「NULLはどちらの条件にも残さない」が違う。NULLとの比較はUNKNOWNになり、NOTを付けてもUNKNOWNのまま両方から落ちる。",
+      "比較結果のNULLをfalseへ寄せ、正常と隔離が漏れなく分かれるようにしている。",
+      "「DROP ROWの結果として隔離テーブルへ書き出す」が違う。DROP ROWは行を捨てる動作で、隔離テーブルへの保存にはならない。amount < 0もNULLには一致しない。",
+      "「coalesce(amount >= 0, true)」が違う。NULLをtrueへ寄せるため、隔離したいNULLが正常側へ入る。"
     ],
-    "explanation": "正常側・不正側の条件がNULLを含めて全体を網羅し、重複もないか確認する。",
+    "explanation": "amount >= 0はNULLに対してUNKNOWNであり、そのNOTもUNKNOWNである。coalesceでfalseへ明示してから、真と偽へ二分する。DROP ROWは隔離先への書き込みではない。",
     "source": "https://docs.databricks.com/aws/en/ldp/expectations",
     "guide": "3.2",
     "original": true,
@@ -460,19 +460,19 @@
     "topic": "救済列と業務品質",
     "prompt": "Auto LoaderでJSONを読んだ。amount=-100は正しく数値として解析されたため_rescued_dataは空だった。負の売上を隔離するには？",
     "options": [
-      "型の救済とは別にamountの業務ルールを定義し、正常・隔離へ振り分ける",
-      "_rescued_dataが空なので業務上も正しいと認める",
-      "スキーマのamount列をDOUBLEに指定するだけで負数を拒否する",
-      "スキーマの推論ディレクトリを削除する"
+      "_rescued_dataが空の行はスキーマに適合したとみなし、負のamountも型の検証を通過したので正常テーブルへ入れる",
+      "amountをDOUBLEにし、schemaEvolutionModeをaddNewColumnsにして、負数は進化モードが隔離テーブルへ回す",
+      "型として読めていることとは別にamountの業務条件を定義し、負の売上を正常テーブルと隔離テーブルへ振り分ける",
+      "schemaEvolutionModeをrescueにし、数値として解析できた負数も_rescued_dataへ入れてから隔離する"
     ],
-    "answer": 0,
+    "answer": 2,
     "optionExplanations": [
-      "構文・型の正しさと業務上の妥当性を分離できる。",
-      "解析可能な不正値は救済列に入るとは限らない。",
-      "DOUBLE型は負数も表現でき、業務品質条件の代わりにはならない。",
-      "業務ルールを追加せず、スキーマ管理を壊し得る。"
+      "「型の検証を通過したので正常」が違う。救済列が空なのは解析できたという意味で、負の売上という業務ルールの合格ではない。",
+      "「進化モードが隔離テーブルへ回す」が違う。DOUBLEは負数を表現でき、addNewColumnsは新しいフィールドの追加であって負数の拒否ではない。",
+      "解析の成否と、amountが0以上かという業務条件を分けて隔離している。",
+      "「解析できた負数も_rescued_dataへ」が違う。rescueは型不一致や未知フィールドの退避であり、有効な数値は救済列に入らない。"
     ],
-    "explanation": "取り込みの救済列を品質エンジンと同一視しない。期待条件・隔離・再処理を設計する。",
+    "explanation": "_rescued_dataはスキーマに合わなかった値の退避である。数値として読めた負の売上は業務ルールで正常と隔離に分ける。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "3.2",
     "original": true,
@@ -486,19 +486,19 @@
     "topic": "利用量と金額",
     "prompt": "担当者がsystem.billing.usageのusage_quantityを全SKUで合計し、その数値を米ドル請求額として報告した。修正は？",
     "options": [
-      "すべて同じ固定単価を仮定する",
-      "利用量の単位を確認し、金額が必要ならSKU・クラウド・価格有効期間等に対応する単価を適切に結合する",
-      "列名をdollarsへ変えれば金額になる",
-      "auditログの行数をドルとする"
+      "usage_quantityをSKUごとに合計し、list_pricesはsku_nameだけで結合して、その積を請求額として報告する",
+      "usage_quantityを米ドルの金額とみなし、list_pricesはusage_unitがDBUの行だけを後から掛けて報告する",
+      "list_pricesの単価をSKUで区別せず一つの平均にし、usage_quantityの合計へその平均を掛けて請求額にする",
+      "usage_quantityの単位を確認し、SKU、クラウド、価格の有効期間が一致するlist_pricesを掛けて金額にする"
     ],
-    "answer": 1,
+    "answer": 3,
     "optionExplanations": [
-      "SKU・時期等の違いを無視し、検証不能な金額になる。",
-      "利用量と金額は異なり、期間に合う価格の適用が必要。",
-      "名前の変更は単位を変換しない。",
-      "監査行数は課金額ではない。"
+      "「sku_nameだけで結合」が違う。同じSKUでもクラウドや価格の有効期間が違えば単価が違うため、名前だけでは期間に合う価格にならない。",
+      "「usage_quantityを米ドルの金額とみなし」が違う。usage_quantityは利用量であり、DBU以外のSKUを後から除外しても単位の変換にはならない。",
+      "「一つの平均にし」が違う。SKUごとの価格をならすと、実際に発生したSKUと期間の単価にはならない。",
+      "利用量と金額を分け、価格表の結合キーにSKU、クラウド、有効期間を含めている。"
     ],
-    "explanation": "コスト分析では単位と価格条件を確認する。本教材は価格数値を推測しない。",
+    "explanation": "system.billing.usageのusage_quantityは請求額そのものではない。金額にするならsystem.billing.list_pricesを、SKU、クラウド、利用時刻が価格の有効期間に入る条件で結合する。",
     "source": "https://docs.databricks.com/aws/en/admin/system-tables/",
     "guide": "4.1",
     "original": true,
@@ -513,19 +513,19 @@
     "topic": "API成功と実行成功",
     "prompt": "Jobs APIからrunの取得要求にHTTP 200が返った。チームは「ジョブも成功した」と結論した。正しい確認は？",
     "options": [
-      "job_idだけを見て直近のrunを特定したと考える",
-      "タスクがRUNNINGになった時点で全処理成功とする",
-      "取得したrunのlife-cycle / resultと、必要なtaskの状態を確認する",
-      "200ならタスク状態を無視してよい"
+      "取得したrunのlife_cycle_stateとresult_state、それに必要なtaskの状態を確認する",
+      "応答のHTTP 200を、そのrunのresult_stateがSUCCESSであるという意味として読み、taskの状態は参照しない",
+      "応答のJSONに含まれるjob_idが要求した値と一致すれば、そのジョブの直近のrunは成功したと判断する",
+      "tasksの先頭要素がTERMINATEDであれば、残りのtaskのresult_stateはSUCCESSとして扱う"
     ],
-    "answer": 2,
+    "answer": 0,
     "optionExplanations": [
-      "ジョブ定義と個別実行は異なる。",
-      "開始と完了は異なり、後続タスクの失敗もあり得る。",
-      "HTTP成功は情報取得の成功であり、処理結果とは別。",
-      "情報取得成功と業務実行成功を混同している。"
+      "APIの取得成功と、runおよびtaskの結果を別々に見ている。",
+      "「HTTP 200を、そのrunのresult_stateがSUCCESSであるという意味として読み」が違う。200は取得要求の成功で、runはTERMINATEDかつFAILEDのことがある。",
+      "「job_idが要求した値と一致すれば、そのジョブの直近のrunは成功したと判断する」が違う。job_idはジョブ定義の識別であり、どのrunが成功したかはstateを見る。",
+      "「先頭要素がTERMINATEDであれば、残りのtaskのresult_stateはSUCCESSとして扱う」が違う。TERMINATEDは終了であって成功ではなく、他のtaskの失敗も残り得る。"
     ],
-    "explanation": "監視対象はAPI呼出しだけでなく非同期の実行状態。job・run・taskを区別する。",
+    "explanation": "Jobs APIのHTTP 200は、run情報の取得が成功したことである。処理の成否はlife_cycle_state、result_state、そして必要なtaskの状態で確認する。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "4.3",
     "original": true,
@@ -541,19 +541,19 @@
     "topic": "品質メトリクス",
     "prompt": "パイプラインは正常終了しているが、DROP設定の期待条件で捨てられる行が急増した。まず調べる観測源は？",
     "options": [
-      "system.billing.usageの利用量だけ",
-      "SQL WarehouseのQuery Profileだけ",
-      "Jobs UIの最終成功ステータスだけ",
-      "Pipeline event logの品質メトリクスと該当flowの実行情報"
+      "更新がCOMPLETEDであるevent logを起点にし、期待条件のdropped_recordsは成功のうちとして件数を見ない",
+      "ジョブの成功ステータスをevent logの代わりに見、flowごとの品質メトリクスはSQL Alertの結果で代用する",
+      "Query Profileのスキャン行数をevent logのdata_qualityとみなし、DROPされた行数の代わりに使う",
+      "Pipeline event logの該当flowについて、期待条件の品質メトリクスと、そのflowの実行情報を見る"
     ],
     "answer": 3,
     "optionExplanations": [
-      "使用量だけでは期待条件ごとの違反や破棄の詳細はわからない。",
-      "パイプラインの品質メトリクスを直接確認するにはevent logが適する。",
-      "成功という状態だけではDROPされた不正行の増加を検出できない。",
-      "処理成功でも品質違反がある状態を確認できる。"
+      "「dropped_recordsは成功のうちとして件数を見ない」が違う。更新の完了は、DROPで捨てられた行が増えていないことを示さない。",
+      "「成功ステータスをevent logの代わり」が違う。ジョブの成功はflowごとの期待条件の件数を持たない。SQL Alertもそのログの代替ではない。",
+      "「スキャン行数をevent logのdata_qualityとみなし」が違う。SQLの実行プロファイルは、パイプラインの期待条件が捨てた行数ではない。",
+      "処理が成功していても、event logに残る品質メトリクスでDROPの増加を確認している。"
     ],
-    "explanation": "成功終了と品質達成は同じでない。DROPは処理を止めずに不正行を減らすため、品質の観測が必要。",
+    "explanation": "DROP設定の期待条件は更新を失敗させずに行を捨てる。完了ステータスではなく、Pipeline event logの該当flowに出る品質メトリクスを見る。",
     "source": "https://docs.databricks.com/aws/en/ldp/expectations",
     "guide": "4.4",
     "original": true,
@@ -568,19 +568,19 @@
     "topic": "アラート設計",
     "prompt": "日次で更新される品質集計をSQL Alertで監視したい。毎分評価しているが、前日の成功値を見て当日の障害を見逃した。最適な改善は？",
     "options": [
-      "集計の鮮度も条件へ含め、更新スケジュールと評価窓・通知先を整合させる",
-      "評価頻度を毎秒へ上げるだけ",
-      "正常値を定数としてSQLに埋め込む",
-      "通知先を消す"
+      "集計の最大時刻が予定の更新窓に入っていることも条件にし、評価間隔と通知先を日次の更新に合わせる",
+      "評価間隔は1分のままにし、前日の品質値との差だけを見て、当日分が未着でも前回値を正常として扱う",
+      "品質のしきい値をSQLの中の固定値にし、更新時刻の列は条件から外して、評価間隔だけを日次にする",
+      "通知先をアラートの実行主体にし、データの鮮度の代わりに、その集計SQLの実行成功を合格条件にする"
     ],
     "answer": 0,
     "optionExplanations": [
-      "古い正常値と最新データ未到着を区別できる。",
-      "古い値を頻繁に評価しても鮮度問題は解消しない。",
-      "品質監視にならない。",
-      "検知結果が担当者へ伝わらなくなる。"
+      "古い正常値が残っている状態と、当日の更新が届いていない状態を、鮮度の条件で分けている。",
+      "「当日分が未着でも前回値を正常として扱う」が違う。評価を速くしても、見ている行が前日の成功値のままなら当日の障害は出ない。",
+      "「更新時刻の列は条件から外して」が違う。評価を日次にしても、時刻を見なければ古いままの集計値が条件を満たし続ける。",
+      "「集計SQLの実行成功を合格条件」が違う。アラートSQLが実行できたことは、集計対象の日次データが新鮮であることではない。"
     ],
-    "explanation": "アラートは条件式だけでなく、データ鮮度・実行時刻・通知経路まで一体で設計する。",
+    "explanation": "SQL Alertは条件式だけでなく、データの鮮度、評価の間隔、通知先を日次の更新スケジュールと揃える。前日の値を頻繁に評価しても、当日の未着は検知できない。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "4.5",
     "original": true,
@@ -595,19 +595,19 @@
     "topic": "USE権限",
     "prompt": "analystsグループにはmain.sales.ordersへのSELECTとmainへのUSE CATALOGがあるが、main.salesへのUSE SCHEMAがない。必要な追加権限は？",
     "options": [
-      "テーブルのSELECTを同じ対象へ重複付与する",
-      "main.salesへのUSE SCHEMAを付与する",
-      "メタストア全体の管理者権限を付与する",
-      "テーブルへのSELECTをcatalog全体へ広げるだけにする"
+      "main.salesへのUSE SCHEMAを付与し、既にあるcatalogのUSE CATALOGおよびテーブルのSELECTと揃える",
+      "main.salesへのUSE CATALOGを付与し、catalog側に付いているUSE CATALOGと同じ権限をschemaにも足す",
+      "main.sales.ordersへのUSE SCHEMAを付与し、テーブルを参照するための親権限としてSELECTに追加する",
+      "main.salesへのSELECTを付与し、親schemaのUSE SCHEMAはcatalogのUSE CATALOGで既に満たされているとみなす"
     ],
-    "answer": 1,
+    "answer": 0,
     "optionExplanations": [
-      "不足しているUSE SCHEMAを補わない。",
-      "与えられた条件で不足する親schemaの使用権限を補う。",
-      "読取りのためには過剰で、最小権限でない。",
-      "読取り権限を広げても不足するUSE SCHEMAは補われず、範囲も過剰になる。"
+      "不足しているのはschemaを横断するUSE SCHEMAであり、既に付いているUSE CATALOGとSELECTはそのままにしている。",
+      "「main.salesへのUSE CATALOGを付与」が違う。USE CATALOGはcatalogに付ける権限で、schemaに足りないUSE SCHEMAの代わりにはならない。",
+      "「main.sales.ordersへのUSE SCHEMAを付与」が違う。USE SCHEMAはschemaに付ける権限で、テーブルに付けても親schemaの使用権にはならない。",
+      "「USE SCHEMAはcatalogのUSE CATALOGで既に満たされている」が違う。テーブルのSELECTがあっても、親schemaのUSE SCHEMAがなければ参照できない。"
     ],
-    "explanation": "テーブルSELECT、USE CATALOG、USE SCHEMAの責務は別。必要最小限の不足だけを補う。",
+    "explanation": "テーブルを読むには、catalogのUSE CATALOG、schemaのUSE SCHEMA、テーブルのSELECTがそれぞれ要る。この条件で足りないのはmain.salesのUSE SCHEMAである。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
     "guide": "5.1・8.2",
     "original": true,
@@ -623,19 +623,19 @@
     "topic": "行と列の制御",
     "prompt": "全地域の取引を分析する権限は維持したいが、一般分析者にはemail列だけ伏せたい。最も直接的な制御は？",
     "options": [
-      "テーブルコメントに「emailを見ないこと」と書く",
-      "全員に所有権を付ける",
-      "権限に応じた列マスクをemailへ適用する",
-      "emailがある行をすべて行フィルタで除外する"
+      "取引テーブルに行フィルタを設定し、emailが入っている行を、権限のない利用者の結果から外す",
+      "email列に列マスクを設定し、マスク関数がNULLを返した行は行フィルタで結果から落とす",
+      "地域列に列マスクを設定し、emailの値はそのまま残して、地域コードだけを権限に応じて置き換える",
+      "email列に列マスクを設定し、全地域の行を残したまま、権限に応じてemailの値だけを置き換える"
     ],
-    "answer": 2,
+    "answer": 3,
     "optionExplanations": [
-      "アクセス制御を強制しない。",
-      "制御を強めるどころか過剰権限になる。",
-      "行範囲を維持しながら列値の表示を制御する。",
-      "必要な取引行まで失われ、要件に合わない。"
+      "「emailが入っている行を、権限のない利用者の結果から外す」が違う。隠したいのはemailの値で、emailを持つ取引行まで分析対象から消える。",
+      "「マスク関数がNULLを返した行は行フィルタで結果から落とす」が違う。列マスクは値の置き換えであり、マスクされた行を結果から除外する動作ではない。",
+      "「地域列に列マスク」が違う。マスクの対象列がemailではなく、要件のemailはそのまま読める。",
+      "行の範囲は維持し、email列の表示だけをマスク関数で制御している。"
     ],
-    "explanation": "行の可視範囲と列値の可視範囲を区別する。マスキングは保存データの物理消去ではない。",
+    "explanation": "行を残して列の値だけを隠すのは列マスクである。行フィルタは行ごと結果から外す。マスクは保存済みデータの物理削除ではない。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
     "guide": "5.2",
     "original": true,
@@ -650,19 +650,19 @@
     "topic": "ハッシュ化の限界",
     "prompt": "電話番号をソルトなしハッシュへ変換した。担当者は「元の番号へ戻せないので、誰とも照合できない完全匿名データになった」と述べた。適切な評価は？",
     "options": [
-      "ハッシュを使えば法令確認は不要とする",
-      "同じ番号の同じハッシュも一致しないとする",
-      "列名をanonymousにすれば安全になる",
-      "候補が限られる入力は照合・辞書攻撃が可能なため、再識別リスクを評価し仮名化と匿名化を区別する"
+      "ソルトなしハッシュは元の番号へ戻せないので、同じ番号との照合も、候補を順に試す再識別もできない",
+      "ソルトなしの決定的ハッシュは同じ番号が同じ値になり、候補が限られる番号は照合され得るので、仮名化と匿名化を分ける",
+      "ソルトなしハッシュは呼出しごとに別の値になるので、同じ番号どうしの突合はできず、匿名化まで完了している",
+      "列のタグをanonymousにすれば、ソルトなしハッシュについて再識別のリスクを評価しなくても匿名データとして扱える"
     ],
-    "answer": 3,
+    "answer": 1,
     "optionExplanations": [
-      "技術名だけで法的要件は満たせない。",
-      "決定的なハッシュなら同じ入力は同じ値になる。",
-      "名前は再識別リスクを変えない。",
-      "一方向変換だけで匿名性を断定できない。"
+      "「照合も、候補を順に試す再識別もできない」が違う。一方向でも決定的なら同じ番号は同じハッシュになり、番号の候補空間が狭ければ照合できる。",
+      "同じ入力が同じ値になる点と、電話番号のように候補が限られる点を分け、仮名のままで匿名とは言っていない。",
+      "「呼出しごとに別の値になる」が違う。ソルトなしの決定的ハッシュは、同じ番号なら同じ値になる。",
+      "「タグをanonymousにすれば」が違う。タグの文字列はハッシュの決定性も候補空間も変えない。"
     ],
-    "explanation": "匿名性は再識別可能性と利用条件で判断。ハッシュ、トークン、抑制、一般化の違いを押さえる。",
+    "explanation": "ソルトなしのハッシュは仮名化には使えても、番号のように候補が限られる値では辞書的な照合が残る。元に戻せないことと、誰とも照合できないことは別である。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
     "guide": "5.3",
     "original": true,
@@ -677,19 +677,19 @@
     "topic": "削除要請の範囲",
     "prompt": "退会者をsilverだけからDELETEしたが、bronzeからの定期再処理で復活した。適切な消去戦略は？",
     "options": [
-      "元データ・派生物と再取込み経路を特定し、再導入防止と旧ファイル・保持期間・バックアップを含めて管理する",
-      "毎回silverを手でDELETEし続け、元データは無視する",
-      "列マスクだけでデータを完全消去したとする",
-      "進行中ジョブを確認せず保持安全策を無効にして全ファイルを消す"
+      "silverからのDELETEに加え、bronzeは残し、再処理のときにsilver側のビューで同じキーを戻さないようにする",
+      "silverとbronzeの現行バージョンからDELETEし、削除ベクトルで隠せば、旧ファイルとバックアップの確認は省く",
+      "元データ、派生物、再取込みの経路を洗い、再導入の防止と、旧ファイル、保持期間、複製の削除まで含める",
+      "対象者の列を列マスクでNULLにし、silverのDELETEとVACUUMを省いても、保持期間に沿った消去は完了しているとみなす"
     ],
-    "answer": 0,
+    "answer": 2,
     "optionExplanations": [
-      "単一層のDELETEでなくライフサイクル全体を扱う。",
-      "再導入の根本原因と他の保存物を解決しない。",
-      "マスクは可視制御であり物理消去ではない。",
-      "読み取り整合性や復旧を損なう危険がある。"
+      "「bronzeは残し、再処理のときにsilver側のビューで同じキーを戻さない」が違う。再処理がbronzeからsilverを作り直すと、ビューの定義とは別に行が戻る。",
+      "「旧ファイルとバックアップの確認は省く」が違う。現行バージョンのDELETEや削除ベクトルでは、過去ファイルと別の複製は消えていない。",
+      "消した層へ戻ってくる経路と、論理削除のあとに残るファイルや複製を、保持ルールと一緒に見ている。",
+      "「列マスクでNULLにし、silverのDELETEとVACUUMを省いても、保持期間に沿った消去は完了している」が違う。マスクは参照時の値の置き換えで、保持期間に沿った物理的な消去ではない。"
     ],
-    "explanation": "保持・削除・再処理は一つの設計。DELETE、物理再書き込み、VACUUM、複製物の責務を分離する。",
+    "explanation": "silverだけをDELETEしても、bronzeからの再処理で戻る。消去は元データ、派生物、再取込み、古いファイル、保持期間、バックアップや複製までを一つの方針にする。",
     "source": "https://docs.databricks.com/aws/en/tables/operations/vacuum",
     "guide": "5.5",
     "original": true,
@@ -704,19 +704,19 @@
     "topic": "部分修復",
     "prompt": "三つのタスクA→B→CのうちAは成功し、Bは一時的な外部接続障害で失敗、Cは未実行。原因が解消した。Aには高コストな副作用がある。最初に検討する方法は？",
     "options": [
-      "Cだけを独立実行し、Bが生成するはずのデータは以前のものを使う",
-      "出力整合性を確認し、repairでBと必要な後続Cを実行する",
-      "常にAから全体を何度も再実行する",
-      "Bを成功と書き換えてCだけ動かす"
+      "repairでBの状態を成功へ更新し、未実行だったCだけを同じrunの後続タスクとして起動する",
+      "新しいrunでAから再実行し、BとCはそのやり直したAの結果にdepends_onさせる",
+      "失敗したBを別のジョブとして単体実行し、Cは元のrunに残っているタスク値を参照して続行する",
+      "出力の整合を確認し、repairで失敗したBと必要な後続のCを実行して、成功済みのAは再実行しない"
     ],
-    "answer": 1,
+    "answer": 3,
     "optionExplanations": [
-      "必要なBの出力が欠け、同じ実行としての整合性を満たせない。",
-      "成功したAの不要な再実行を避けられる。",
-      "不要な副作用・コストを増やす可能性がある。",
-      "Bの必要な処理が完了した保証がない。"
+      "「Bの状態を成功へ更新」が違う。Bの処理が終わっていないのに成功へ変えると、Cが依存するBの出力が無い。",
+      "「Aから再実行」が違う。接続障害が解消したあとも、副作用の大きいAを新しいrunの先頭からやり直すことになる。",
+      "「別のジョブとして単体実行」が違う。元のrunのrepairではなくなるため、Cが同じ実行のタスク値や出力を引き継げない。",
+      "原因が解消したあとのrepairで、失敗したBと未実行のCに範囲を絞っている。"
     ],
-    "explanation": "repairは原因を直した後の回復手段。再実行範囲と既存出力の整合性を判断する。",
+    "explanation": "repairは、失敗したタスクと、そのために走らなかった後続を同じrunの中でやり直す手段である。成功済みで副作用の大きいAまで含めるかは、出力の整合を見てから決める。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "6.2",
     "original": true,
@@ -731,19 +731,19 @@
     "topic": "Bundleライフサイクル",
     "prompt": "CIでdatabricks bundle validateが成功した。担当者は「prodへの配備とデータ処理も完了した」と報告した。正しい説明は？",
     "options": [
-      "validateだけでprodの全ジョブが必ず起動する",
-      "runだけならリソース定義は不要になる",
-      "validateは設定検証であり、配備にはdeploy、ワークロード実行にはrun等の別工程が必要",
-      "validateは全データの業務品質を実証する"
+      "validateはバンドル設定を検証し、成功するとそのtargetへのdeployと、ジョブのrunまで同じ成功に含まれる",
+      "validateはバンドル設定を検証し、deployはリソースを配置し、データの業務品質はrunの終了コードで実証される",
+      "validateはバンドル設定の検証であり、リソースの配置はdeploy、ワークロードの実行はrunなど別の工程で確認する",
+      "validateはtargetの変数を展開して検証し、deployを省いても、その後のrunが本番のリソース定義を更新する"
     ],
     "answer": 2,
     "optionExplanations": [
-      "コマンドの役割が異なる。",
-      "再現可能な配備や既存リソースの準備を無視できない。",
-      "検証・配備・実行を分けて扱う。",
-      "設定検証はデータ処理の意味の検証ではない。"
+      "「deployと、ジョブのrunまで同じ成功に含まれる」が違う。validateの成功は設定検証の成功で、配置も実行も行っていない。",
+      "「業務品質はrunの終了コードで実証」が違う。検証、配置、実行の分担は合っているが、runが終わったことはデータの業務的な正しさまでは示さない。",
+      "validate、deploy、runの役割を、設定、配置、実行に分けている。",
+      "「deployを省いても、その後のrunが本番のリソース定義を更新する」が違う。定義をターゲットへ反映するのはdeployで、runは配置済みのワークロードを実行する。"
     ],
-    "explanation": "validate成功を統合テスト成功や本番実行成功へ飛躍させない。各工程の証跡を確認する。",
+    "explanation": "databricks bundle validateの成功は、バンドルが検証を通ったことである。本番への反映はdeploy、処理の実行はrunで、それぞれの結果を別に確認する。",
     "source": "https://docs.databricks.com/aws/en/dev-tools/bundles/",
     "guide": "6.4",
     "original": true,
@@ -758,19 +758,19 @@
     "topic": "Gitと本番の再現性",
     "prompt": "本番ノートブックをUI上で緊急修正したが、Git上のコミットは古いままだった。次の配備で修正が消えた。防ぐ運用は？",
     "options": [
-      "本番だけGitを使わず、手順を記憶する",
-      "すべてのブランチを同じprodパスへ同時に配備する",
-      "prodの手動修正を正とし、次回CIで使うコミットの確認を省く",
-      "変更をレビュー可能なソース管理へ反映し、特定コミットのテスト済み成果物を環境間で昇格させる"
+      "本番で直した内容をGit folderの作業ブランチへcommitし、レビュー前の先端をそのままprodのtargetへdeployする",
+      "本番UIの修正を正本として残し、次回のdeployが古いcommitで上書きしないよう、CIの本番適用を止める",
+      "本番の修正をレビューできるソースへ反映し、テストを通った特定のcommitを環境の間で昇格させる",
+      "Git folder上の本番ブランチを直接直し、他の環境へは各ワークスペースに残るUIの状態を同期して再現する"
     ],
-    "answer": 3,
+    "answer": 2,
     "optionExplanations": [
-      "追跡性と再現性を失う。",
-      "競合と上書きを招く。",
-      "次回も古いコードが配備され得るため、乖離を解消していない。",
-      "デプロイ元と本番状態の乖離を防ぐ。"
+      "「レビュー前の先端をそのままprodのtargetへdeployする」が違う。commitしても、レビューとテストを通る前の先端を本番の昇格単位にしている。",
+      "「CIの本番適用を止める」が違う。UI上の修正を守るために配置を止めると、次に通るcommitとの差が残ったままになる。",
+      "本番の手修正を、レビュー可能なcommitと、テスト済みの昇格単位に戻している。",
+      "「各ワークスペースに残るUIの状態を同期」が違う。環境ごとの画面上の差分を正本にすると、どのcommitが本番かが再び分からなくなる。"
     ],
-    "explanation": "Git foldersはソース管理の入口。CI/CDと組み合わせてコミット・設定・実行環境を追跡する。",
+    "explanation": "本番ノートブックだけを直すと、次のdeployの元になるcommitが古いままになる。変更はソース管理へ戻し、テスト済みのcommitを環境間で昇格させる。",
     "source": "https://docs.databricks.com/aws/en/repos/",
     "guide": "6.5",
     "original": true,
@@ -785,19 +785,19 @@
     "topic": "診断情報",
     "prompt": "ジョブがSparkのstageを開始する前に、Python import時の例外で失敗している。最初に見る情報は？",
     "options": [
-      "タスク出力やdriverログの例外と、実際の依存・実行環境",
-      "存在しないstageのshuffle指標だけ",
-      "全テーブルのVACUUM履歴だけ",
-      "SQL Query Profileのスキャン量だけ"
+      "Spark UIで失敗したstageのshuffle readを見、importの例外はexecutor lostの失敗として切り分ける",
+      "SQLのQuery Profileに出るスキャン量を見、importできなかったライブラリはテーブル統計の欠落として扱う",
+      "driverログに出た例外に加え、そのクラスタが実行したVACUUMの履歴を、依存ライブラリの解決結果として使う",
+      "タスクの出力とdriverログに出た例外を見、その実行に対して宣言されたライブラリと実行環境を確認する"
     ],
-    "answer": 0,
+    "answer": 3,
     "optionExplanations": [
-      "失敗段階と一致する診断源。",
-      "Spark処理前の例外なので主要な原因を見落とす。",
-      "import例外の直接の情報源ではない。",
-      "SQL実行前のPython importエラーの主な診断源ではない。"
+      "「失敗したstageのshuffle read」が違う。例外はstageが始まる前のimportで起きているため、shuffleの指標はまだ無い。",
+      "「スキャン量」と「テーブル統計の欠落」が違う。Query ProfileはSQLの実行結果の見方で、Pythonのimport失敗の層ではない。",
+      "「VACUUMの履歴を、依存ライブラリの解決結果として使う」が違う。driverログ自体は見る場所だが、VACUUMの履歴はimportできたかの根拠にならない。",
+      "失敗がSparkのstageより前なので、タスク出力とdriverログ、そして宣言された依存を見ている。"
     ],
-    "explanation": "診断ツールは失敗の層から選ぶ。すべての障害をSparkのデータ処理として扱わない。",
+    "explanation": "診断の入口は、失敗した層に合わせる。importの例外はstageのメトリクスではなく、タスク出力、driverログ、その実行環境のライブラリ宣言に出る。",
     "source": "https://docs.databricks.com/aws/en/jobs/",
     "guide": "6.1",
     "original": true,
@@ -812,19 +812,19 @@
     "topic": "スキーマ進化",
     "prompt": "クラウドストレージへ毎時JSONが到着し、後から任意の新規フィールドが追加される。型が解釈できないデータも捨てずに調査したい。適切な取り込み設計は？",
     "options": [
-      "救済列を出力から削除すればスキーマ進化も完了したとする",
-      "Auto Loaderのスキーマ管理・進化方針と救済データを設計し、checkpointで進捗を保持する",
-      "毎時すべての状態を削除して全件を初回扱いにする",
-      "未知のフィールドを無条件に廃棄し、調査できるとする"
+      "schemaLocationとcheckpointを固定し、新しいフィールドを受け入れる進化モードと、型不一致を残す救済列を設計する",
+      "schemaLocationとcheckpointを固定し、進化モードはaddNewColumnsにして、型不一致の値は救済列ではなく正常列のNULLにする",
+      "schemaLocationとcheckpointを固定し、進化モードはfailOnNewColumnsにして、未知のフィールドが届いたバッチは失敗で止める",
+      "schemaLocationとcheckpointを固定し、既知の列だけを明示スキーマで読み、未知のフィールドは捨てて調査対象にしない"
     ],
-    "answer": 1,
+    "answer": 0,
     "optionExplanations": [
-      "救済データを捨てても未知の列や型変更を正しく取り込む方針は定義されない。",
-      "到着検出、スキーマ変化、解析問題、進捗を分けて管理する。",
-      "進捗を失い、再処理・重複を招く。",
-      "情報が失われ、調査要件を満たせない。"
+      "スキーマの保存先、未知フィールドの受け入れ、解析できない値の救済、処理済み位置のcheckpointを分けて持っている。",
+      "「型不一致の値は救済列ではなく正常列のNULLにする」が違う。addNewColumnsは列の追加には使えても、解釈できなかった元の値は救済列に残さないと調査できない。",
+      "「未知のフィールドが届いたバッチは失敗で止める」が違う。未知フィールドを失敗として止めると、追加されたフィールドを取り込んで調査する要件を満たさない。",
+      "「未知のフィールドは捨てて調査対象にしない」が違う。明示スキーマで既知列だけを読むと、追加フィールドも型不一致の元データも残らない。"
     ],
-    "explanation": "スキーマの変化への方針を明示する。実際に許可する進化や再起動の条件は設定・環境に合わせて確認する。",
+    "explanation": "毎時増えるJSONでは、スキーマの進化、解析できない行の救済、処理済みファイルのcheckpointを別に設計する。新しい場所へ状態を作り直すと、進捗もスキーマの履歴も切れる。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "7.1",
     "original": true,
@@ -838,19 +838,19 @@
     "topic": "追記と変更",
     "prompt": "上流DeltaテーブルにUPDATE/DELETEが入る。下流は現在の状態を正確に保つ必要がある。変更コミットをスキップしてappendだけ処理する設計についての評価は？",
     "options": [
-      "OPTIMIZEすれば下流の業務キーも自動削除される",
-      "skipChangeCommits等で変更コミットを読み飛ばすだけで十分とする",
-      "変更が伝わらないため要件を満たさず、CDF等で更新・削除の適用を設計する",
-      "スキップすれば下流も自動で同じ更新・削除を行う"
+      "変更コミットを読み飛ばすだけでは更新と削除が下流へ届かない。CDFなどで変更を読み、現状のキーへ適用する",
+      "skipChangeCommitsで変更コミットを読み飛ばせば、下流は同じキーの更新と削除を現状テーブルへ適用できる",
+      "ignoreDeletesで削除による読取りの失敗を避け、UPDATEで変わった行は追記として現状テーブルへ反映する",
+      "readChangeFeedを無効にした追記読取りのまま、変更コミットを含む上流でも下流の現在状態を維持する"
     ],
-    "answer": 2,
+    "answer": 0,
     "optionExplanations": [
-      "データ配置の最適化は変更適用の仕組みではない。",
-      "読み飛ばしは変更適用ではなく、下流へ更新・削除を伝えない。",
-      "追記読取りだけでは現在状態を維持できない。",
-      "変更を読まないことは変更適用と同じではない。"
+      "追記として読める範囲と、更新や削除を現状へ適用する処理を分けている。",
+      "「更新と削除を現状テーブルへ適用できる」が違う。skipChangeCommitsは変更コミットを下流へ渡さないための指定で、適用処理ではない。",
+      "「UPDATEで変わった行は追記として現状テーブルへ反映する」が違う。ignoreDeletesは削除を無視して読取りを続けるオプションで、更新を現状への追記適用にはしない。",
+      "「readChangeFeedを無効にした追記読取りのまま、変更コミットを含む上流でも下流の現在状態を維持する」が違う。変更フィードを読まない追記読取りは、上流のUPDATEとDELETEを現状へ反映しない。"
     ],
-    "explanation": "append-only設計の前提が破れたときに、単にエラーを回避するか正しさを満たすかを区別する。",
+    "explanation": "skipChangeCommitsやignoreDeletesは、変更を含むコミットで追記読取りが止まらないようにするための選択肢である。現在状態を維持するなら、CDFなどを読んで更新と削除を適用する。",
     "source": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
     "guide": "7.2",
     "original": true,
@@ -864,19 +864,19 @@
     "topic": "ソース別の読取り",
     "prompt": "チームはKafkaのイベントとクラウド上のParquetを取り込む。担当者が「どちらもAuto Loaderで同じファイルオプションを使えばよい」と提案した。正しい修正は？",
     "options": [
-      "Kafkaをファイルパス文字列としてread_filesへ渡せばよい",
-      "KafkaのオフセットをAuto LoaderのschemaLocationに保存すれば十分とする",
-      "両ソースで無条件に同じcheckpointを共有する",
-      "Kafkaには対応するStreamingソース、到着ファイルにはAuto Loader等を使い、認証と進捗管理をそれぞれ設計する"
+      "KafkaのトピックをcloudFilesのパスとして読み、オフセットはschemaLocationへ、Parquetは同じcheckpointへ書く",
+      "Kafkaは対応するストリーミングソース、到着ファイルはAuto Loaderとし、認証と進捗の保存先をソースごとに分ける",
+      "KafkaもParquetもread_filesへ同じオプションで渡し、checkpointはトピック名とディレクトリパスで共有する",
+      "Kafka内のJSONはAuto LoaderのschemaEvolutionModeで解釈し、オフセットはファイルの更新時刻で進める"
     ],
-    "answer": 3,
+    "answer": 1,
     "optionExplanations": [
-      "ソースの意味とコネクタを混同している。",
-      "スキーマ保存先はKafkaの取り込み進捗管理を代替しない。",
-      "独立クエリの状態を混在させる。",
-      "メッセージバスとファイルソースは読取り方式が異なる。"
+      "「トピックをcloudFilesのパス」と「オフセットはschemaLocation」が違う。schemaLocationはファイル取込みのスキーマ保存先で、Kafkaのオフセットではない。",
+      "メッセージバスとファイルでコネクタを分け、認証と、オフセットまたはファイル進捗も別々に持っている。",
+      "「read_filesへ同じオプション」と「checkpointはトピック名とディレクトリパスで共有する」が違う。read_filesはファイルの読取りで、独立したソースのcheckpointを一つにすると進捗が混ざる。",
+      "「オフセットはファイルの更新時刻で進める」が違う。Kafkaの読み位置はオフセットであり、Auto Loaderのファイル検出やスキーマ進化の設定ではない。"
     ],
-    "explanation": "フォーマットの列挙とコネクタの対応を分ける。入力源・認証・オフセット／ファイル進捗を確認する。",
+    "explanation": "KafkaはKafkaソース、クラウド上のファイルはAuto Loaderや対応するファイルreaderで読む。認証と、オフセットかファイル進捗かもソースごとに設計する。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "7.1",
     "original": true,
@@ -890,19 +890,19 @@
     "topic": "継承元の確認",
     "prompt": "グループはschema全体にSELECTを持つ。ある子テーブルを読めなくするため、そのテーブルの直接GRANTだけを外したが読めるままだった。まず調べることは？",
     "options": [
-      "schema等から継承した権限とグループ所属を確認し、権限付与の範囲を見直す",
-      "テーブル側でSELECTを再付与してから外す操作を繰り返す",
-      "親のSELECTは将来のテーブルには無関係と考える",
-      "ビューの表示列だけ減らし、元テーブルへの読取り権限はそのままにする"
+      "テーブルに直接のGRANTが残っていないことを確認し、schemaのSELECTはこれから作られる表にだけ効くとみなして終わる",
+      "schemaから継承されているSELECTと、グループの所属を確認し、権限を付与している範囲を見直す",
+      "そのテーブルの所有者を外し、schemaから継承したSELECTは所有者がいない表では効かなくなるようにする",
+      "その表を参照するビューの表示列を減らし、元テーブルに残るschema由来のSELECTはそのままにする"
     ],
-    "answer": 0,
+    "answer": 1,
     "optionExplanations": [
-      "直接権限を外しても親から得るアクセスが残る場合がある。",
-      "直接付与を操作しても親の継承権限が残る問題は解消しない。",
-      "適用可能な継承権限は将来の子にも及ぶ。",
-      "別のアクセス経路が残り、元テーブルの読取り禁止にはならない。"
+      "「これから作られる表にだけ効く」が違う。schemaに付いたSELECTは、既にある子テーブルにも継承される。直接GRANTを外しても親の権限は残る。",
+      "読めている理由を、テーブル直接のGRANTではなく、schemaの継承とグループ所属から追っている。",
+      "「所有者がいない表では効かなくなる」が違う。所有者の有無は、親schemaから継承されたSELECTを無効にしない。",
+      "「元テーブルに残るschema由来のSELECTはそのままにする」が違う。ビューを狭めても、元テーブルへの継承されたSELECTは残る。"
     ],
-    "explanation": "どこからアクセスが来たかを追う。親の広い付与と子の限定を矛盾させない設計が必要。",
+    "explanation": "子テーブルの直接GRANTを外しても、schemaなど親に付いたSELECTとグループ所属が残っていれば読める。付与した範囲が今の表と将来の表のどちらに効くかを確認する。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
     "guide": "8.2",
     "original": true,
@@ -916,19 +916,19 @@
     "topic": "メタデータと保護",
     "prompt": "多数のテーブルに「責任者」「更新頻度」「PIIの分類」を付け、発見しやすくしたい。同時に「タグさえ付けば読取り拒否も自動で完了する」と言われた。正しい説明は？",
     "options": [
-      "タグは所有権と同義である",
-      "コメント・タグで発見性を高め、実際の認可やマスキングは対応する権限・ポリシーとして別途設計する",
-      "コメントにconfidentialと書くだけで全SELECTが拒否される",
-      "PIIの実値をタグの値へ全部書き込む"
+      "コメントとタグで発見性を上げ、紐づくABACポリシーがなくても、タグの値だけでそのテーブルのSELECTを拒否する",
+      "コメントへPIIの分類を書き、同じ文字列のタグが付いた列は、列マスクを定義しなくても読取りを拒否する",
+      "責任者をタグの値として記録し、そのタグを持つ利用者には、テーブル所有者と同じGRANTや削除を許可する",
+      "コメントとタグで発見性を上げ、読取りの拒否やマスクは、権限とABACなどのポリシーとして別に設定する"
     ],
-    "answer": 1,
+    "answer": 3,
     "optionExplanations": [
-      "分類属性と所有者は異なる。",
-      "メタデータとアクセス制御を区別している。",
-      "説明文だけでは制御は強制されない。",
-      "メタデータ側に機密情報を拡散する。"
+      "「タグの値だけでそのテーブルのSELECTを拒否する」が違う。タグは分類であり、拒否するには紐づくポリシーや権限が別に要る。",
+      "「列マスクを定義しなくても読取りを拒否」が違う。コメントも通常のタグも、それだけではマスクや拒否を実行しない。",
+      "「所有者と同じGRANTや削除を許可」が違う。タグに書いた責任者は所有者ではなく、タグの付与は所有権の付与ではない。",
+      "発見のためのメタデータと、強制のための権限やポリシーを分けている。"
     ],
-    "explanation": "governed tagsとABACポリシーの連携はあるが、一般のタグ追加だけで任意のアクセス制御が成立するとはいえない。",
+    "explanation": "コメントとタグは、責任者やPII分類を見つけて理解するための情報である。読取り拒否やマスクは、権限、列マスク、governed tagsに紐づくABACポリシーとして別に定義する。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/",
     "guide": "8.1",
     "original": true,
@@ -942,19 +942,19 @@
     "topic": "継承と所有権",
     "prompt": "catalog内の全テーブルへの適用可能なSELECTを付与された利用者が「今後作られるテーブルも自分の所有物になる」と主張した。正しい理解は？",
     "options": [
-      "USE CATALOGがあればSELECTも必ず自動付与される",
-      "子の権限は一切継承されず毎回全件手作業しかない",
-      "読取り権限の継承と所有権は異なる。必要な親USE権限も含めてアクセス条件を確認する",
-      "SELECTがあれば将来の全オブジェクトの所有者になる"
+      "catalogに付いているSELECTの継承により、今後作られるテーブルの所有者も、そのSELECTを持つ利用者へ移る",
+      "catalogのUSE CATALOGがあれば、その中に作られるテーブルのSELECTと所有権はどちらも自動で付く",
+      "継承されるSELECTと所有権は別であり、新しいテーブルの所有者は作成者になる。利用には親のUSE権限も要る",
+      "親に付いたSELECTは今あるテーブルだけに継承され、今後のテーブルはUSE CATALOGだけでSELECTと所有権が付く"
     ],
     "answer": 2,
     "optionExplanations": [
-      "親の使用権限はデータ読取り権限を与えない。",
-      "UCの適用可能な継承モデルを無視している。",
-      "SELECTの継承はownership付与ではない。",
-      "読取り権限を所有権と混同している。"
+      "「今後作られるテーブルの所有者も、そのSELECTを持つ利用者へ移る」が違う。継承されるのは読取り権限で、今後のテーブルの所有者は作成者のままである。",
+      "「SELECTと所有権はどちらも自動で付く」が違う。USE CATALOGはcatalog内のオブジェクトを使うための権限で、SELECTも所有権も与えない。",
+      "読取りの継承、所有者、親のUSE権限を別の条件として見ている。",
+      "「今あるテーブルだけに継承」が違う。親への付与は今後作られるテーブルにも及び得る。USE CATALOGだけではSELECTも所有権も付かない。"
     ],
-    "explanation": "公式サンプルの継承の説明を、USE権限不要や所有権付与まで拡大解釈しない。",
+    "explanation": "catalogやschemaに付いたSELECTは、条件を満たす子オブジェクトへ継承される。それは所有権とは別で、新しいテーブルの所有者は作成者である。参照には親のUSE権限も残る。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference",
     "guide": "8.2",
     "original": true,
@@ -968,19 +968,19 @@
     "topic": "Factの粒度",
     "prompt": "注文ヘッダーfactには注文ごとの総額が1行、明細factには商品ごとの行がある。注文総額を商品カテゴリ別に集計したい。最初にすべき設計判断は？",
     "options": [
-      "ヘッダー総額を全明細へそのまま複製してSUMする",
-      "集計前に金額を丸めれば粒度の不一致も解消するとする",
-      "テーブルをLiquidにすれば金額の意味も自動修正される",
-      "集計の粒度と配賦規則を明確にし、ヘッダー総額を明細数だけ重複計上しないモデルにする"
+      "ヘッダーの注文総額を、その注文のカテゴリ別明細の各行へ複製し、複製した額をSUMしてカテゴリ別の金額にする",
+      "ヘッダーの注文総額を明細行数で割らず、カテゴリに落ちた明細の件数を注文総額へ掛けてカテゴリへ配賦する",
+      "集計したい粒度と、総額を明細へ割り戻す規則を決め、ヘッダー総額を明細の行数ぶん重ねてSUMしない",
+      "明細factを商品カテゴリでCLUSTER BYしてからヘッダー総額を結合し、物理的な配置と同じ粒度でSUMする"
     ],
-    "answer": 3,
+    "answer": 2,
     "optionExplanations": [
-      "明細の数だけ同じ注文総額を足す可能性がある。",
-      "丸めてもヘッダーと明細の多重結合は解消しない。",
-      "物理配置は集計の業務意味を変えない。",
-      "異なる粒度の結合で生じる金額の増幅を避ける。"
+      "「各行へ複製し、複製した額をSUM」が違う。注文総額が明細の数だけ足され、カテゴリ別の合計が注文金額を超える。",
+      "「明細の件数を注文総額へ掛けて」が違う。割らずに件数を掛けると、配賦ではなく総額の増幅になる。",
+      "ヘッダーと明細で粒度が違うことを先に認め、重複計上しない配賦を設計している。",
+      "「物理的な配置と同じ粒度でSUMする」が違う。Liquidの配置は結合後の金額が何を表すかを変えない。"
     ],
-    "explanation": "Professionalでは物理的な高速性より先に、正しい粒度・加算可能性・結合関係を確認する。",
+    "explanation": "注文ヘッダーの総額と商品明細は粒度が違う。カテゴリ別に出すなら、どの金額をどの粒度で足すかの配賦を先に決める。配置の変更では二重計上は消えない。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
     "guide": "9.1",
     "original": true,
@@ -994,19 +994,19 @@
     "topic": "Type 2 dimension",
     "prompt": "顧客の所属が変わっても、過去の売上は売上発生時の所属で分析したい。適切なモデルは？",
     "options": [
-      "Type 2 dimensionの履歴を保持し、売上発生時点の有効行または対応する代理キーで結合する",
-      "Type 1で最新所属へ上書きし、過去売上も常に最新所属へ結合する",
-      "業務キーだけでdimensionの全履歴行へ結合する",
-      "Type 2履歴は保持するが、売上は常にis_current=trueの行へ結合する"
+      "Type 1で最新の所属へ上書きし、過去の売上も売上日の行ではなく、現在の所属行へ結合する",
+      "Type 2の履歴行は残し、売上は業務キーだけで結合して、有効期間では絞り込まず履歴の各行へつなぐ",
+      "Type 2の履歴行は残し、売上はis_currentが真の行へ結合して、過去の所属を現在の所属へ置き換える",
+      "Type 2の履歴行を残し、売上発生時点で有効だった行、またはその時点に記録した代理キーへ結合する"
     ],
-    "answer": 0,
+    "answer": 3,
     "optionExplanations": [
-      "過去時点の属性を正しく保持できる。",
-      "過去時点の所属という要件を失う。",
-      "同じ売上が複数履歴へ結合され、重複する。",
-      "最新行への結合では過去時点の所属を分析できない。"
+      "「Type 1で最新の所属へ上書き」が違う。過去の所属が残らないため、売上発生時の所属では分析できない。",
+      "「有効期間では絞り込まず履歴の各行へつなぐ」が違う。業務キーだけだと、一つの売上が複数の履歴行へ増える。",
+      "「is_currentが真の行へ結合」が違う。履歴テーブルはあっても、現在行へだけつなぐと過去の売上まで現在の所属になる。",
+      "売上の時点に有効な履歴、または書込時の代理キーへ結び、当時の所属を残している。"
     ],
-    "explanation": "履歴を保持するだけでなく、factがどの履歴行へ対応するかまで設計する。",
+    "explanation": "発生時点の所属が要るなら、Type 2の履歴を持つだけでは足りない。factは、その時点の有効行か、そのとき記録した代理キーへ結合する。現在行だけへの結合はType 1と同じ結果になる。",
     "source": "https://docs.databricks.com/aws/en/ldp/cdc",
     "guide": "9.4",
     "original": true,
@@ -1020,19 +1020,19 @@
     "topic": "Federation",
     "prompt": "外部DBを全面コピーせず、UC管理下で問い合わせたい。利用者の権限だけでなく外部DBへの接続も設定する。適切な基本構成は？",
     "options": [
-      "外部DBのJDBC資格情報を各利用者のノートブックへ直接書き込む",
-      "接続情報を持つconnectionとforeign catalogを設定し、UC権限・外部認証・ネットワークを確認する",
-      "UCのSELECTだけ付与すれば外部側の認証も必ず不要になる",
-      "foreign catalogを作ると元DBへの負荷が必ずゼロになる"
+      "外部DBの資格情報を利用者ごとのノートブックへ書き、foreign catalogに付いたSELECTだけでその接続を代替する",
+      "資格情報を持つconnectionとforeign catalogを作り、UC上の権限、外部DBの認証、ネットワーク到達性を分けて確認する",
+      "foreign catalogへSELECTを付与すれば、connectionに外部資格情報を持たせなくても、外部DBへ問い合わせできる",
+      "connectionを作れば問い合わせは外部DBへ送られず、foreign catalogへ同期した複製だけでUCの権限を評価する"
     ],
     "answer": 1,
     "optionExplanations": [
-      "管理されたconnectionとUC統制ではなく、資格情報の拡散も招く。",
-      "外部ソースの認証とUC上の統制を分けて扱う。",
-      "外部DBやネットワークの条件を無視している。",
-      "外部問い合わせはソース側の処理負荷を伴い得る。"
+      "「ノートブックへ書き、foreign catalogに付いたSELECTだけでその接続を代替する」が違う。資格情報が利用者ごとに広がり、UCのconnectionで外部認証を管理する形にならない。",
+      "外部への資格情報はconnectionに置き、利用者にはUCの権限を付ける、という分担になっている。",
+      "「外部資格情報を持たせなくても、外部DBへ問い合わせできる」が違う。foreign catalogのSELECTはUC側の権限で、外部DBが求める認証の代わりにはならない。",
+      "「問い合わせは外部DBへ送られず、foreign catalogへ同期した複製だけ」が違う。Federationの基本は外部への問い合わせであり、全面コピーを置かずに読む構成である。"
     ],
-    "explanation": "Federationはデータをコピーしない選択肢だが、認証・pushdown・ソース負荷の検討が必要。",
+    "explanation": "Lakehouse Federationは、connectionの資格情報で外部DBへ接続し、foreign catalogをUCの権限で見せる。SELECTを付けただけでは外部認証は不要にならず、ソース側の負荷も残り得る。",
     "source": "https://docs.databricks.com/aws/en/query-federation/",
     "guide": "10.2",
     "original": true,
@@ -1046,19 +1046,19 @@
     "topic": "外部プラットフォームへの共有",
     "prompt": "共有元はUC管理テーブルを持ち、受信者はDatabricksを利用していない。毎晩のCSVメール配布ではなく、制御された共有プロトコルを使いたい。検討するものは？",
     "options": [
-      "データを全世界公開バケットへ出せば最小権限になる",
-      "共有元の全テーブルを含む単一shareを全受信者へ配る",
-      "Delta Sharingのopen sharing（D2O / Databricks-to-Open）と、受信者の認証・対応クライアント",
-      "D2Dの受信者metastoreが相手に必ずあると仮定する"
+      "Delta Sharingのオープン共有を使い、受信者の認証と対応クライアントを確認したうえで、必要な対象だけをshareへ入れる",
+      "受信者がDatabricksを使っていなくても、共有元のsharing identifierを渡せばD2Dのmetastore共有として認証できる",
+      "オープン共有のトークンを受信者のグループで共用し、対象に加え同じカタログの関連テーブルも一つのshareへまとめる",
+      "配布する資格情報を減らし、共有したいテーブルを公開バケット上のCSVとして置いて、オープン共有の代わりにする"
     ],
-    "answer": 2,
+    "answer": 0,
     "optionExplanations": [
-      "制御された共有と最小権限を満たさない。",
-      "共有すべき範囲を超え、受信者ごとの最小権限を満たさない。",
-      "Databricks外の受信者への共有という条件に合う。",
-      "Databricksを使わない受信者という前提に合わない。"
+      "Databricksを使わない受信者に合わせ、オープン共有の認証とクライアント、共有する対象の範囲を確認している。",
+      "「sharing identifierを渡せばD2Dのmetastore共有」が違う。D2Dの受信者は相手のDatabricks metastoreであり、identifierだけでは外部クライアントにならない。",
+      "「トークンを受信者のグループで共用」と「関連テーブルも一つのshareへまとめる」が違う。オープン共有でも、トークンとshareの対象は受信者ごとに必要な範囲へ限る。",
+      "「公開バケット上のCSV」が違う。ファイルを公開する配布は、受信者の認証や共有解除があるDelta Sharingのオープン共有ではない。"
     ],
-    "explanation": "D2Dとオープン共有を受信者の環境から選ぶ。資格情報・対応機能・共有解除の運用も確認する。",
+    "explanation": "受信者がDatabricksを使わない場合に検討するのは、オープン共有（D2O）である。D2Dは受信側のmetastoreを識別する方式で、共有するテーブルは必要なものに限る。",
     "source": "https://docs.databricks.com/aws/en/delta-sharing/",
     "guide": "10.1",
     "original": true,
@@ -1073,19 +1073,19 @@
     "topic": "宣言型か自前制御か",
     "prompt": "標準的な取り込み・品質・CDCを扱うチームは、依存順と更新状態の手動管理を減らしたい。一方、別チームは特殊な外部sinkへの書き込み契約を細かく制御したい。適切な判断は？",
     "options": [
-      "常に低水準APIを使い、手動の依存管理を増やす方が運用最小である",
-      "前者はLakeflow、後者は対応機能を確認してStructured Streaming等を検討し、運用責務と自由度を比較する",
-      "両者とも短いSQLなら通常Viewだけで障害復旧と書き込みまで完了する",
-      "両者ともforeachBatchを使えば任意の外部sinkで追加実装なしにexactly-onceになる"
+      "標準的な取り込み、品質、CDCもforeachBatchで書き、外部sinkと同じくオフセットと依存関係を自前のコードで管理する",
+      "標準的な取り込み、品質、CDCはLakeflowを使い、特殊な外部sinkは対応範囲を確認してStructured Streamingなどと比較する",
+      "どちらもMaterialized viewの定義だけにし、外部sinkへの書き込みが一度で終わることはビューのリフレッシュが保証する",
+      "どちらもforeachBatchで書き、sinkがその書き込みを冪等にしていなくても、関数の再実行は一度だけになる前提にする"
     ],
     "optionExplanations": [
-      "低水準APIは柔軟だが、自前の状態・依存管理の責務も増える。",
-      "要件が標準的な宣言型処理か、独自の書き込み制御かを分けて判断する。",
-      "Viewの定義は書き込み・復旧・運用の全機能を代替しない。",
-      "foreachBatchは既定でat-least-onceであり、sink側の冪等性等が必要。"
+      "「標準的な取り込み、品質、CDCもforeachBatchで書き」が違う。宣言型で足りる処理まで、状態と依存を自前にする低水準側へ寄せている。",
+      "標準的な宣言型処理と、書き込み契約を細かく制御したい処理を、運用の責務で分けている。",
+      "「ビューのリフレッシュが保証」が違う。Materialized viewはクエリ結果の維持であり、任意の外部sinkへの書き込み契約は持たない。",
+      "「関数の再実行は一度だけになる前提にする」が違う。foreachBatchはバッチ関数が再実行され得るため、exactly-onceにするならsink側の冪等性が要る。"
     ],
     "answer": 1,
-    "explanation": "製品名の好みでなく、運用負担と必要な制御から選択する。DatabricksのLakeflow拡張とOSS SDPの対応範囲も区別する。",
+    "explanation": "依存や更新状態をプラットフォームへ寄せたい標準処理はLakeflowが候補になる。任意の外部sinkを細かく制御するならStructured Streamingなどを検討し、foreachBatchはat-least-onceとしてsinkの冪等性を見る。",
     "source": "https://docs.databricks.com/aws/en/ldp/",
     "guide": "1.8",
     "original": true,
@@ -1100,19 +1100,19 @@
     "topic": "For Eachの入力と並列制御",
     "prompt": "取り込み対象テーブル一覧を上流タスクで作り、同じ処理を各テーブルへ実行したい。外部DBへの同時負荷を制限する必要もある。適切なのは？",
     "options": [
-      "入れ子タスクをさらにFor Eachにして任意の深さへ反復を重ねる",
-      "並列度を最大にすれば外部DBの接続制限もなくなる",
-      "配列をFor Each入力へ渡し、入れ子タスクへ各要素をパラメーター化し、並列度を外部負荷に合わせる",
-      "If/Elseのtrue側へ全テーブル名を一つの文字列として渡せば反復は自動になる"
+      "上流タスクが作った配列をFor eachの入力にし、その入れ子タスクの中へ別のFor eachを置いてテーブルごとにさらに反復する",
+      "上流タスクが作った配列をIf/elseのtrue側へ一つのJSONとして渡し、条件が真のときに配列内のテーブルを順に処理する",
+      "上流タスクが作った配列をFor eachの入力にし、入れ子タスクへ各要素をパラメーターで渡し、並列数は外部DBの負荷に合わせる",
+      "上流タスクが作った配列をFor eachの入力にし、並列数は外部負荷に合わせ、後続タスクは各反復の入れ子タスクへ直接depends_onする"
     ],
     "optionExplanations": [
-      "公式はFor Eachを入れ子タスクにできないと明記。",
-      "並列実行は外部接続数や競合を増やし得る。",
-      "入力ごとの反復、パラメーター、外部サービスの上限を一緒に扱う。",
-      "If/Elseは反復ではない。文字列の一括引数だけでは各対象への反復を定義しない。"
+      "「入れ子タスクの中へ別のFor each」が違う。For eachの入れ子にできるのは通常のタスク型で、For each自身を入れ子にはできない。",
+      "「If/elseのtrue側へ一つのJSONとして渡し」が違う。If/elseは条件の真偽で後続を分けるタスクで、配列の要素ごとの反復にはならない。",
+      "配列を反復の入力にし、各要素を入れ子タスクのパラメーターにして、同時実行数を外部の接続上限に合わせている。",
+      "「後続タスクは各反復の入れ子タスクへ直接depends_on」が違う。For eachの外にあるタスクの依存先は、反復の入れ子ではなく親のFor eachタスクにする。"
     ],
     "answer": 2,
-    "explanation": "制御フローの分岐と反復を区別する。下流の依存先は親For Eachとし、複数反復の副作用・競合を確認する。",
+    "explanation": "対象一覧の反復はFor each、条件の分岐はIf/elseである。並列数は外部DBが受ける接続数に合わせ、For eachの外の後続は親のFor eachタスクに依存させる。",
     "source": "https://docs.databricks.com/aws/en/jobs/for-each",
     "guide": "1.9",
     "original": true,
@@ -1127,19 +1127,19 @@
     "topic": "高メモリと追加再試行",
     "prompt": "serverless notebook taskが非冪等な外部書き込みを含む。担当者はmax_retries=0だから追加実行はないと考えている。またメモリ不足も起きる。正しい確認方針は？",
     "options": [
-      "max_retries=0ならserverless auto-optimizationの動作は確認不要",
-      "メモリ不足を解消すると外部書き込みの冪等性も自動的に保証される",
-      "すべてのtask typeで同じ高メモリ設定が使えると仮定する",
-      "serverless auto-optimizationの追加再試行を確認し、at-most-once要件なら無効化を検討する。高メモリは対応するnotebook設定を別に評価する"
+      "serverless自動最適化による追加の再試行を確認し、at-most-onceが要るなら無効化を検討する。高メモリはノートブックのメモリ設定として別に見る",
+      "max_retriesを0にしてserverless自動最適化の追加再試行も止め、メモリ不足の方はノートブックの高メモリ設定で別に見る",
+      "disable_auto_optimizationで追加の再試行を抑える。高メモリはノートブック以外のタスクタイプでも、同じメモリ項目で指定する",
+      "追加再試行を止めるdisable_auto_optimizationはclassic computeでも同じ効果があるため、高メモリと一緒にclassicのクラスタ設定へ書く"
     ],
     "optionExplanations": [
-      "公式はauto-optimizationが追加再試行を含むことを説明している。",
-      "メモリ設定は外部副作用の重複防止にならない。",
-      "確認時点で高メモリはnotebook taskのみと記載されている。",
-      "retryの仕組みと資源設定は別の問題であり、両方を確認する。"
+      "再試行の経路と、ノートブックの高メモリ設定を別の確認項目にしている。",
+      "「max_retriesを0にしてserverless自動最適化の追加再試行も止め」が違う。serverlessの自動最適化は、retry policyの回数とは別に失敗タスクを再試行し得る。",
+      "「ノートブック以外のタスクタイプでも、同じメモリ項目」が違う。高メモリは確認時点でPublic Previewかつnotebook task向けで、他のタスクタイプの共通項目ではない。",
+      "「classic computeでも同じ効果」が違う。disable_auto_optimizationはserverlessの自動最適化に対する設定で、classicのクラスタ設定としては効かない。"
     ],
-    "answer": 3,
-    "explanation": "現行Outlineにも高メモリと自動最適化のretry設定が含まれる。Preview等の提供条件は実際の環境で確認する。",
+    "answer": 0,
+    "explanation": "serverlessでは、max_retriesが0でも自動最適化が追加の再試行を含む。非冪等な処理でat-most-onceが要るなら、その最適化の無効化を検討する。高メモリはノートブックのメモリ設定で、Sparkのexecutorメモリとは別である。",
     "source": "https://docs.databricks.com/aws/en/jobs/run-serverless-jobs",
     "guide": "1.10",
     "original": true,
@@ -1154,19 +1154,19 @@
     "topic": "デバッガーと回帰テスト",
     "prompt": "純粋なPython変換関数の分岐で誤った値が出る。再現入力は少量で、以降の変更でも同じ不具合を防ぎたい。適切な組み合わせは？",
     "options": [
-      "Pythonのbreakpointと変数確認で原因を絞り、期待DataFrame/スキーマを比較する自動テストを追加する",
-      "デバッガーで一度成功したら回帰テストは不要",
-      "driverのbreakpointで全executorの全UDF処理を必ず同時に観測できるとする",
-      "行数が一致するassertだけにして値・型は検証しない"
+      "driver上のbreakpointで分岐の値を確認し、CIには入力と出力の行数が一致するassertだけを残して、値とスキーマは対話のときに見る",
+      "driver上のbreakpointで分岐の値を確認し、同じ停止点がexecutor上のUDFにも同時に効くことを確かめて、回帰テストは追加しない",
+      "driver上のbreakpointで分岐の値を確認し、同じ入力に対する期待DataFrameとスキーマを比較する自動テストを残す",
+      "executorログに出るUDFの例外だけを見て、driverのbreakpointは使わず、行数が一致するassertを回帰テストとして残す"
     ],
     "optionExplanations": [
-      "対話的な原因調査と継続的な回帰防止の役割を分けている。",
-      "単発の対話調査は将来の変更を自動検証しない。",
-      "driverのデバッグを全分散taskの観測と同一視できない。",
-      "値や型が誤っていても行数は一致し得る。"
+      "「行数が一致するassertだけ」が違う。原因の確認はできても、値や型が再び壊れても行数が同じならCIは成功する。",
+      "「executor上のUDFにも同時に効く」が違う。driverのbreakpointは、そのPythonプロセスの停止であり、全executorのUDF停止と同じではない。回帰テストの省略も将来の変更を検知しない。",
+      "対話的な確認と、値とスキーマを比べる回帰テストを両方残している。",
+      "「行数が一致するassertを回帰テストとして残す」が違う。純粋なPython関数の誤った値は例外にならないことがあり、行数も同じまま残る。"
     ],
-    "answer": 0,
-    "explanation": "デバッガー、単体テスト、統合テストは補完関係。対応言語・compute/Runtimeも公式で確認する。",
+    "answer": 2,
+    "explanation": "少量の入力で再現する純粋なPythonなら、driverのbreakpointで分岐の値を確認できる。再発防止は、期待するDataFrameとスキーマを比べる自動テストに残す。",
     "source": "https://docs.databricks.com/aws/en/notebooks/debugger",
     "guide": "1.11",
     "original": true,
@@ -1181,19 +1181,19 @@
     "topic": "形式とソースの対応",
     "prompt": "Parquetファイル、CSVファイル、Kafka内のJSON payloadを取り込みたい。すべてに同じreader設定を適用しようとしている。正しい設計は？",
     "options": [
-      "試験範囲に形式が列挙されるので、すべての形式は同一Auto Loader設定で読めるとする",
-      "ソースのコネクタとpayloadの形式を分け、ファイルには対応reader、Kafkaには専用sourceとJSONの解釈を設定する",
-      "JSONならソースがファイルでもKafkaでもread_filesへ同じパスを渡す",
-      "CSVで型不一致が起きても救済情報を必ず捨ててから正常と判定する"
+      "ParquetとCSVはAuto Loaderで読み、KafkaにあるJSONは、同じcloudFilesオプションのパスとしてトピック名を渡して読む",
+      "三つの入力をread_filesへまとめ、Kafkaの読み進める位置は、CSVのheaderオプションと同じ設定項目で管理する",
+      "Kafkaは専用のソース、ParquetとCSVはファイル用のreaderにし、JSONの解釈結果はファイル側のschemaLocationへ保存する",
+      "ファイルは形式に合うreaderで読み、Kafkaは専用のソースにして、JSON payloadの解釈とオフセットの管理はKafka側に置く"
     ],
     "optionExplanations": [
-      "列挙はコネクタや設定の互換性を保証しない。",
-      "運搬するsourceとデータ表現のformatは別の設計軸。",
-      "Kafkaの接続とファイルパスは同じではない。",
-      "不正な入力の調査・再処理に必要な情報を失う。"
+      "「同じcloudFilesオプションのパスとしてトピック名を渡して読む」が違う。Kafkaのトピックはファイルパスではなく、Auto Loaderの対象ではない。",
+      "「headerオプションと同じ設定項目で管理」が違う。CSVのヘッダ指定は、Kafkaのオフセットを進める設定ではない。",
+      "「解釈結果はファイル側のschemaLocationへ保存」が違う。ソースの使い分けは合っているが、KafkaのJSON解釈とオフセットはAuto LoaderのschemaLocationには置かない。",
+      "ファイルの形式と、Kafkaという運搬元を分け、JSONの解釈とオフセットをKafka側の設定にしている。"
     ],
-    "answer": 1,
-    "explanation": "認証・offset/ファイル進捗・スキーマ・解析エラーをそれぞれ設計する。",
+    "answer": 3,
+    "explanation": "ParquetとCSVはファイルの形式、Kafkaはメッセージのソースである。同じJSONでも、ファイルとして読む場合とKafkaのpayloadとして解釈する場合で、進捗の持ち方が違う。",
     "source": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/",
     "guide": "7.1",
     "original": true,
@@ -1207,19 +1207,19 @@
     "topic": "バッチとStreamingの共通Delta層",
     "prompt": "バッチの追記をDeltaへ保存し、そこからStreamingの下流処理を動かす。上流は追記専用だが、同じバッチが再実行される可能性がある。適切な設計は？",
     "options": [
-      "下流のcheckpointを毎回変更すれば再開位置を安全に維持できる",
-      "上流のappendを毎回overwriteに変えても下流には全く影響しない",
-      "appendの契約とschemaを維持し、下流に独立したcheckpointを用意し、上流の再投入重複も業務キー等で対処する",
-      "Deltaへappendすれば同じ業務イベントを何度書いても自動で一行になる"
+      "上流の追記という契約とスキーマを保ち、下流には独立したcheckpointを置き、再実行で重なった行は業務キーなどで扱う",
+      "再実行のときは上流をoverwriteへ変え、下流のcheckpointは固定したまま、追記のときと同じ増分読取りを続ける",
+      "上流はappendのままにし、下流のcheckpointLocationを実行ごとに新しい場所にして、読み位置をテーブルの先頭へ戻す",
+      "上流のappendがDeltaのトランザクションになっていれば、同じ業務イベントを再書き込みしても下流では自動で1行になる"
     ],
     "optionExplanations": [
-      "進捗を引き継げず新規処理となり、再読取りの影響がある。",
-      "上書きは追記の契約を壊し、通常の増分読取りへ影響する。",
-      "テーブルのトランザクションと業務重複、ストリームの進捗を分けている。",
-      "ACIDなappendは業務キーでの自動重複除去を意味しない。"
+      "追記の契約、下流自身の読取り位置、業務上の重複を別々に扱っている。",
+      "「overwriteへ変え、下流のcheckpointは固定したまま、追記のときと同じ増分読取りを続ける」が違う。上書きは追記の契約を変え、固定したcheckpointからの増分読取りはそのままでは続かない。",
+      "「checkpointLocationを実行ごとに新しい場所にして」が違う。新しいcheckpointは前回の読取り位置を引き継がず、先頭からの読み直しになる。",
+      "「自動で1行になる」が違う。ACIDなappendはトランザクションとしての追記であり、同じ業務キーの自動的な重複除去ではない。"
     ],
-    "answer": 2,
-    "explanation": "バッチとStreamingの接続は容易でも、再実行時のデータ契約が必要。",
+    "answer": 0,
+    "explanation": "Deltaを挟むとバッチの追記をStreamingで続きから読める。再実行で同じ業務イベントが再びappendされる場合は、checkpointとは別に業務キーなどで重複を扱う。",
     "source": "https://docs.databricks.com/aws/en/delta/delta-streaming",
     "guide": "7.2",
     "original": true,
@@ -1233,19 +1233,19 @@
     "topic": "Window frameの意味",
     "prompt": "日付と同日の一意な取引IDで順序づけ、同じ顧客の一行前から現在行までの合計を計算したい。「二行」を窓の単位にしたい。考え方として適切なのは？",
     "options": [
-      "同じ日付の取引は必ず一行なので同順位やframeを考えなくてよい",
-      "GROUP BY顧客だけで元の各取引行を残した移動合計が得られる",
-      "RANGEとROWSは順序列の値や同順位があっても常に同じ結果になる",
-      "決定的な順序を定義し、ROWS BETWEEN 1 PRECEDING AND CURRENT ROW等の行ベースframeを使う"
+      "PARTITION BYは顧客、ORDER BYは日付だけにし、RANGE BETWEEN 1 PRECEDING AND CURRENT ROWで、直前の日付値から現在までを合計する",
+      "PARTITION BYは顧客、ORDER BYは日付と取引IDにし、ROWS BETWEEN 1 PRECEDING AND CURRENT ROWで、直前の1行と現在行を合計する",
+      "PARTITION BYは取引ID、ORDER BYは日付と顧客にし、ROWS BETWEEN 1 PRECEDING AND CURRENT ROWで、同じ取引の直前行と現在行を合計する",
+      "同じ顧客の中で日付ごとにGROUP BYして金額をSUMし、その集計行にROW_NUMBERを付けて直前グループの合計を現在のグループへ足す"
     ],
     "optionExplanations": [
-      "同じ日付に複数取引があり得るという前提を無視している。",
-      "GROUP BYは集約後の粒度へ変え、元の各行をそのまま残さない。",
-      "同順位や値の分布によってframeの意味は異なる。",
-      "要求は値の範囲ではなく物理的な行数。順序の同順位も解消する。"
+      "「ORDER BYは日付だけ」と「RANGE」が違う。同じ日付の行がpeerになり、直前の1行ではなく同じ日付の値の範囲を枠が指す。",
+      "行数を単位にするROWSと、同順位を残さない順序（日付と取引ID）を、顧客の枠の中で指定している。",
+      "「PARTITION BYは取引ID」が違う。取引IDが一意だと各枠が1行になり、同じ顧客の直前の取引を見ない。",
+      "「GROUP BYして金額をSUM」が違う。集約後の粒度になり、元の各取引行を残した移動合計にはならない。"
     ],
-    "answer": 3,
-    "explanation": "Windowのpartition、順序、frameは別指定。どの行を集計対象に含めるかを明確にする。",
+    "answer": 1,
+    "explanation": "「二行」は値の幅ではなく行数なので、ROWSフレームを使う。同じ日付の取引を一意に並べるため、ORDER BYには取引IDも含める。RANGEやGROUP BYは別の粒度になる。",
     "source": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions",
     "guide": "3.1",
     "original": true,
@@ -1259,19 +1259,19 @@
     "topic": "クラシックジョブの隔離と再試行",
     "prompt": "クラシックAuto LoaderのforeachBatch内で、正常行と隔離行を別々のDeltaへ書く。片方の書き込み後に失敗する可能性がある。適切な方針は？",
     "options": [
-      "NULLを含む品質条件を完全に二分し、両出力に再試行の冪等性を設計し、二つの出力が自動で一つの原子操作になると仮定しない",
-      "最初のwriteが成功したら、二つ目も同じトランザクションで必ず成功すると考える",
-      "DROP ROWを指定しただけで隔離テーブルも自動生成されると考える",
-      "エラーをすべて握りつぶせば欠落も重複も発生しないとする"
+      "正常側をamount >= 0、隔離側をNOT (amount >= 0)にし、二つのDeltaへのwriteは一つのトランザクションとして再試行されるものとする",
+      "正常側と隔離側をcoalesceで二分し、一つ目のwriteが成功したバッチは、再試行のときに二つ目のwriteを実行しない",
+      "期待条件にDROP ROWを指定すれば隔離側のDeltaも同じバッチで作られ、foreachBatchを再実行しても書き込みは重複しないものとする",
+      "NULLを含めて正常と隔離へ二分し、両方の出力が再試行でも同じ結果になるようにして、二つのwriteを一つの原子操作とはみなさない"
     ],
     "optionExplanations": [
-      "複数sink、品質の分岐、部分失敗をすべて設計対象にしている。",
-      "別出力への書き込みを自動的な単一原子操作と一般化できない。",
-      "DROPは破棄であり、隔離先への保存は別の実装が必要。",
-      "握りつぶしは失敗を隠し、欠落・部分処理の検知を妨げる。"
+      "「NOT (amount >= 0)」と「一つのトランザクション」が違う。NULLは両方の条件から外れ、別々のDeltaへのwriteが一つのコミットになるわけでもない。",
+      "「二つ目のwriteを実行しない」が違う。一つ目の成功後に失敗すると、再試行で二つ目を省いた分の行が隔離側または正常側から欠ける。",
+      "「DROP ROWを指定すれば隔離側のDeltaも同じバッチで作られ」が違う。DROP ROWは行を捨てる指定で、隔離テーブルへの保存や、再実行時の重複防止にはならない。",
+      "NULLの落ちを塞ぎ、部分的に成功した二つの出力を再試行でも整合させ、原子的な一つのwriteだとは置いていない。"
     ],
-    "answer": 0,
-    "explanation": "正常データを守るだけでなく、不正側の調査・再処理の完全性も必要。",
+    "answer": 3,
+    "explanation": "foreachBatchの中の二つのwriteは、片方が成功したあとに失敗し得る。条件はNULLを含めて二分し、それぞれの出力は再試行されても同じ結果になるようにする。",
     "source": "https://docs.databricks.com/aws/en/structured-streaming/foreach",
     "guide": "3.2",
     "original": true,
@@ -1285,19 +1285,19 @@
     "topic": "D2Dの受信者",
     "prompt": "共有元と共有先の双方がDatabricksとUnity Catalogを利用している。対象の受信側へ限定した共有を行い、秘密情報の手配布を減らしたい。第一に検討する方式は？",
     "options": [
-      "受信側がDatabricksでも必ずCSV添付メールしか選べないとする",
-      "D2D共有として受信側metastore等を識別し、必要な対象だけをshareへ追加する",
-      "受信側を特定せず全インターネットへ公開したファイルを使う",
-      "共有元の個人管理者アカウントを受信側全員で共用する"
+      "オープン共有のベアラートークンを受信側の利用者へ配り、metastoreの識別子は使わずに、必要なテーブルをshareする",
+      "D2Dの共有として受信側のUnity Catalog metastoreを識別し、必要なテーブルだけをそのshareへ追加する",
+      "D2Dの受信者をmetastoreの識別子なしで作成し、共有元カタログにあるテーブルをまとめてそのshareへ追加する",
+      "受信側もDatabricksを使うので、共有元の管理者トークンを受信側ワークスペースのシークレットとして同じ値で持たせる"
     ],
     "optionExplanations": [
-      "D2D等の共有機能があるため、手配布に限定されない。",
-      "受信側の環境に合った識別・共有範囲の制御になる。",
-      "受信者限定と統制の要件に反する。",
-      "個人の過剰権限を拡散し、監査も困難になる。"
+      "「ベアラートークンを受信側の利用者へ配り」が違う。両者ともUnity Catalogを使えるなら、利用者へトークンを配るオープン共有より、metastoreを識別するD2Dの方が秘密の配布が少ない。",
+      "受信側の環境に合わせた識別子を使い、shareへ入れる対象も必要なテーブルに限っている。",
+      "「識別子なしで作成」と「テーブルをまとめてそのshareへ追加する」が違う。D2Dの受信者はmetastoreのsharing identifierで識別し、カタログ一式を入れると共有範囲が広い。",
+      "「管理者トークンを受信側ワークスペースのシークレットとして同じ値で持たせる」が違う。受信者の識別は共有の設定で行い、管理者の資格情報を受信側へ複製しない。"
     ],
     "answer": 1,
-    "explanation": "D2Dとopen sharingを受信側環境から使い分ける。受信者の識別と共有範囲を混同しない。",
+    "explanation": "双方がDatabricksとUnity Catalogを使うなら、まずD2Dで受信側metastoreを識別する。オープン共有のトークンを利用者へ配る方式は、秘密の手配布を減らす要件に合わない。",
     "source": "https://docs.databricks.com/aws/en/delta-sharing/",
     "guide": "10.1",
     "original": true,
@@ -1311,19 +1311,19 @@
     "topic": "ライブ共有と取得済みコピー",
     "prompt": "共有テーブルへのアクセスを停止した。受信者は停止前に一部データを独自保存していた。「共有停止でそのコピーも自動消去される」と言われた。正しい説明は？",
     "options": [
-      "共有元のVACUUMで相手の独立コピーも削除できる",
-      "ライブ共有なら受信者が結果を保存することは技術的に一切不可能である",
-      "今後の共有アクセスの失効と、既に受信者が保存したコピーの削除は別であり、契約・保持・削除手順も必要",
-      "共有を停止すると受信者のすべての保存媒体が自動で消去される"
+      "共有アクセスの停止は、それ以後の参照を止める。受信者が既に保存したコピーの削除は、契約と保持の手順で別に扱う",
+      "共有アクセスの停止にあわせ、共有元で実行するVACUUMが、受信者の独立した保存先にあるファイルも削除する",
+      "ライブ共有を停止すると、受信者が停止前に書き出したテーブルを、共有元のREORG TABLEのAPPLY (PURGE)で物理削除できる",
+      "共有を停止すると、受信側に残っている複製も、共有元で実行するDROP SHAREの削除対象に含まれて消える"
     ],
     "optionExplanations": [
-      "共有元のファイル整理は他者の保存物を操作しない。",
-      "取得した結果の利用・保存を無条件に不可能と一般化できない。",
-      "技術的なアクセス制御と、取得後のデータライフサイクルを分けている。",
-      "独立したコピーまで自動で消えると保証する根拠はない。"
+      "以後のアクセスを止めることと、相手が既に書き出したデータの削除を分けている。",
+      "「VACUUMが、受信者の独立した保存先にあるファイルも削除」が違う。VACUUMが消すのは共有元の保持期間を過ぎた未参照ファイルである。",
+      "「REORG TABLEのAPPLY (PURGE)で物理削除できる」が違う。PURGEは共有元の論理削除を共有元のファイルへ反映する処理で、受信者の書き出し先は対象外である。",
+      "「DROP SHAREの削除対象に含まれて消える」が違う。shareの停止や削除は共有関係を終える操作で、受信者が保存済みの複製までは消さない。"
     ],
-    "answer": 2,
-    "explanation": "共有は制御された参照の仕組みだが、受信後の扱いも含むガバナンスが必要。",
+    "answer": 0,
+    "explanation": "Delta Sharingの停止は、以後その共有経由で読めなくすることである。停止前に受信者が自分のテーブルへ保存したコピーは、共有元のVACUUMやREORGでは消えない。",
     "source": "https://docs.databricks.com/aws/en/delta-sharing/",
     "guide": "10.3",
     "original": true,
@@ -1337,19 +1337,19 @@
     "topic": "Query ProfileとSpark UI",
     "prompt": "SQL全体の遅延を調べると、あるjoin演算子が重い。さらに特定のtaskだけ長時間spillしている。最も適切な調査は？",
     "options": [
-      "system.billing.usageの合計があればすべてのtaskの原因も特定できる",
-      "EXPLAINの推定計画だけで実際のすべての実行時間を証明する",
-      "ジョブ成功の通知だけで演算子の性能を判断する",
-      "Query Profileで演算子とスキャン/shuffleを把握し、Spark UIでtask分布や偏りを調べる"
+      "EXPLAINが出す推定コストでjoinの実時間を確定し、長くspillしたtaskはQuery Profileに出る出力行数だけで特定する",
+      "system.billing.usageのDBUで重い演算子を特定し、taskのspillはlist_pricesとの単価差として読む",
+      "ジョブが成功した通知と実行時間でjoinの重さを判断し、Spark UIはstageが失敗した実行のときだけ開く",
+      "Query Profileでjoin演算子とスキャンやshuffleを見、Spark UIでtaskごとの時間とspillの偏りを見る"
     ],
     "optionExplanations": [
-      "課金利用量は局所的なtaskの詳細の代替ではない。",
-      "計画と実測は別である。",
-      "成功状態だけでは性能の原因を把握できない。",
-      "クエリ単位と分散task単位の観測を補完させている。"
+      "「推定コストでjoinの実時間を確定」が違う。EXPLAINは計画の見積もりで、どのtaskがspillしたかの実測にはならない。",
+      "「DBUで重い演算子を特定」が違う。利用量はコストの集計であり、join演算子や単一taskのspillの代わりにはならない。",
+      "「stageが失敗した実行のときだけ開く」が違う。成功したクエリでもtaskの偏りはSpark UIで見え、成功通知は演算子の内訳を持たない。",
+      "SQL全体の演算子はQuery Profile、分散taskの偏りはSpark UI、と粒度を分けている。"
     ],
     "answer": 3,
-    "explanation": "同じ「遅い」でも粒度の異なる情報を使い分ける。",
+    "explanation": "join演算子が重いかはQuery Profile、その中の特定taskだけがspillしているかはSpark UIで見る。EXPLAINの見積もりや課金の利用量は、その実測の代わりにはならない。",
     "source": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
     "guide": "4.2",
     "original": true,
@@ -1365,19 +1365,19 @@
     "topic": "Job/task通知と再試行",
     "prompt": "個別taskが失敗して再試行された時点でも通知が欲しい。しかしjob-levelの失敗通知しか設定していない。修正は？",
     "options": [
-      "task-level通知を設定し、最後のretryまでmuteする等の条件が要件と合うか確認する",
-      "job-level失敗通知はすべてのtask再試行失敗ごとに必ず届くので変更不要",
-      "データ品質のSQL Alertだけに変えれば個別task失敗も必ず同じように通知される",
-      "想定実行時間を設定せずDuration Warningだけを選べば、任意の遅延を自動判定できる"
+      "job-levelの失敗通知のままにし、taskが再試行されるたびに同じ失敗通知が送られるよう、alert_on_last_attemptは外しておく",
+      "task-levelの失敗通知を追加し、再試行の途中でも知らせるなら、最後の試行までミュートする設定は有効にしない",
+      "SQL Alertの条件へtaskのresult_stateを渡し、ジョブ側の通知設定は変えずに、再試行ごとの失敗を同じ宛先へ出す",
+      "実行時間の警告だけを有効にし、期間のしきい値は空のまま、失敗したtaskの再試行を遅延のイベントとして通知する"
     ],
     "optionExplanations": [
-      "task失敗の粒度とmute方針を合わせている。",
-      "公式はjob-levelがtask retryの都度には通知しないと説明する。",
-      "データ条件の評価と実行状態の通知は同じではない。",
-      "実行時間の閾値等の設定が必要。"
+      "「taskが再試行されるたびに同じ失敗通知が送られる」が違う。job-levelの失敗通知は、失敗したtaskの再試行ごとには送られない。",
+      "通知の単位をtaskにし、途中の再試行も受け取るために、最後の試行までミュートするオプションを外している。",
+      "「SQL Alertの条件へtaskのresult_stateを渡し」が違う。SQL Alertはクエリ結果の条件で、taskの再試行という実行イベントの通知ではない。",
+      "「期間のしきい値は空のまま、失敗したtaskの再試行を遅延のイベントとして通知する」が違う。実行時間の警告は期間のしきい値があって初めて遅れを知らせ、失敗の再試行そのものではない。"
     ],
-    "answer": 0,
-    "explanation": "対象、イベント、閾値、宛先、再試行中の抑止を一緒に設計する。",
+    "answer": 1,
+    "explanation": "taskの失敗を再試行のたびに知るには、task-levelの通知を使う。最後の試行までミュートする設定を有効にすると、途中の再試行は通知されない。job-levelの失敗通知はその代替にならない。",
     "source": "https://docs.databricks.com/aws/en/jobs/notifications",
     "guide": "4.6",
     "original": true,
@@ -1392,19 +1392,19 @@
     "topic": "管理対象テーブルと保守負担",
     "prompt": "チームは手作業の統計・ファイル保守を減らし、UC統制を維持したい。データのライフサイクルもプラットフォームへ管理させられる。適切な選択は？",
     "options": [
-      "すべての利用者にストレージへの直接書き込みを許可すれば保守負担はなくなる",
-      "UC managed tableと対応する自動保守・最適化を検討し、権限・保持・費用の責務は引き続き確認する",
-      "external tableへ変えればmanaged専用機能がすべて必ずそのまま使える",
-      "managedにすれば品質ルールと法的保持要件は一切検討不要になる"
+      "保存場所を自前にするexternal tableにし、OPTIMIZEとVACUUMの自動実行はmanaged tableと同じ範囲で有効にする",
+      "UCのmanaged tableにしてファイルの自動保守を使い、品質規則と法的な保持期間の判断はVACUUMの処理へ任せる",
+      "UCのmanaged tableと、それに対応するファイルの自動保守を検討し、権限と保持期間と費用の確認は残す",
+      "LOCATIONを指定して作ったテーブルをmanaged tableとして自動保守の対象にし、不要ファイルはクラウド側のライフサイクルルールで削除する"
     ],
     "optionExplanations": [
-      "統制を迂回し、整合性やアクセス管理のリスクを増やす。",
-      "自動保守の利点と、残る設計責務を区別している。",
-      "機能の適用対象を無条件に外部テーブルへ広げてはいけない。",
-      "プラットフォームは業務品質や法的判断をすべて代行しない。"
+      "「managed tableと同じ範囲で有効にする」が違う。場所を自前で持つexternal tableと、ストレージをプラットフォームが管理するmanaged tableでは、自動保守の対象は同じではない。",
+      "「品質規則と法的な保持期間の判断はVACUUMの処理へ任せる」が違う。自動保守はファイル整理の負担を減らせても、品質規則や法的な保持の判断まで代行しない。",
+      "手作業の統計やファイル保守を減らせるmanaged tableを候補にし、権限と保持と費用は設計側に残している。",
+      "「LOCATIONを指定して作ったテーブルをmanaged tableとして」が違う。LOCATION付きの作成は外部テーブルであり、クラウドのライフサイクルルールはDeltaのトランザクションの外でファイルを消し得る。"
     ],
-    "answer": 1,
-    "explanation": "公式Outlineのmanagedと保守負担の文が日本語PDFで分割されているが、意味上は連続して読む。",
+    "answer": 2,
+    "explanation": "UCのmanaged tableは、ファイルのライフサイクルをプラットフォーム側で扱い、自動の最適化やVACUUMの対象にしやすい。外部ロケーションのテーブルへ同じ範囲が及ぶとは限らず、品質や法的な保持の判断は残る。",
     "source": "https://docs.databricks.com/aws/en/tables/managed",
     "guide": "2.1・2.1.1",
     "original": true,
@@ -1419,19 +1419,19 @@
     "topic": "不要スキャンの切り分け",
     "prompt": "クエリは少数の日付だけを対象とするのに、読み取りファイルとバイトが非常に多い。CPUは飽和していない。まず評価する対策は？",
     "options": [
-      "VACUUMだけで現在の全ファイルが検索列順へ自動並べ替えされると考える",
-      "CPUコアを増やせば不要ファイルの読み取り自体は必ずゼロになる",
-      "フィルタの形・統計・データ配置を実行計画とProfileで確認し、pruning/skippingが効くよう改善する",
-      "クエリ結果が少数行ならI/O量も必ず少ないと判断する"
+      "日付列を関数で包んだフィルタのままにし、統計の対象列を増やせば、同じ式でも対象外のファイルがスキップされる",
+      "フィルタの書き方、列統計、データ配置を実行計画とProfileで確認し、プルーニングとスキッピングが効く形へ直す",
+      "VACUUMで未参照のファイルを削除すれば、現在のスナップショットに残るファイルも日付の順へ並び替えられる",
+      "実行計画の出力行が少ないクエリは、読むファイル数とバイトも少ないとみなし、列統計が収集されているかは確認しない"
     ],
     "optionExplanations": [
-      "VACUUMはデータ配置を再編する操作ではない。",
-      "資源追加だけで読み取り対象の選択性は変わらない。",
-      "観測された不要I/Oに対応する調査と改善。",
-      "出力行数と入力スキャン量は異なる。"
+      "「同じ式でも対象外のファイルがスキップされる」が違う。統計の対象列を増やしても、列を関数で包んだ述語はファイルのスキップに使えないことがある。",
+      "読んでいるファイルが多い観測に対し、述語、統計、配置のどこで枝刈りが落ちているかを見ている。",
+      "「日付の順へ並び替えられる」が違う。VACUUMは保持期間を過ぎた未参照ファイルの削除で、現在のファイルを日付順へ再配置しない。",
+      "「出力行が少ないクエリは、読むファイル数とバイトも少ない」が違う。結果の行数と、スキップできずに読んだ入力の量は別である。"
     ],
-    "answer": 2,
-    "explanation": "データスキッピングとファイルプルーニングの狙いは読まなくてよいデータを除外すること。",
+    "answer": 1,
+    "explanation": "CPUが空いているのに読むファイルが多いときは、フィルタがデータスキッピングやパーティションの枝刈りに乗っているかを見る。列を関数で包む式や、統計の外にある列はスキップされないことがある。",
     "source": "https://docs.databricks.com/aws/en/delta/data-skipping",
     "guide": "2.3",
     "original": true,
@@ -1445,19 +1445,19 @@
     "topic": "CDF保持と下流遅延",
     "prompt": "CDFを読む下流の長期停止があった。担当者は「CDFは永久保存だから、どれだけ遅れても全履歴を同じように再開できる」と主張した。適切な評価は？",
     "options": [
-      "CDF有効化前の全変更も有効化後に自動復元されるので確認不要",
-      "CDFの保持とVACUUM等の運用は完全に無関係である",
-      "checkpointがあればソースの消失した変更も必ず再生成される",
-      "CDFと関連履歴の保持条件を確認し、必要な変更が利用可能か判定し、失われた場合の再構築方針を用意する"
+      "CDFと、それを読むために必要なテーブル履歴の保持を確認し、必要な変更が残っているかを判断して、消えている場合の再構築を用意する",
+      "CDFを有効にした時点より前の更新も、有効化のあとに残っているテーブル履歴から、同じ変更フィードとして読み直せる",
+      "下流のcheckpointが残っていれば、VACUUMでデータファイルが消えた変更も、そのcheckpointから同じバージョンの変更を再生成できる",
+      "テーブル履歴の保持を短くしても、CDFの変更行は通常のDeltaファイルとは別のフィードとして残り、VACUUMの対象には入らない"
     ],
     "optionExplanations": [
-      "有効化前の履歴を自動ですべて作る機能ではない。",
-      "変更データの利用可能性は保持・履歴管理と関係する。",
-      "checkpointは消失したソースデータを再生成しない。",
-      "保持と下流の回復可能性を整合させる。"
+      "変更フィードが永久に同じ開始点から読めるとは置かず、保持と、失ったときの作り直しを見ている。",
+      "「有効にした時点より前の更新も」が違う。CDFは有効化より前の変更を、あとから同じフィードとして復元しない。",
+      "「checkpointから同じバージョンの変更を再生成」が違う。checkpointが覚えているのは下流の読取り位置で、VACUUMされたソースのファイルは作り直されない。",
+      "「VACUUMの対象には入らない」が違う。CDFの利用可否はテーブル履歴とファイルの保持に依存し、通常のファイルと切り離された無期限の保管ではない。"
     ],
-    "answer": 3,
-    "explanation": "低遅延の増分処理と永久監査保存を区別する。",
+    "answer": 0,
+    "explanation": "CDFは有効化したあとの変更を、テーブルの履歴が残っている範囲で読む仕組みである。下流が長く止まっているときは、保持期間を超えて消えた変更をcheckpointが復元するわけではない。",
     "source": "https://docs.databricks.com/aws/en/tables/features/change-data-feed",
     "guide": "2.4",
     "original": true,
@@ -1471,19 +1471,19 @@
     "topic": "Workspaceとデータの権限",
     "prompt": "運用者にはジョブ起動だけを許し、定義の編集は許可しない。データへのアクセスはジョブの実行主体へ必要な範囲だけ付けたい。適切なのは？",
     "options": [
-      "ジョブのACLとrun-as主体のUC権限を分け、起動者の必要な操作とデータアクセスをそれぞれ最小化する",
-      "テーブルSELECTだけ付ければジョブの編集・起動も同時に制御できる",
-      "起動者全員をworkspace管理者にしてから操作を依頼する",
-      "ジョブを閲覧できる人は必ずすべての元データを読めると仮定する"
+      "ジョブはCAN_MANAGE_RUNで起動と定義の編集を分け、データの権限はRun asに指定した主体へ、必要なUC権限だけを付ける",
+      "ジョブはCAN_MANAGE_RUNで起動だけを許可し、実行時のUC権限はRun asではなく、Run nowを押した利用者のSELECTを使う",
+      "ジョブはCAN_MANAGEを起動する利用者へ付け、定義の編集はその利用者が行わないという手順で、起動だけの権限に分ける",
+      "起動する利用者へ対象テーブルのSELECTを付与すれば、ジョブのACLは変えなくても、編集の禁止とRun asの実行権限を同時に満たせる"
     ],
     "optionExplanations": [
-      "ワークスペース資源とデータの制御を分離している。",
-      "UCの読取りとジョブのACLは別の層。",
-      "起動だけの要件に対し過剰権限。",
-      "ジョブの可視性と元テーブルの読取りは同一権限ではない。"
+      "起動に必要なCAN_MANAGE_RUNと、実行時に評価されるRun asのUC権限を分けている。CAN_MANAGE_RUNには定義の編集は含まれない。",
+      "「Run nowを押した利用者のSELECTを使う」が違う。権限レベルは合っているが、実行時のデータアクセスは起動者ではなくRun asの主体で評価される。",
+      "「定義の編集はその利用者が行わないという手順」が違う。CAN_MANAGEには定義の編集が含まれるため、手順で編集しないことは権限としての分離にならない。",
+      "「ジョブのACLは変えなくても」が違う。テーブルのSELECTはジョブの編集可否を制御せず、起動者へのSELECTはRun asの権限にもならない。"
     ],
     "answer": 0,
-    "explanation": "認可は対象と操作の組み合わせ。起動者と実行主体の違いを確認する。",
+    "explanation": "ジョブのACLでは、CAN_MANAGE_RUNが実行の起動と取り消し、CAN_MANAGEが定義の編集である。処理が読むデータは、Run nowを押した人ではなく、Run asに指定した主体のUC権限で評価される。",
     "source": "https://docs.databricks.com/aws/en/security/auth/access-control/",
     "guide": "5.1",
     "original": true,
@@ -1498,19 +1498,19 @@
     "topic": "PII保護の経路",
     "prompt": "PIIをsilverでマスクしたが、bronzeの原本と隔離テーブルが広く読め、エラーログにも実値を記録していた。適切な改善は？",
     "options": [
-      "バッチだけ保護しStreamingの別入口は同じデータだから未確認でよい",
-      "全経路のPIIを洗い出し、bronze/隔離/ログ/再処理入力にも最小権限と必要なマスク・削除方針を適用する",
-      "silverだけ保護すれば他の経路も自動的に読めなくなる",
-      "PIIを検出してタグを付けた時点で、アクセス制御の確認は終わりとする"
+      "silverの列マスクをバッチ出力に設定し、同じソースを読むStreamingの入口にはsilverと同じ保護が及ぶので、その権限は見直さない",
+      "bronze、隔離テーブル、エラーログ、再処理の入力を含め、データが通る経路ごとに最小権限と、必要なマスクや削除を適用する",
+      "silverへ列マスクを付ければ、bronzeと隔離テーブルに付いているGRANTも、同じマスク関数を自動で参照するようになる",
+      "PIIの列へ分類タグを付けた時点で、bronzeへのSELECTと、ログの出力先に対する権限の確認は、その分類をもって完了とする"
     ],
     "optionExplanations": [
-      "保護されない入口や派生物が残る可能性がある。",
-      "データ経路全体での漏洩と再導入を扱う。",
-      "別のオブジェクトへの権限を自動で閉じるとは限らない。",
-      "検出・分類と認可の強制は別工程。"
+      "「Streamingの入口にはsilverと同じ保護が及ぶ」が違う。silverのマスクはsilverを読むときの表示であり、Streamingがbronzeや別テーブルを読む経路は別の権限のまま残る。",
+      "マスクしたsilver以外に、原本、隔離、ログ、再処理という出口が残っていることを洗い出している。",
+      "「同じマスク関数を自動で参照」が違う。silverに付けた列マスクは、bronzeや隔離テーブルのGRANTへ自動ではコピーされない。",
+      "「その分類をもって完了とする」が違う。タグは分類であり、bronzeのSELECTやログ出力先の権限をその場で閉じるわけではない。"
     ],
     "answer": 1,
-    "explanation": "コンプライアンスは単一テーブルの見た目ではなく、保存・利用・再処理を含むライフサイクルで考える。",
+    "explanation": "silverのマスクは、silverを参照するときの表示を変える。bronzeの原本、隔離テーブル、エラーログ、再処理の入力が別の権限で読めるなら、経路ごとに権限とマスクと削除を設計する。",
     "source": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/",
     "guide": "5.4",
     "original": true,
@@ -1525,19 +1525,19 @@
     "topic": "意味を共有するメタデータ",
     "prompt": "同名のamount列が、ある表では税抜、別の表では税込を表す。利用者は検索で表を見つけても意味を誤解する。最も適切な改善は？",
     "options": [
-      "説明文を付ければSELECT権限も自動で最小化されるとする",
-      "理解できない利用者全員へ所有権を付与する",
-      "列・テーブルの説明に定義・粒度・更新頻度を記し、統一した分類タグと所有部門情報を整備する",
-      "列名が同じなら同じ意味であるとする"
+      "両方のamountへ同じ文面のコメントを付け、列名が同じなので、税込か税抜かは利用者が行の分布を見て判断する",
+      "列コメントに税込か税抜かの定義を書き、コメントを付けた列は、所有者以外のSELECTがその定義に合わせて自動で絞られる",
+      "列とテーブルの説明に、金額の定義、粒度、更新頻度を書き、分類に使うタグと所管する部門も表の間で揃える",
+      "両方のamountへ同じ分類タグを付け、税込と税抜の違いはコメントには書かず、列名が一致していることで利用者に伝える"
     ],
     "optionExplanations": [
-      "説明メタデータと強制的な認可は別。",
-      "意味の共有に所有権の拡大は不要。",
-      "発見した後に正しく利用するための文脈を与える。",
-      "名称だけで業務定義を推測してはいけない。"
+      "「同じ文面のコメント」と「行の分布を見て判断」が違う。同じ列名のままでは税の定義が伝わらず、分布の観察は定義の共有にならない。",
+      "「SELECTがその定義に合わせて自動で絞られる」が違う。コメントは意味の説明であり、所有者以外のSELECT範囲を変える権限設定ではない。",
+      "同名列の業務定義、粒度、更新頻度、分類、所管を、発見した人が読める形にしている。",
+      "「同じ分類タグ」と「コメントには書かず、列名が一致していることで」が違う。タグを同じにすると税込と税抜の違いが消え、列名もその違いを表さない。"
     ],
     "answer": 2,
-    "explanation": "ガバナンスはアクセスだけでなく、データの意味を一貫して理解できることも含む。",
+    "explanation": "発見できたことと、正しく解釈できることは別である。税込と税抜のように同名でも意味が違う列は、説明、粒度、更新頻度、分類タグ、所管をメタデータとして残す。説明文そのものはSELECT権限を変えない。",
     "source": "https://docs.databricks.com/aws/en/comments",
     "guide": "8.1",
     "original": true,
@@ -1551,19 +1551,19 @@
     "topic": "品質失敗と性能障害",
     "prompt": "Lakeflowの更新が失敗した。event logには特定の期待条件違反が記録され、Spark UIには大きなspillはない。最初に選ぶ調査は？",
     "options": [
-      "CPUとメモリを必ず増やし、データ条件は調べない",
-      "FAIL UPDATEをDROPへ無条件に変えて成功表示だけを回復する",
-      "VACUUMで現在のデータを消してすべてのエラーをなくす",
-      "該当flowの入力と期待条件を確認し、ルール違反の原因を切り分ける"
+      "event logに出た期待条件の違反は記録として残し、spillが大きくなければexecutorのメモリを増やして、同じ更新を再実行する",
+      "失敗している期待条件の動作をFAIL UPDATEからDROP ROWへ変えて更新を成功させ、違反した入力行はevent logでは追わない",
+      "該当するflowの入力と、失敗した期待条件の式を突き合わせ、どのルールに反した行が入ってきたかを切り分ける",
+      "VACUUMで古いファイルを削除してから同じ更新を再実行し、期待条件に反した行を履歴のファイルから読まないようにする"
     ],
     "optionExplanations": [
-      "品質規則の違反を資源追加で解決するとは限らない。",
-      "品質契約を変えて失敗を隠すだけになり得る。",
-      "ファイル整理は品質条件の原因解決ではない。",
-      "観測された失敗原因の層に対応している。"
+      "「executorのメモリを増やして、同じ更新を再実行する」が違う。event logが示しているのは期待条件の違反で、spillが小さい実行のメモリ不足ではない。",
+      "「DROP ROWへ変えて更新を成功させ」が違う。失敗させる契約を、行を捨てて成功扱いに変えると、違反の原因を残さない。",
+      "観測された失敗が品質ルールなので、そのflowの入力と条件式から原因を見ている。",
+      "「期待条件に反した行を履歴のファイルから読まないようにする」が違う。VACUUMは未参照ファイルの削除で、条件に反した現在の行を直す処理ではない。"
     ],
-    "answer": 3,
-    "explanation": "event logでflowとエラーを絞り、必要ならSpark UI等で実行側を確認。品質の契約を勝手に緩めない。",
+    "answer": 2,
+    "explanation": "event logに特定の期待条件違反があり、Spark UIに大きなspillが無いなら、先に見るのは資源ではなく、そのflowの入力とルールである。FAILをDROPへ変えるのは、契約を緩めて失敗を消す操作になる。",
     "source": "https://docs.databricks.com/aws/en/ldp/monitor-event-logs",
     "guide": "6.3",
     "original": true,
@@ -1578,19 +1578,19 @@
     "topic": "論理と物理のモデル",
     "prompt": "大量の明細factがあり、検索列が変化している。担当者は「Liquidへ変更すれば、注文ヘッダーとの重複joinもSCD履歴の誤結合も直る」と述べた。正しい設計レビューは？",
     "options": [
-      "粒度・キー・履歴対応を先に正し、検索とファイルサイズに合う物理配置としてLiquid等を別途評価する",
-      "Liquidのキーを増やせば業務粒度の定義は不要になる",
-      "高カーディナリティ列ごとに細かいpartitionを必ず作る",
-      "LiquidとZORDERとpartitioningを同一テーブルへ常に重ねる"
+      "注文と明細の粒度、結合キー、履歴行との対応を先に正し、検索列とファイルサイズに合う配置としてLiquidなどは別に評価する",
+      "CLUSTER BYのキーへ明細の結合キーを追加すれば、ヘッダー総額の重複した結合と、SCDの有効期間を外れた結合も解消する",
+      "カーディナリティの高いキーでPARTITIONED BYを切り、同じ列をCLUSTER BYした境界と揃えて、二つの配置を併用する",
+      "既存のZORDER BYを残したまま同じ列をCLUSTER BYへ追加し、誤った代理キーへの結合も、配置を変えた結果として一意にする"
     ],
     "optionExplanations": [
-      "論理的な正しさと物理的な効率を別の設計層として扱う。",
-      "配置方式は誤ったjoinの意味を修正しない。",
-      "過細分化による小ファイル・管理負担を招き得る。",
-      "配置方式の互換性を無視している。"
+      "金額や履歴の意味を直す論理モデルと、読み取るファイルを減らす物理配置を分けている。",
+      "「有効期間を外れた結合も解消する」が違う。クラスタリングキーはファイルの寄せ方であり、JOINがどの履歴行を指すかは変えない。",
+      "「二つの配置を併用」が違う。Liquidはpartitioningと同時には使えず、高いカーディナリティのPARTITIONED BYは細かいディレクトリを増やす。",
+      "「ZORDER BYを残したまま」と「配置を変えた結果として一意」が違う。ZORDERはLiquidと同じテーブルには重ねられず、配置の変更は誤った代理キー結合を一意にしない。"
     ],
     "answer": 0,
-    "explanation": "大規模Deltaモデルでは業務の粒度・更新と物理配置の両方が必要。",
+    "explanation": "Liquidは、変わりやすい検索列に対する物理的な配置である。ヘッダーと明細の重複や、SCDの誤った時点への結合は、粒度とキーを直してからでないと残る。partitionやZORDERとも同時には使わない。",
     "source": "https://docs.databricks.com/aws/en/tables/clustering",
     "guide": "9.1・9.2・9.3",
     "original": true,
