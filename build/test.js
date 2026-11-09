@@ -191,38 +191,42 @@ assert.ok(blocked.elements.storage.textContent.includes('利用できません')
 blocked.run('selectAnswer("DEP-01",0);grade("DEP-01");');
 assert.equal(blocked.run('calculateScore(state).graded'), 1);
 
-const legacyStore = {};
-const legacyKey = r('LEGACY_STORAGE_KEYS[0]');
 const currentKey = r('STORAGE_KEY');
-assert.equal(legacyKey, 'dep-study-ja-current-20261107-v1');
-assert.equal(currentKey, 'dep-study-ja-current-20261107-v2');
-legacyStore[legacyKey] = JSON.stringify({
-  version: 1,
-  answers: { 'DEP-01': questions[0].answer, 'DEP-99': 0, GONE: 1 },
-  graded: { 'DEP-01': true, 'DEP-99': true },
-});
-const migrated = makeEnv(false, legacyStore);
-assert.equal(migrated.run('calculateScore(state).correct'), 1);
-assert.equal(migrated.run('calculateScore(state).graded'), 1);
-assert.equal(migrated.run('state.answers["DEP-99"]'), undefined);
-assert.equal(migrated.run('QUESTIONS.length'), total);
-assert.ok(legacyStore[currentKey]);
-assert.ok(migrated.elements.notice.textContent.includes('引き継ぎ'));
-assert.ok(migrated.elements.notice.textContent.includes(legacyKey));
-assert.ok(migrated.elements.notice.textContent.includes(currentKey));
+assert.equal(currentKey, 'dep-study-ja-current-20261109-v3');
+assert.equal(r('LEGACY_STORAGE_KEYS.length'), 0);
+const retiredKeys = [
+  'dep-study-ja-current-20261107-v1',
+  'dep-study-ja-current-20261107-v2',
+];
+for (const retiredKey of retiredKeys) {
+  const retiredStore = {};
+  retiredStore[retiredKey] = JSON.stringify({
+    version: 1,
+    answers: { 'DEP-01': questions[0].answer, 'DEP-99': 0 },
+    graded: { 'DEP-01': true, 'DEP-99': true },
+  });
+  const ignored = makeEnv(false, retiredStore);
+  assert.equal(ignored.run('calculateScore(state).correct'), 0, retiredKey);
+  assert.equal(ignored.run('calculateScore(state).graded'), 0, retiredKey);
+  assert.equal(ignored.run('state.answers["DEP-01"]'), undefined, retiredKey);
+  const notice = ignored.elements.notice ? ignored.elements.notice.textContent : '';
+  assert.equal(notice.includes('引き継ぎ'), false, retiredKey);
+  assert.equal(retiredStore[currentKey], undefined, retiredKey);
+}
 
 (async () => {
   const good = JSON.stringify({ pack: r('STORAGE_KEY'), state: JSON.parse(r('JSON.stringify(state)')) });
   await e.elements.import.listeners.change({ target: { files: [{ text: async () => good }], value: 'x' } });
   assert.ok(e.elements.notice.textContent.includes('復元しました'));
+  const beforeRetiredImport = r('calculateScore(state).correct');
   const legacyPack = JSON.stringify({
-    pack: legacyKey,
+    pack: 'dep-study-ja-current-20261107-v2',
     state: { version: 1, answers: { 'DEP-02': questions[1].answer }, graded: { 'DEP-02': true } },
   });
   await e.elements.import.listeners.change({ target: { files: [{ text: async () => legacyPack }], value: 'x' } });
-  assert.ok(e.elements.notice.textContent.includes('復元しました'));
-  assert.equal(r('calculateScore(state).correct'), 1);
-  assert.equal(r('state.answers["DEP-02"]'), questions[1].answer);
+  assert.ok(e.elements.notice.textContent.includes('正しい進捗JSON'));
+  assert.equal(r('calculateScore(state).correct'), beforeRetiredImport);
+  assert.notEqual(r('state.answers["DEP-02"]'), questions[1].answer);
   await e.elements.import.listeners.change({ target: { files: [{ text: async () => '{bad' }], value: 'x' } });
   assert.ok(e.elements.notice.textContent.includes('正しい進捗JSON'));
   await e.elements.import.listeners.change({
@@ -231,7 +235,7 @@ assert.ok(migrated.elements.notice.textContent.includes(currentKey));
   assert.ok(e.elements.notice.textContent.includes('正しい進捗JSON'));
   e.elements.export.listeners.click();
   console.log(
-    `PASS: exact embedded JS; ${choices} option selections/checks; ${total}/${total} all-correct; 0/${total} all-wrong; per-domain scoring; progress reload; re-selection; filters; reset confirmation; JSON import/export; legacy 40-question progress migration; invalid state; blocked storage fallback; coverage ${coverage.length} rows each with at least one question.`
+    `PASS: exact embedded JS; ${choices} option selections/checks; ${total}/${total} all-correct; 0/${total} all-wrong; per-domain scoring; progress reload; re-selection; filters; reset confirmation; JSON import/export; retired progress keys are not migrated; invalid state; blocked storage fallback; coverage ${coverage.length} rows each with at least one question.`
   );
 })().catch((error) => {
   console.error(error);

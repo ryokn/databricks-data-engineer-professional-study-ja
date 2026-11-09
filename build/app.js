@@ -1,10 +1,9 @@
 'use strict';
 const QUESTIONS = __QUESTIONS__;
 const DOMAINS = __DOMAINS__;
-// v2 is the 60-question pack. v1 was the retired 40-question pack.
-// Same DEP-01..DEP-40 ids keep their option indexes, so v1 answers migrate.
-const STORAGE_KEY = 'dep-study-ja-current-20261107-v2';
-const LEGACY_STORAGE_KEYS = ['dep-study-ja-current-20261107-v1'];
+// v3 revises the option text and answer positions. v1 and v2 answers are not migrated.
+const STORAGE_KEY = 'dep-study-ja-current-20261109-v3';
+const LEGACY_STORAGE_KEYS = [];
 function freshState(){ return {version:1, answers:{}, graded:{}}; }
 function normalizeState(raw){
   const clean=freshState();
@@ -19,22 +18,11 @@ function normalizeState(raw){
   return clean;
 }
 let storageAvailable=true;
-let migratedFromLegacy=false;
 let state=freshState();
 try{
   const current=localStorage.getItem(STORAGE_KEY);
-  if(current){
-    state=normalizeState(JSON.parse(current));
-  }else{
-    for(const key of LEGACY_STORAGE_KEYS){
-      const legacy=localStorage.getItem(key);
-      if(!legacy) continue;
-      state=normalizeState(JSON.parse(legacy));
-      migratedFromLegacy=true;
-      break;
-    }
-  }
-}catch(e){ storageAvailable=false; state=freshState(); migratedFromLegacy=false; }
+  if(current) state=normalizeState(JSON.parse(current));
+}catch(e){ storageAvailable=false; state=freshState(); }
 function persist(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
   catch(e){storageAvailable=false;}
@@ -45,7 +33,6 @@ function showStorage(){
     '進捗はこのブラウザに保存します。file://での保存はブラウザ設定によります。大切な記録はJSON出力してください。' :
     '自動保存が利用できません。今の画面では解答できます。必要なら進捗をJSON出力してください。';
 }
-if(migratedFromLegacy) persist();
 function calculateScore(s){
   const out={total:QUESTIONS.length, selected:0, graded:0, correct:0, domains:{}};
   Object.keys(DOMAINS).forEach(k=>out.domains[k]={total:0,selected:0,graded:0,correct:0});
@@ -158,6 +145,3 @@ document.getElementById('import').addEventListener('change',async e=>{
   e.target.value='';
 });
 render();
-if(migratedFromLegacy){
-  document.getElementById('notice').textContent='以前の40問模試（保存キー dep-study-ja-current-20261107-v1）の進捗を引き継ぎました。同じ問題番号の解答は残し、追加問題は未回答です。今後の自動保存は dep-study-ja-current-20261107-v2 です。';
-}
